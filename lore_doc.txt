@@ -1,0 +1,426 @@
+The Core Setup You've just been appointed Transport Commissioner of Millhaven (placeholder name — we can workshop this), a once-thriving town that peaked decades ago and has been quietly falling apart ever since. The previous commissioner disappeared under unclear circumstances. Nobody talks about it. Your job is simple: fix the roads, keep people moving, keep the town alive.
+The Whimsical Surface Layer
+Charming family names in house profiles. The Bakers who actually run the bakery. The elderly Finch couple who've lived on the same street for 50 years. A grad student named Orin who's been "almost done" with his thesis for three years.
+Restaurants with personality — the Italian place has been family-owned for four generations, the Indian restaurant opened last year and is already the most popular spot at lunch
+Office buildings with silly corporate names
+Seasonal events, town festivals that affect lunch traffic
+The Dark Layer Underneath Hidden details players only find if they click around obsessively:
+The previous commissioner's family profile is still in an abandoned house — they never left town, they just... stopped going to work one day
+One office building has revenue that never drops no matter how bad traffic gets. No explanation given
+A restaurant that generates no lunch traffic ever, but never closes and always shows a profit
+Certain families have a workplace listed as a building that doesn't exist on the map
+Late at night in the day/night cycle, an extra car sometimes appears on the road that doesn't belong to any family
+Some questions to develop this further:
+What happened to the previous commissioner — do you want that to be a solvable mystery with a real answer, or something deliberately left ambiguous? And should the dark secrets be purely atmospheric easter eggs, or could some of them actually affect gameplay in weird ways?
+
+if you dig through the mountains or make roads on certain spots you can find artifcatsft that delve into lore. maybe a body that belongs to a missing person of a former competitor of the Italian restaurant or info on what happened to the last commisioner.
+That's a fantastic mechanic — environmental storytelling baked directly into the road-building system. The thing you're doing anyway (digging tunnels, laying roads) becomes the discovery mechanism. Players who never dig won't find anything. Players who go off the beaten path get rewarded with lore.
+The Artifact System Certain tiles on the map are "seeded" with hidden objects. When you build a tunnel through that mountain tile or lay a road over that ground, a small discovery notification pops up — something subtle, not intrusive. Maybe a little journal entry or police report fragment appears in a side panel. Collectible but never forced.
+The Two Main Mystery Threads
+The Italian Restaurant — The Caruso Family The Carusos have run La Dolce Via for four generations. What the town doesn't know is that Marco Bellini, who tried to open a competing Italian restaurant in the 90s, vanished before it ever opened. His permit application is still in the town records. Digging through the mountain ridge behind the old commercial district turns up his remains. Cross-referencing the family profiles reveals that the current Caruso patriarch was the last person to file a noise complaint against Bellini's construction site — three days before he disappeared. Nothing is ever confirmed. The Carusos are still lovely people who wave at you on the street.
+The Last Commissioner — Raymond Voss Raymond Voss served as Transport Commissioner for 11 years before vanishing 18 months before you were appointed. The official story is he relocated. His house profile is still in the game — family gone, building marked "vacant." Artifacts found across the map tell his story in fragments:
+A road survey notebook found under a tunnel dig, filled with normal notes until the last few pages which describe him finding something while planning a highway route through the eastern hills
+A crumpled internal memo found under a road tile near the town hall — someone above him told him to reroute the highway "away from the eastern grid, no documentation"
+Deep in the largest mountain on the map, a tunnel dig reveals what appears to be a partially buried structure — not natural, not on any town blueprint
+His final journal entry, found last if the player connects all the tiles, simply reads: "They were here before the town. The roads didn't bring people to Millhaven. The roads brought Millhaven to them."
+Who "they" are is never explained.
+Some fun smaller artifacts to seed elsewhere:
+A time capsule from a 1987 school project buried under a residential road — kids writing about their dreams, one of whom shares a surname with a family still living in town
+A lovers' note tucked in a mountain pass — sweet, totally mundane, except the date is impossible (1987, but the handwriting mentions a building that wasn't built until 2003)
+A small wooden road sign for a street that doesn't exist and never appears on any map
+A question to develop further: Should Raymond Voss be findable — like his actual fate is one of the artifacts — or should his story end on that last journal entry with no resolution? And do you want the mysterious structure in the mountain to be purely atmospheric, or could it have a subtle gameplay effect (like cars avoid routing near it slightly, or breakdown rates are higher in that zone)?
+
+
+
+That's a fantastic mechanic — environmental storytelling baked directly into the road-building system. The thing you're doing anyway (digging tunnels, laying roads) becomes the discovery mechanism. Players who never dig won't find anything. Players who go off the beaten path get rewarded with lore.
+The Artifact System Certain tiles on the map are "seeded" with hidden objects. When you build a tunnel through that mountain tile or lay a road over that ground, a small discovery notification pops up — something subtle, not intrusive. Maybe a little journal entry or police report fragment appears in a side panel. Collectible but never forced.
+The Two Main Mystery Threads
+The Italian Restaurant — The Caruso Family The Carusos have run La Dolce Via for four generations. What the town doesn't know is that Marco Bellini, who tried to open a competing Italian restaurant in the 90s, vanished before it ever opened. His permit application is still in the town records. Digging through the mountain ridge behind the old commercial district turns up his remains. Cross-referencing the family profiles reveals that the current Caruso patriarch was the last person to file a noise complaint against Bellini's construction site — three days before he disappeared. Nothing is ever confirmed. The Carusos are still lovely people who wave at you on the street.
+The Last Commissioner — Raymond Voss Raymond Voss served as Transport Commissioner for 11 years before vanishing 18 months before you were appointed. The official story is he relocated. His house profile is still in the game — family gone, building marked "vacant." Artifacts found across the map tell his story in fragments:
+A road survey notebook found under a tunnel dig, filled with normal notes until the last few pages which describe him finding something while planning a highway route through the eastern hills
+A crumpled internal memo found under a road tile near the town hall — someone above him told him to reroute the highway "away from the eastern grid, no documentation"
+Deep in the largest mountain on the map, a tunnel dig reveals what appears to be a partially buried structure — not natural, not on any town blueprint
+His final journal entry, found last if the player connects all the tiles, simply reads: "They were here before the town. The roads didn't bring people to Millhaven. The roads brought Millhaven to them."
+Who "they" are is never explained.
+Some fun smaller artifacts to seed elsewhere:
+A time capsule from a 1987 school project buried under a residential road — kids writing about their dreams, one of whom shares a surname with a family still living in town
+A lovers' note tucked in a mountain pass — sweet, totally mundane, except the date is impossible (1987, but the handwriting mentions a building that wasn't built until 2003)
+A small wooden road sign for a street that doesn't exist and never appears on any map
+A question to develop further: Should Raymond Voss be findable — like his actual fate is one of the artifacts — or should his story end on that last journal entry with no resolution? And do you want the mysterious structure in the mountain to be purely atmospheric, or could it have a subtle gameplay effect (like cars avoid routing near it slightly, or breakdown rates are higher in that zone)?
+lets brainstorm more lore
+11:01 AM
+2 / 2
+Synthesized whimsical-dark elements to expand fictional world lore
+Synthesized whimsical-dark elements to expand fictional world lore
+The user wants to brainstorm more lore. Let me think creatively about expanding the world of Millhaven with more whimsical-but-dark elements.
+Done
+Love it. Let's go deeper. A few directions we could pull the lore — we don't have to pick just one, these can all coexist:
+
+The Town Itself — Millhaven's History Every town has a founding myth. What if Millhaven's is slightly off? The official story (maybe shown in a welcome screen or town hall document) is that Millhaven was founded in 1923 by a railroad surveyor named Elias Holt who "saw potential in the valley." But artifacts suggest the town existed in some form before Holt arrived — just without roads. Like people were already living here, organized, with buildings, but no roads connecting anything. Holt didn't found the town. He just connected it to the outside world. And something changed when he did.
+
+The Families — Deeper Strangeness Some family profiles could hide oddities players only notice if they read carefully:
+The Aldridge family has lived at the same address since 1923. Same names. Same ages listed. Every generation.
+One family's workplace is listed as "Dept. of Civic Continuity" — clicking it shows no map location, no revenue data, just an address that corresponds to an empty field
+A family with no children listed, but the school run data shows a drop-off happening every morning at the elementary school
+An apartment building where every resident lists a different employer but all employers share the same tax ID number
+
+The Restaurants — More Secrets Each restaurant could have a hidden layer:
+The Chinese Restaurant — Golden Lotus Been here since 1941. During lunch rush it generates the most traffic of any restaurant. But if you look at the revenue data closely, it's always exactly the same number. Every single week. Never fluctuates regardless of traffic or late arrivals. Owner's family profile lists her age as 94 but her photo (a small icon) looks about 40.
+The American Diner — Holt's Named after the founder. Has a back room listed in its building data as "Storage B" that generates a small amount of revenue weekly with no explanation. No one goes in or out during simulation. Late at night a single car parks there and never moves until morning.
+The Indian Restaurant — Spice Meridian Newest place in town, opened "last year." But a tunnel dig near its foundation reveals a much older structure underneath with the same floorplan. Like the building has been there before, torn down, and rebuilt. Multiple times.
+
+The Infrastructure Itself What if the roads have memory?
+Certain road tiles, when you demolish them, reveal that something was built there before — ghost road data in the ground, old asphalt under the soil, from a road network that predates the town's official founding
+The river has a bridge foundation already partially built underwater — never finished, no record of who started it or when
+One mountain has a tunnel entrance on the other side that the player didn't build. It leads nowhere. It can't be demolished.
+
+The Commissioner's Office — Your Character You're the newly appointed commissioner but there are hints your appointment wasn't random:
+Your office building (town hall) has a locked file room in its profile that unlocks gradually as you find artifacts — each discovery opens another document
+Early documents are mundane HR paperwork. Later ones suggest you were specifically selected from a list of candidates based on criteria that have nothing to do with urban planning — personality traits, family history, whether you have living relatives in the area
+One document near the end suggests your family name appears in Millhaven records from 1923. You may have been brought here for a reason.
+
+Potential Bigger Themes to Pick From These are directions the overall mystery could be about — worth picking one as the spine:
+The town is a trap — something beneath Millhaven feeds on connectivity. Every road you build strengthens it. Voss figured this out too late.
+The Entity — What Is It?
+It doesn't have a name in any document. Millhaven residents don't know it exists. The closest anyone gets to naming it is Voss, who in his notebook refers to it only as "the network." Not a monster, not a god — something older and more patient than either. It doesn't think the way people think. It just hungers for connection. Isolated things don't interest it. The moment two points are linked — a road, a bridge, a tunnel — it feeds on the flow between them. People moving. Commerce happening. Traffic.
+It was dormant for a long time. Then Elias Holt arrived in 1923 and built the first road.
+
+How It Expresses Itself
+It never acts directly. It influences:
+Terrain — the mountains aren't random. They're arranged to funnel road-building in specific directions. Every "natural" gap in the terrain is a suggestion. Players who follow the path of least resistance are following its preferred network layout
+People — the ageless families, the impossible dates, the Golden Lotus owner who's been 40 for 80 years — these are people who've been in contact with it long enough to absorb something. Not corrupted. Just... retained. They don't know either.
+The roads themselves — late enough in the game, if the player has built extensively, certain roads at night show faint movement in the asphalt. Like something flowing underneath. Just a visual flicker. No tooltip. No explanation.
+
+The Artifact Trail — Reframed
+Now that we have the spine, every artifact connects back to this:
+Early artifacts (surface layer, slightly unsettling):
+Holt's 1923 survey notes — enthusiastic, excited, describes the valley as "almost eager to be connected"
+A 1940s city planning document recommending specific road routes "for geological stability" — the routes form a pattern that, if the player maps them out, looks like a circulatory system
+A child's drawing found under a residential road — a town with roads spreading outward like roots, and something round and dark at the center, underground
+Mid artifacts (Voss begins piecing it together):
+Voss's survey notebook — starts normal, then he notices traffic anomalies. Cars routed to destinations they didn't select. Pathfinding behaving strangely in the eastern grid. He thinks it's a software bug at first.
+A geological survey he commissioned privately — the bedrock under Millhaven isn't natural. It has structure. Almost like architecture.
+An email printout (found under a tunnel dig near town hall) — Voss writing to a university geologist asking about "organized subsurface formations and their relationship to surface traffic patterns." The geologist's reply is enthusiastic and asks for coordinates. Voss never responded.
+Late artifacts (the full picture):
+Voss's personal journal, final weeks — he's mapped the entity's preferred network. It wants a closed loop. Every road built toward the eastern hills completes another segment of it. He's been unknowingly finishing its design for 11 years.
+A hand-drawn map found deep in the largest mountain tunnel — Voss's version of the road network, overlaid with something underneath. The subsurface structure and the road network are the same shape.
+The structure itself, found at the deepest tunnel tile — not ruins. Not ancient. It looks current. Maintained. Humming faintly according to Voss's notes. He describes it as "a junction. The oldest one. Everything flows through here."
+Voss's last entry, the one we already wrote: "They were here before the town. The roads didn't bring people to Millhaven. The roads brought Millhaven to them."
+Then nothing. No body. No exit. Just a vacant house profile still in the system.
+Good clarification — and actually that makes it more unsettling. The network is never finished. The game just ends when you personally fail. The entity doesn't care. It'll wait for the next commissioner.
+That reframes the ending beautifully:
+The Revised Ending Screen When you go bankrupt, the game over screen shows your score, days survived, and then that single extra line — but now it reads something like:
+"The network is 34% complete. The next commissioner has been notified."
+The percentage is just how much road you built relative to the map. It's never 100%. The town will get a new commissioner after you. It always does. You're not the hero who finishes the story — you're just the latest person who tried and ran out of money. Voss lasted 11 years. How long did you last?
+
+This Also Reframes The Entity's Patience
+It doesn't need you specifically. It just needs a steady succession of well-meaning commissioners who each build a little more. Millhaven has had one every decade or so since 1923. Each one picks up roughly where the last left off because the road network carries over — you inherit whatever the previous commissioner built. The entity has been slowly completing its design across a century of human lifetimes, one commissioner at a time.
+Which raises a dark implication — the town's financial system, the one that bankrupts you, might not be accidental. Someone or something keeps the budget tight enough that no single commissioner can finish the job alone. Keeps the cycle going. Keeps bringing new ones in.
+
+Does that "next commissioner has been notified" line feel like the right gut-punch ending, or do you want to push it further?
+*only show screen if number is above 50%. Dont want people to find about some of the lore until they are better and deeper into game.
+Because the game resets every time change around how some of the lore works so every game you get a different experience. 
+
+
+What If The Ending Knows You?
+The game has your family name in the 1923 records. It's been referenced in artifacts throughout. So when the game over screen hits, it doesn't say "the next commissioner has been notified."
+It says:
+"The next commissioner has been notified." "Their name is [your surname]."
+Same surname as you. Always. Every run. Different first name each time, procedurally generated — but the surname never changes. The implication lands slowly: there is no "next commissioner" who is a stranger. It's always your family. Has been since 1923. Will be after you.
+You weren't called back. You were born into rotation.
+
+The Full Ending Sequence — Layered By How Many Artifacts You Found
+Rather than one ending screen, it builds based on how deep the player dug:
+0-3 artifacts found — the innocent ending: Plain game over. Score, days survived, a cheerful message about Millhaven thanking you for your service. Warm watercolor illustration of the town. Nothing wrong.
+4-8 artifacts — something feels off: Score screen as normal, but the illustration of the town has the roads you built glowing faintly underneath, like veins. The "next commissioner" line appears. No surname yet. Just a name. The player might not even clock it as strange on a first run.
+9-14 artifacts — the pattern emerges: The road network on the ending illustration pulses once, slowly, like a heartbeat. The percentage appears. The next commissioner shares your surname. Underneath in very small text, almost too small to read:
+"Millhaven thanks Commissioner [your name] for 47 days of service. Infrastructure completion: 41%. Successor orientation scheduled."
+Orientation. Not appointment. Not hiring. Orientation — like it's a process. Like there's a manual.
+15+ artifacts — full picture: The ending screen takes a beat longer to load than normal. When it appears, the watercolor town illustration is gone. Instead it's Voss's hand-drawn map from the deepest tunnel — his road overlay on top of the subsurface structure. Your roads are drawn on it in a different color. Together, Voss's network and yours are visibly closer to the complete shape.
+Then the text:
+"Commissioner [your name]: 47 days. Infrastructure completion: 41%." "Commissioner Raymond Voss: 4,015 days. Infrastructure completion: 29%." "Commissioner [grandfather's name, your surname]: 1,847 days. Infrastructure completion: 18%." "Commissioner Elias Holt: 312 days. Infrastructure completion: 6%."
+A full ledger. Every commissioner since 1923, their days survived, their contribution to the percentage. The player can scroll it. It goes back further than 1923. The names get stranger. The dates get older. The percentages get smaller — tiny fractions of a percent from commissioners who only lasted days.
+It's been doing this for a very long time. Long before Millhaven. Long before roads existed.
+At the very bottom of the ledger, below Holt, below all the English names:
+"First contact: [a date that is clearly wrong — something like 4,200 BCE]" "Infrastructure completion at first contact: 0.0001%" "Commissioner designation: unknown" "Days served: 1"
+Someone built one path between two points twelve thousand years ago. Maybe a game trail. Maybe a footpath between two fires. It was enough.
+Then the final line, below everything:
+"The network thanks you for your service."
+Not Millhaven. Not the town. The network.
+
+One More Layer — The New Game Question
+When the player clicks "play again," instead of a fresh start screen it says:
+"Welcome back, Commissioner."
+Not "welcome." Welcome back. Like it already knows you're coming.
+The new map generates — different terrain, different river placements, different mountains. But if the player looks carefully, the road foundations from the previous run are faintly visible beneath the soil. Ghost roads. Already there. Waiting to be built again.
+
+That's a complete emotional arc — cozy watercolor town on the surface, existential dread underneath, and a gut-punch ending that recontextualizes everything the player just did. The better you played, the worse it feels.
+Want to start building out any specific piece of this into actual in-game text, artifact writing, or family profile details?
+
+Great instinct — the lake as a discovery mechanic adds another layer beyond just road/tunnel building. Still rewards curious players who poke around the map rather than just building efficiently.
+The Lake & The Caruso Family — Marco Bellini
+Let's flesh out the Bellini story fully first so the artifacts feel cohesive.
+Marco Bellini arrived in Millhaven in 1987. Young, ambitious, second-generation Italian-American. He wanted to open a restaurant called Bellini's — traditional Neapolitan, family recipes, the real thing. He applied for a permit, found a location, started construction. The Carusos had run La Dolce Via since 1951 and weren't happy. But in Millhaven, you don't just have competition disappear.
+Or maybe you do.
+Marco vanished in October 1987. No body ever found. Case went cold. His restaurant permit expired. The construction site sat empty for a year then quietly got absorbed into a different development. The Carusos sent flowers to his mother.
+
+Lake Artifacts — What's In There
+Lakes should have a small random chance on click, but certain specific lake tiles are seeded — guaranteed finds if the player clicks there. The seeded tiles aren't marked. Players find them by being thorough or lucky.
+Artifact 1 — The Tackle Box (random chance, any lake tile) A rusted fishing tackle box. Inside, a handwritten list of fishing spots around Millhaven's lakes, dated summer 1987. The handwriting matches Bellini's permit application on file. It's mundane — bass near the eastern shore, catfish near the reeds — until the last entry:
+"Someone following me from town again. Third time this week. Thought it was kids. It wasn't kids."
+No further entries.
+Artifact 2 — The Permit Carbon Copy (seeded tile, smaller lake) A waterproof document sleeve containing a carbon copy of Marco Bellini's restaurant permit, stamped DENIED in red. The denial reason listed is "zoning conflict — existing establishment within proximity radius."
+The proximity radius rule cited doesn't exist in any other town document. It appears in no other permit denial in Millhaven's history. Someone wrote it specifically for this application. The signature on the denial is illegible but the title underneath reads Deputy Commissioner of Civic Planning.
+Cross-referencing the date with the commissioner ledger in your file room reveals the Deputy Commissioner at that time was a man named Gerald Caruso.
+Artifact 3 — The Weighted Coat (seeded tile, deepest part of the largest lake) This one takes effort to find — the largest lake's deepest tile requires the player to click methodically across the water surface. When found, the discovery notification is different from the others. No cheerful little chime. Just a quiet sound and the text:
+"Something is snagged on the lakebed. You can see it from the water's surface on a clear day if you know where to look. Nobody has looked."
+The artifact entry reads only: "A man's coat. Italian wool. One pocket contains a wallet — ID belonging to Marco Bellini, age 29, of Naples originally, Millhaven since March 1987. The other pocket contains a stone. Several stones, actually. Enough."
+No further detail. The player fills in the rest.
+Artifact 4 — The Matchbook (random chance, lake near the Italian restaurant) A matchbook from a restaurant called Bellini's with an address on it. The address corresponds to a building currently on the map — not a restaurant. An office complex. Built in 1989. Two years after Marco disappeared. The matchbook predates the building by two years.
+Someone printed matchbooks before the restaurant ever opened. Marco was certain he was going to make it.
+
+The Caruso Family Profile — What Players Notice If They Look
+La Dolce Via's building profile lists the current owner as Rosa Caruso, age 71. Warm description — beloved community figure, donates to the school fundraiser every year, famous for her tiramisu.
+Her family profile lists her father as Gerald Caruso, deceased.
+No cause of death. No date. Just deceased.
+Her grandfather's name in the profile: Antonio Caruso, founder of La Dolce Via, 1951.
+If the player has found the permit denial artifact and cross-referenced Gerald as Deputy Commissioner, clicking back on Rosa's profile hits differently. She's not a villain. She probably doesn't know. Or maybe she does and has made her peace with it. The game never tells you.
+The restaurant still makes the best tiramisu in Millhaven.
+
+A Potential Fifth Artifact — The Letter
+Found not in the lake but near it — a road tile along the lakeside path, suggesting someone walked this route often:
+A letter, unsent, written by Marco to his mother in Naples. Mostly homesick and hopeful — he describes Millhaven as "strange but beautiful, like a painting someone left unfinished." He says the restaurant is going to work. He says he's found a good fishing spot. He says some of the locals are cold but most are kind.
+The last paragraph:
+"There is one family here I cannot get a read on. They smile at everything. I think that is what unnerves me — they smile at everything, even things that aren't funny, even things that should make a person frown. Papa always said you should trust a man who knows how to frown. I am probably being paranoid. The lake is beautiful in the morning. I am going fishing tomorrow."
+The letter is dated October 3rd, 1987.
+
+Want to develop the other restaurant mysteries next, or dig into the Voss trail of artifacts in more detail?
+What Is It, Really?
+It predates language so it was never named. The closest humans have come to describing it across different eras:
+Prehistoric cave paintings found in the region (predating Millhaven by thousands of years) show lines radiating outward from a central point underground — archaeologists who briefly studied the site in 1962 catalogued them as "trade route maps" and moved on
+A Norse word scratched into a rock formation near the eastern hills: "Æðarvegr" — roughly translating to "the vein-road" or "the path that drinks"
+A Potawatomi oral tradition, recorded by a missionary in 1804, describes the valley as a place the tribe deliberately avoided — not out of fear exactly, but out of a concept that translates loosely as "a hunger that mistakes movement for offering"
+Voss in his final journal simply calls it "the network" — which is accidentally the most accurate name anyone has ever given it
+It isn't malevolent in any human sense. It doesn't hate people. It doesn't want to hurt anyone. It experiences something closer to appetite. It feeds on the flow of connected things — energy, movement, commerce, life passing between linked points. A road is a straw. Traffic is sustenance. It has no more malice toward Millhaven than a plant has malice toward the soil it grows in.
+That's what makes it so unsettling. There's no villain to defeat.
+
+Its Life Cycle — How It Actually Works
+Think of it less like a creature and more like a vast underground organism — something between a fungal network and a circulatory system, grown into the bedrock over millennia. It has a center — the structure Voss found deep in the eastern mountain — and it extends outward in all directions through the rock like roots.
+It doesn't build. It can't build. It can only attract.
+What it can do is influence the path of least resistance. Subtly reshape terrain over decades — a river slowly migrating to create a natural crossing point here, a mountain pass that seems almost deliberately convenient there. It arranges the landscape into suggestions. And then it waits for something intelligent enough to follow those suggestions and build the connections it can't build itself.
+It has been doing this for a very long time. Humans aren't the first species it's used. Just the most effective so far.
+
+The Pre-Human History
+Artifacts found in the deepest mountain tunnels — the ones that require the most expensive, most ambitious tunneling to reach — hint at this:
+Artifact — The Fossil Roads At a certain depth, the tunnel reveal something strange in the rock strata — compressed pathways, almost like tunnels themselves, but organic. Worm-like. Running in deliberate patterns through the prehistoric stone. A geologist's field notes (Voss commissioned these) describe them as "organized burrow networks inconsistent with any known species — the formation suggests coordinated behavior across a colony of significant size, all routes converging on a central chamber."
+Whatever built these paths fed the entity long before humans arrived. They're gone now. The entity consumed what it needed and the colony died out — or was spent. The pathways remain as fossils in the rock, a record of a previous arrangement.
+The human road network above, if you overlaid it, follows the same routes almost exactly.
+Artifact — The Pictographs Deeper still, a chamber the player breaks into while tunneling reveals pictographs on the walls. These weren't made by the Potawatomi or any known regional culture. They're older. They show:
+A circle in the center. Lines radiating outward. Small figures moving along the lines toward the circle. Then the same image repeated — but the figures are different. Different shapes. Not human. Several iterations of this, each with different figures, same pattern. Humans are the most recent panel.
+There is one more panel after the humans. It's unfinished. The figures in it are unclear — too abstract, or perhaps too far ahead to depict accurately. Something is moving along the lines. Something is building.
+The entity is patient. It's already thinking about what comes after us.
+
+How It Influences Millhaven Specifically
+It doesn't control people. It can't rewrite minds. But proximity to the network — living above it, moving along its roads daily — has subtle effects over long exposure:
+The Retained — people like the Golden Lotus owner, certain old Millhaven families who've been here since the beginning. They don't age normally. They don't know why. They feel a vague sense of purpose they can't articulate. They are deeply, contentedly attached to Millhaven and cannot imagine leaving. Several have tried. They always come back. The pull isn't frightening to them — it feels like home.
+The Drawn — people like you, like Voss, like Holt. Called back across generations. The entity doesn't summon them consciously — it's more that certain bloodlines, having been in contact with the network long enough, carry something in them that makes them useful. They're good at connectivity. Good at seeing how things should link together. Natural infrastructure minds. The entity doesn't choose them so much as recognize them when they arrive.
+The Resistant — a small number of Millhaven residents who feel vaguely uneasy all the time and don't know why. They avoid the eastern part of town instinctively. Their commute data shows they take longer routes that bypass the deepest network tiles. They never build anything. They move away eventually — and the entity lets them go because they were never useful anyway.
+
+The Center — What Voss Found
+The structure in the eastern mountain is the entity's oldest surface expression — the point where the underground network comes closest to the top. It looks like a room. Stone walls but too regular, too smooth for natural formation. In the center, a depression in the floor — circular, about the size of a well — and from it, if you put your ear to it according to Voss's notes, you can hear something that he describes as:
+"Not sound exactly. More like the memory of sound. Like standing in a concert hall the morning after a performance — the air still holds something of what passed through it. Except this has been holding it for a very long time."
+The depression connects to the network below. It's a mouth of sorts. Or a heart. The roads above feed down into it through the rock, invisible, and whatever flows along those roads — energy, commerce, human movement — drains slowly down.
+Voss spent three days in that chamber before writing his last journal entry. His notes from those three days are missing. Not damaged — missing. Like they were never written. He went in with a full notebook and came out with blank pages.
+He wrote the final entry — "The roads didn't bring people to Millhaven. The roads brought Millhaven to them." — sitting outside the tunnel entrance, according to the timestamp. He never went back inside.
+He was gone within a week.
+
+What Happened To Voss
+He isn't dead. That's the thing.
+His house profile shows vacant. His family left. But if the player has found enough artifacts and returns to click on his house after the final journal entry is discovered, the profile has changed. Subtly. The family status no longer says vacant.
+It says retained.
+His name is still there. His age — which should be in his late 60s by now — is listed the same as it was in a personnel photo from his first year as commissioner. He's still in Millhaven. He just doesn't go to work anymore. He doesn't go anywhere.
+His daily commute data shows one trip, every day. From his house to the eastern mountain. And back.
+He found the center and it kept him. Not as a prisoner — he can leave his house, clearly. More like the Golden Lotus owner. More like the old families. The network recognized him as someone who'd been useful, who'd gotten too close, who knew too much — and instead of removing him, it absorbed him into the retained.
+He's content. That's the worst part. If the player somehow triggers a click event on his character during the simulation, his profile description reads:
+"Raymond. Retired. Enjoys long walks. Says Millhaven is the only place he's ever felt truly at home. Doesn't remember much before arriving here. Doesn't mind."
+
+The Question The Lore Leaves Unanswered
+Everything above is discoverable. But one thing is never explained anywhere in any artifact:
+The entity is patient. It's been doing this for twelve thousand years across multiple species. It's clearly intelligent in some distributed, alien way. It arranged terrain, it retained useful people, it cycled through commissioners with precision.
+So why hasn't it finished?
+The network has never hit 100%. Not once across all the commissioners in the ledger, across all the species in the pictographs. Every time it gets close something goes wrong — the commissioner runs out of money, the colony dies out, something intervenes.
+Is it actually incapable of finishing? Is there something preventing the completion that even it doesn't understand? Or is the feeding the point — and a finished network would mean nothing left to consume, so it keeps the budget tight, keeps the cycle going, keeps itself hungry on purpose?
+The game never answers this. Neither does Voss, who presumably knows by now.
+Oh that's a brilliant mechanic. It works on multiple levels simultaneously — on the surface it looks like the Carusos are protecting their monopoly (no roads means no competition can reach town), but underneath it's actually the entity getting impatient. The Carusos are its unwitting enforcers. They think they're protecting the restaurant. They're actually protecting the network's food supply.
+
+How It Escalates — The Timeline
+The incidents scale with how long you've gone without building roads. Never immediate. Never obviously connected to the Carusos. Always deniable.
+Days 1-3 without road building — Whispers Nothing physical yet. Just text events that appear as small notifications:
+"Residents report an unpleasant smell near the eastern lots. Probably drainage."
+"A dog on Holt Street hasn't stopped barking since last night. Neighbors are complaining."
+"The streetlights on the main square flickered for an hour last night. Electrical issue, likely."
+Mundane. Easily ignored. The player probably doesn't connect them.
+Days 4-6 — Pressure Still no physical damage but the town starts feeling wrong:
+Family profiles start showing an anxiety trait that wasn't there before. Residents described as "restless" or "having trouble sleeping"
+Office revenue starts dipping slightly — not because of traffic, there is no traffic yet, but the tooltip explanation just says "employee morale" with no further detail
+A notification: "Rosa Caruso stopped by the commissioner's office while you were out. She left her card. She says she'd love to have coffee and discuss the town's development plans."
+If you click Rosa's card it just shows La Dolce Via's menu. Nice touch.
+Days 7-10 — First Incident A building burns. Not a major one — a small residential house on the outskirts. The fire report notification reads:
+"A fire broke out overnight at 14 Millward Lane. Cause: undetermined. The family has been displaced. No injuries reported. Arson has not been ruled out."
+The family profile for that house, if you click it, now shows them listed as "temporarily relocated." Their workplace and school data is greyed out. They're effectively removed from the simulation until you build enough road to get them back.
+Crucially — the house that burns is always the one furthest from La Dolce Via. The one least useful to the Carusos as potential customers. The entity isn't wasteful. Neither are the Carusos, consciously or not.
+Days 11-15 — Escalation More fires. One per every two days now. Always outskirts first, working inward. Always at night. The fire reports start including a new detail:
+"A witness reported seeing a vehicle parked near the site approximately one hour before the fire was discovered. The vehicle was described as a dark sedan. No plate recorded."
+Same description every time. Dark sedan. No plate. If the player checks the commute data for Rosa Caruso — which they can do by clicking her family profile — her evening route sometimes shows an anomaly. A stop. Near the fire sites. Always the night before.
+Not proof. Never proof. Just data.
+Days 16-20 — The Message Rosa Caruso sends another notification. This time it's a letter, rendered as a proper in-game document:
+
+Dear Commissioner,
+Millhaven is a town that rewards movement. People need to get places. Businesses need customers. A town without roads is like a body without circulation — things start to go wrong in ways that are hard to predict and harder to fix.
+I've watched this town for a long time. I've seen commissioners who understood this thrive. I've seen commissioners who didn't... struggle.
+La Dolce Via has been part of this community since 1951. We want to see it grow. We want to see you succeed.
+Come for dinner sometime. First meal is on me.
+Warmly, Rosa Caruso
+
+The language is perfectly pleasant. Nothing threatening in it. But the phrase "things start to go wrong in ways that are hard to predict" — combined with everything the player has seen — lands very differently than it would on day one.
+Days 21+ — It Gets Worse If the player still hasn't built roads, the incidents stop being fires. The escalation shifts:
+The maintenance building (if placed) reports equipment going missing overnight
+Office complexes start showing "vandalism" events that cost money to repair
+A school briefly closes due to a "gas leak" — kids displaced, parents miss work, revenue hits
+One night, the player's starting cash reserve takes an unexplained small deduction. The transaction log just reads: "Administrative fee — Civic Development Surcharge." No further detail. This fee recurs every three days.
+The Civic Development Surcharge has no explanation anywhere in the game documentation. It doesn't appear in any tooltip. If the player digs through the artifact trail far enough they'll eventually find a single document in the locked file room that mentions it — a memo from Gerald Caruso's time as Deputy Commissioner, establishing the surcharge as a penalty for "insufficient infrastructure development."
+Gerald Caruso wrote the law that lets Rosa take your money if you don't build roads.
+Day 30+ Without Roads — The Final Warning A notification unlike any other. No cheerful UI framing. Just text on a dark background:
+"La Dolce Via has been serving Millhaven since 1951. In that time, seventeen commissioners have come and gone. The restaurant has outlasted every one of them. Rosa Caruso would like you to know that she is patient, but Millhaven is not. The town needs to move. Things that don't move tend to stop."
+Then back to normal UI. Like it never happened.
+
+What The Carusos Actually Know
+This is the interesting question. There are three possible readings and the game supports all of them simultaneously, never confirming which is true:
+Reading 1 — Fully Conscious The Carusos have known about the entity since Antonio founded the restaurant in 1951. They made a deal — keep the roads building, keep the network fed, and the entity keeps the restaurant thriving, keeps the family retained, keeps Rosa young. They're not evil exactly. They're just very old and very practical and they've been doing this long enough that the moral weight has worn smooth.
+Reading 2 — Useful Idiots The Carusos genuinely believe they're just protecting their business and their town. The fires, the pressure, the surcharge — they think that's just how you maintain order in a place like Millhaven. Their family has always done it. Gerald did it. Antonio did it before Gerald. It's tradition. The fact that it happens to serve the entity perfectly is not something any of them has ever examined.
+Reading 3 — Somewhere In Between Rosa knows something is wrong with Millhaven. She's 71 and looks 45 and deep down she knows that isn't right. She's buried the question under decades of good wine and tiramisu and genuine community affection. The fires bother her more than she admits. Sometimes she drives out to the eastern hills at night and sits in her car and doesn't know why she drove there. She tells herself it's for the view.
+The game never tells you which reading is correct. Rosa is still genuinely lovely. The tiramisu is still the best in Millhaven.
+Oh that's so much better — it's grounded, human, and completely separate from the entity. The Carusos are just mob. Full stop. No supernatural explanation needed. It makes Millhaven feel more layered because not every dark secret connects to the entity. Some evil is just regular human evil.
+
+Reframing The Carusos
+The mob angle actually makes the Marco Bellini story hit harder too. He wasn't killed by something ancient and unknowable. He was killed by a family protecting a racket. Mundane, ugly, real. The contrast between the cozy watercolor restaurant and what's underneath it lands differently when the explanation is just organized crime rather than cosmic horror.
+The entity lore and the Caruso lore now exist in parallel — two separate dark threads that the player can discover independently. Some players will find the Bellini lake artifacts and piece together the mob story without ever finding Voss's notebook. Others will go deep on the entity and never click on the lake. They're uncovering different kinds of darkness.
+
+The Mob Mechanics — How It Actually Works
+The Carusos run La Dolce Via as a front. The restaurant revenue the player sees in the tax data is clean money — the real income is never visible in the simulation. What the player does see is that La Dolce Via's revenue never fluctuates normally. Good traffic week, bad traffic week — the numbers are suspiciously stable. That's the first hint something is off if the player pays attention.
+When the restaurant loses road connection and can't generate visible revenue, the Carusos interpret it as the commissioner cutting them off deliberately — a threat to their operation. So they respond the way they know how.
+The escalation stays roughly the same but every incident now has a clean mob explanation with zero supernatural framing:
+Fires are arson, plain and simple
+The dark sedan is a real car with real people in it
+Rosa's letters are veiled threats from someone who's done this before
+The Civic Development Surcharge is a corrupt law Gerald Caruso wrote specifically to have legal leverage over commissioners who cause problems
+
+What The Artifacts Reveal
+The lake artifacts stay exactly as written — they're about Bellini, about Gerald's permit denial, about the coat full of stones. Pure mob justice against a competitor.
+But now there are additional artifacts that reveal the broader operation:
+Artifact — The Ledger Page Found under a road tile near the town hall. A torn page from a financial ledger, clearly not official town records. Two columns — one labeled "visible" and one labeled "family." The visible column matches La Dolce Via's reported revenue exactly. The family column is three times larger every single week. Whatever the family column represents, it's never been taxed.
+Artifact — The Letter From Naples Found in the mountain near the eastern road, suggesting someone drove out here to be alone. A letter in Italian, with a rough translation in the margin in different handwriting — Voss translated it, apparently. It's from someone in Naples addressed to Antonio Caruso, founder of La Dolce Via, dated 1951:
+"The arrangement you described is acceptable. Millhaven is small enough to manage and far enough from Chicago to avoid attention. Establish the restaurant first. Everything else follows. Do not draw attention. Do not create problems. Problems attract investigators and investigators are expensive. If local officials become difficult, handle it quietly. You know how."
+"You know how" — three words. No elaboration needed.
+Artifact — The Police Report Found under a road tile near the old fire station. An internal police report from 1987 — the year Bellini disappeared. Heavily redacted but certain lines are legible:
+"...witness recanted statement on [REDACTED]..." "...department received recommendation from Deputy Commissioner Caruso to close investigation pending..." "...case file transferred to [REDACTED] storage, not for public access..."
+The reporting officer's name at the bottom is legible. If the player cross-references it with current family profiles, that officer's grandson still lives in Millhaven. Works at the town hall. His family profile notes he's "well-regarded in the community, known for his discretion."
+The Carusos don't just own the restaurant. They own the infrastructure around it. The permits office, the police department, pieces of the town bureaucracy. They've been here since 1951 and they've been quietly buying influence the whole time.
+
+Rosa Specifically
+Rosa knows everything. She's not Gerald's naive granddaughter who inherited a restaurant. She's the current head of the operation, has been for twenty years, and she's very good at it. The community warmth is genuine — she does donate to school fundraisers, she does make the best tiramisu in Millhaven, she does care about the town in her way. That's what makes her compelling. She's not a cartoon villain. She just has a very clear sense of what Millhaven is for and what happens to people who interfere with that.
+She's never been investigated. Not once. She's too woven into the fabric of the town. Half the town council has eaten at her table. The other half owes her a favor.
+
+The Player's Options Once They Know
+The game never gives the player a direct "expose the Carusos" mechanic — that would be out of scope for a traffic sim. But knowing changes how you read everything:
+You connect La Dolce Via's road because you need the tax revenue — but now you know what you're actually enabling
+Rosa's warm dinner invitation lands differently when you've read the letter from Naples
+Every stable revenue week from the restaurant is a reminder of the ledger page and the family column
+Voss knew too — there's a single line in his notebook, before the supernatural stuff starts, that reads: "Caruso operation confirmed. Larger than expected. Leaving it alone."
+Even Voss, who uncovered something ancient and cosmic underneath the town, decided the Carusos were the smarter thing not to touch.
+
+Want to move on to the other restaurant mysteries now, or develop any other part of Millhaven's world?
+We have five restaurants total. La Dolce Via is done. That leaves:
+Golden Lotus — Chinese, revenue never fluctuates, owner looks 40 but is listed as 94
+Holt's — American diner, named after the founder, mysterious back room generating revenue
+Spice Meridian — Indian, newest place but built on much older foundations
+El Camino — Mexican (placeholder name, undeveloped)
+Each should feel distinct — different kinds of darkness, not all connected to the entity, not all sinister. Some could be sad, some ambiguous, some genuinely unsettling. Let's go one by one.
+
+Golden Lotus — The Chen Family
+The Surface Millhaven's oldest restaurant, opened 1941 by Mei Chen, who arrived in Millhaven from San Francisco under circumstances nobody ever asked about. The Golden Lotus has the warmest lunch atmosphere in town — red lanterns, the smell of star anise drifting onto the street, Mei herself still working the front of house every single day. Beloved. Institutionally beloved, the way certain places become part of a town's identity so completely that imagining the town without them feels impossible.
+Mei is listed in the building profile as the owner. Her age: 94. Her photo icon — Millhaven uses small illustrated portrait icons for key residents — shows a woman who looks about 40. The game doesn't comment on this. No tooltip. No asterisk.
+The Revenue Anomaly Golden Lotus revenue is exactly the same number every single week. Not approximately the same — precisely identical down to the cent. Bad traffic week where nobody makes it to lunch: same number. Week where the whole town floods the restaurant: same number. It isn't adjusted for anything. It just always reads $4,847.00.
+If the player checks the tax records in the locked file room after finding enough artifacts, Golden Lotus has reported exactly $4,847.00 weekly revenue every week since 1941. The number has never changed. Not once in over eighty years.
+What's Actually Happening Mei Chen is retained. Has been since approximately 1943, two years after opening — long enough for the network to recognize the restaurant as a reliable feeding point and absorb her into its cycle. She doesn't age. She doesn't fully understand why. She's made a kind of peace with it that reads, from the outside, as extraordinary contentment.
+The $4,847.00 isn't revenue. Or rather it isn't only revenue. It's the number the entity decided this location generates — a fixed tithe, consistent, reliable, forever. Mei didn't agree to this arrangement consciously. Nobody asked her. The entity doesn't negotiate. It just decided Golden Lotus was worth exactly that much per week and locked it in.
+She knows something is different about her. She knows she should be dead. On some level she understands the restaurant is connected to something underneath the town. She's chosen not to examine it too closely. She makes very good soup and she's watching Millhaven change around her in slow motion and she finds it, mostly, interesting.
+The Artifacts
+A journal found under a road tile near the restaurant — Mei's handwriting, dated 1943:
+"Something changed in the spring. I cannot explain it well. The restaurant feels different — not bad, just fuller. Like something is paying attention. My mother would have called it ancestors. I don't know what to call it. I feel well. I feel very well. I think I will be here for a long time."
+A health department inspection form from 1987, found in the town hall file room — a young inspector's handwritten note clipped to the official form:
+"Owner appears to be in her late thirties, early forties. Cross-referencing the business registration which lists her as having opened the restaurant in 1941 — this would make her at minimum 65-70. Flagging for follow-up."
+The follow-up form is blank. Nothing was ever pursued.
+A letter found under a tile near the eastern hills — someone mailed this and never sent it, or never reached the mailbox:
+"Dear Daughter — I have been in Millhaven for fifty years now and I think I will be here for fifty more. Do not worry about me. I am well. Tell your children about the restaurant. Tell them it will be here when they want to visit. It will always be here."
+The letter is addressed to someone in San Francisco. The recipient's name shares a surname with a family currently living in Millhaven — third generation, young parents with kids in elementary school. They eat at Golden Lotus every Sunday. Their family profile lists Mei Chen as a family friend.
+They don't know she's their great-grandmother. She watches them eat and doesn't say anything. The game doesn't explain why.
+
+Holt's Diner — The Founder's Shadow
+The Surface Named after Elias Holt, the man who founded Millhaven. Opened in 1951 by a man named Dale Pitts who bought the land from the Holt estate and named the diner as a tribute — or a marketing decision, it's unclear. Classic American diner. Red vinyl booths. Pie under glass. The most normal-feeling place in Millhaven. Deliberately, aggressively normal. The kind of normal that eventually starts to feel like a performance.
+Dale Pitts is long dead. The diner has changed hands four times. Current owner is Tommy Pitts, Dale's grandson, who inherited it and seems mildly resentful about this — his family profile describes him as "not exactly a morning person, running the diner anyway." Genuinely funny. Genuinely normal. Tommy is probably fine.
+Storage B The building profile for Holt's lists two storage rooms — Storage A, which is just a normal storage room full of flour and industrial-sized cans of peaches, and Storage B. Storage B generates a small amount of revenue every week — around $200 — with no traffic data attached. No one goes in. No one comes out. It just generates money.
+Clicking on Storage B in the building profile shows only:
+"Storage B — Private. Not for public access."
+No further data. No family profile attached. No explanation.
+Late at night in the simulation, one car parks behind Holt's and stays until morning. The car belongs to no family profile in the game. It has no driver data. It simply appears, parks, and leaves before the morning commute begins. It happens roughly twice a week.
+What's Actually Happening Storage B is a dead drop. Has been since Dale Pitts opened the diner in 1951 — the same year the Carusos established La Dolce Via and the same year the letter from Naples told Antonio Caruso to establish the restaurant first, everything else follows.
+Holt's Diner is Caruso-adjacent. Not fully controlled by them — Tommy Pitts has no idea — but Storage B has been used for decades as a quiet exchange point. The $200 weekly revenue is a payment, essentially. A retainer for the use of the space. Whoever uses Storage B pays it automatically, has been paying it since Dale's time, and the money passes through the diner's accounts invisibly.
+The car at night is the pickup. Whatever gets dropped in Storage B gets collected. The driver has no profile because they're not from Millhaven. They come in, collect, leave. The entity has nothing to do with this one. It's just the Caruso operation having a longer reach than the player initially understood.
+The Artifact A note found tucked under the diner's foundation tile during road work:
+"Dale — arrangement as discussed. Room in back, kept clear, one key only. Payment monthly, no questions, no names. Tell your kids it's for overflow inventory. Tell them not to open it. This works for everyone as long as it stays quiet. — G.C."
+G.C. Gerald Caruso. Dale Pitts and Gerald Caruso had an arrangement from the very beginning. The diner Tommy Pitts resents inheriting has been part of the operation longer than he's been alive.
+There's a second smaller note underneath the first, different handwriting, much more recent:
+"Tommy — don't read this. Seriously. Just leave the room locked. It's better for you."
+Tommy wrote that to himself. He found the original note. He decided not to know.
+
+Spice Meridian — The Oldest Place In Millhaven
+The Surface Opened last year by Priya Anand, late thirties, moved to Millhaven from Chicago. Enthusiastic, warm, throws herself into the community immediately — sponsors the school fundraiser, leaves good reviews for other local businesses, genuinely seems to love the town. Best lunch crowds of any non-Caruso restaurant. People line up. The food is exceptional.
+Her building profile notes she did extensive renovations before opening — "gutted the interior, modernized completely, kept the bones." The bones, it turns out, are very old.
+The Foundation Problem The tunnel dig artifact under Spice Meridian's location reveals foundations predating the current building by a significant margin. Then the building before that. Then another. The same floorplan, rebuilt repeatedly over decades — possibly over centuries.
+A geological survey note found at depth:
+"Subsurface examination of the Meridian Street site reveals an unusual formation — the building has been constructed, demolished, and reconstructed on this exact footprint a minimum of seven times based on stratified debris layers. The oldest layer contains materials inconsistent with North American construction of any period I can identify. I've sent samples to a colleague. Waiting on results."
+No follow-up document exists. The colleague never responded, or the response was never filed.
+Priya Anand Priya didn't choose Millhaven randomly. Her family profile, if examined carefully, shows her listed previous residence as Chicago — but her listed hometown, a separate field most players never notice, says "Millhaven." She was born here. Left as an infant. Has no memory of it.
+She came back because she found a recipe box in her late mother's belongings — handwritten recipes in a script she didn't recognize, on paper that felt very old, with a Millhaven address written on the inside lid. She followed it here. Opened the restaurant at that address almost by instinct.
+The recipes are extraordinary. She doesn't know where they came from. She's never been able to find the script's language of origin.
+What's Actually Happening The Spice Meridian site is one of the entity's oldest surface nodes — a feeding point that predates Millhaven entirely. The building has been rebuilt seven times because each iteration serves the same function: a place where people gather, eat, move through. The entity doesn't care what cuisine it is or what the building looks like. It just needs the flow.
+Priya was born here, absorbed something in her first months of life before her parents fled — her mother clearly knew something, kept the recipe box, never explained it, never came back. The recipes are a kind of encoded memory. Not supernatural exactly — more like her mother writing down everything she remembered about a place she escaped from, in a form she hoped her daughter would find useful rather than frightening.
+Priya feels completely at home in Millhaven. More at home than anywhere she's ever lived. She tells customers it's the light here, the pace of it. She can't explain it better than that.
+She's being retained. It's just starting. She's too new to notice yet.
+The Artifact That Ties It Together Found in the mountain near the eastern grid — a page from Voss's notebook, earlier than the supernatural entries, when he was still doing normal infrastructure surveys:
+"Meridian Street site flagged for road widening. Consulted building history — seven prior structures, oldest materials unidentifiable. Current tenant (Spice Meridian, opened recently) unaware of site history. Recommend leaving road widening plan as-is. Do not disturb foundation. Note to self: check if owner has local family connections."
+He checked. He found out about Priya's birth record. The next page of the notebook is one of the missing ones — blank, torn at the edge, like something was removed.
+Whatever Voss found out about Priya, he didn't write it down. Or someone didn't want it written down.
+
+El Camino — The Simple One
+After all of the above, El Camino should be a palate cleanser. Not everything needs a dark secret. The contrast makes it funnier and more human.
+The Surface Opened eight years ago by Jorge and Carmen Reyes, a married couple from San Antonio who moved to Millhaven because property was cheap and Carmen's sister lived nearby. Best margaritas in town. Loud on Friday nights. Their teenage daughter waitresses on weekends and is visibly embarrassed by it.
+The building profile is completely normal. Revenue fluctuates naturally with traffic. No anomalies. No strange artifacts nearby. The foundation is just a foundation.
+The Secret El Camino's big secret, discovered if the player clicks through the Reyes family profile obsessively:
+Carmen's listed workplace is El Camino. Jorge's listed workplace is El Camino. Their daughter's school is listed correctly as Millhaven High.
+Jorge's secondary income field — a data field most players never scroll to — lists: "Tuesday poker game, undisclosed location."
+That's it. That's the whole secret. Jorge plays poker on Tuesdays. He's been winning lately. Carmen suspects but hasn't said anything.
+There's a small artifact that can be found near the restaurant — a handwritten note under a nearby road tile that reads:
+"IOU $40 — Jorge. (He's annoyingly good at this.)"
+The handwriting matches the Millhaven chief of police.
+
+The Five Restaurants As A Set
+Stepping back they cover nicely distinct territory:
+La Dolce Via — organized crime, human evil, a murder that was never solved
+Golden Lotus — the entity, retention, a woman watching generations pass
+Holt's — the Caruso reach extending further than the player knew, and a man who chose not to know
+Spice Meridian — the entity's deep history, a woman being slowly absorbed without knowing it
+El Camino — just a nice family restaurant where the husband is good at poker
+Want to develop the family profiles and smaller residents next, or work on the artifact writing in proper in-game text format?
+Be able to find artifacts by just clicking on map on right tiles with inspect tool, normal click, or if you happen to build road over 

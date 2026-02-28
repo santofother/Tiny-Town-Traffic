@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(cd \"C:/Users/Santo/Documents/DU/Projects on my own/Tiny-Town-Traffic\" && sed -n '/<script>/,/<\\\\/script>/p' game.html | sed '1d;$d' > /tmp/check.js && node -c /tmp/check.js 2>&1)",
+      "Bash(cd \"C:/Users/Santo/Documents/DU/Projects on my own/Tiny-Town-Traffic\" && sed -n '/<script>/,/<\\\\/script>/p' game.html | sed '1d;$d' | head -n -1 > /tmp/check2.js && node -c /tmp/check2.js 2>&1)",
+      "Bash(cd \"C:/Users/Santo/Documents/DU/Projects on my own/Tiny-Town-Traffic\" && sed -n '/<script>/,/<\\\\/script>/p' game.html | sed '1d;$d' | head -n -1 > /tmp/check3.js && node -c /tmp/check3.js 2>&1)",
+      "Bash(cd:*)",
+      "Bash(sed:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
