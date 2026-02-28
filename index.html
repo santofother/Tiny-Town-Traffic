@@ -8,16 +8,50 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif;touch-action:none;user-select:none;}
 #gameCanvas{display:block;cursor:crosshair;}
-#mainMenu{position:fixed;top:0;left:0;width:100%;height:100%;background:linear-gradient(135deg,#1a1a2e 0%,#16213e 40%,#0f3460 70%,#1a3a5c 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;overflow:hidden;}
-#mainMenu::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 30% 80%,rgba(78,140,80,0.15) 0%,transparent 50%),radial-gradient(ellipse at 70% 20%,rgba(212,165,116,0.1) 0%,transparent 40%);pointer-events:none;}
-#mainMenu h1{font-size:3.5em;color:#e8d5b7;text-shadow:0 0 40px rgba(232,213,183,0.25),0 4px 20px rgba(232,213,183,0.3);margin-bottom:6px;letter-spacing:4px;animation:titlePulse 4s ease-in-out infinite;}
+#mainMenu{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;overflow:hidden;animation:skyDayNight 60s ease-in-out infinite;}
+@keyframes skyDayNight{
+0%{background:linear-gradient(180deg,#87ceeb 0%,#6bb3d9 30%,#4a90b8 60%,#3a7ca5 100%);}
+30%{background:linear-gradient(180deg,#87ceeb 0%,#6bb3d9 30%,#4a90b8 60%,#3a7ca5 100%);}
+40%{background:linear-gradient(180deg,#5b86c5 0%,#4a72a0 20%,#6b5b8a 50%,#8b6e7a 75%,#c4956a 100%);}
+50%{background:linear-gradient(180deg,#2c1810 0%,#6b3520 15%,#d4845a 35%,#e8a87c 55%,#8b4570 80%,#4a2040 100%);}
+60%{background:linear-gradient(180deg,#2d1b4e 0%,#4a2c6a 25%,#6d3a7a 45%,#3a2050 70%,#1a1028 100%);}
+70%{background:linear-gradient(180deg,#0f1a2e 0%,#1a2540 30%,#0d1520 70%,#080e18 100%);}
+88%{background:linear-gradient(180deg,#0d1b2a 0%,#1b2838 30%,#0d1520 60%,#080e18 100%);}
+94%{background:linear-gradient(180deg,#1a1520 0%,#2c1810 20%,#8b4513 45%,#d4845a 70%,#4a90b8 100%);}
+100%{background:linear-gradient(180deg,#87ceeb 0%,#6bb3d9 30%,#4a90b8 60%,#3a7ca5 100%);}
+}
+#mainMenu::before{content:'';position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 30% 80%,rgba(78,140,80,0.12) 0%,transparent 50%),radial-gradient(ellipse at 70% 20%,rgba(212,165,116,0.08) 0%,transparent 40%);pointer-events:none;}
+#mainMenu h1{font-size:3.5em;color:#e8d5b7;text-shadow:0 0 40px rgba(232,213,183,0.25),0 4px 20px rgba(232,213,183,0.3);margin-bottom:6px;letter-spacing:4px;animation:titlePulse 6s ease-in-out infinite;position:relative;z-index:2;}
 @keyframes titlePulse{0%,100%{text-shadow:0 0 40px rgba(232,213,183,0.25),0 4px 20px rgba(232,213,183,0.3);}50%{text-shadow:0 0 60px rgba(232,213,183,0.4),0 4px 30px rgba(232,213,183,0.5);}}
-#mainMenu .subtitle{color:#a89070;font-size:1.1em;margin-bottom:8px;font-style:italic;}
-#mainMenu .menu-icons{font-size:2em;margin-bottom:28px;letter-spacing:12px;animation:iconDrift 6s ease-in-out infinite;}
-@keyframes iconDrift{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
-.menu-btn{background:linear-gradient(135deg,#e8d5b7,#d4a574);border:none;padding:15px 50px;margin:8px;font-size:1.1em;border-radius:8px;cursor:pointer;color:#1a1a2e;font-weight:600;transition:all 0.3s;min-width:250px;}
-.menu-btn:hover{transform:scale(1.05);box-shadow:0 4px 20px rgba(232,213,183,0.4);}
+#mainMenu .subtitle{color:#a89070;font-size:1.1em;margin-bottom:8px;font-style:italic;position:relative;z-index:2;}
+#mainMenu .menu-icons{font-size:2em;margin-bottom:28px;letter-spacing:16px;display:flex;gap:4px;position:relative;z-index:2;}
+.menu-icon-char{display:inline-block;animation:iconWaveBob 4s ease-in-out infinite;}
+@keyframes iconWaveBob{0%,100%{transform:translateY(0);}35%,55%{transform:translateY(-6px);}}
+.menu-btn{border:none;padding:15px 50px;margin:8px;font-size:1.1em;border-radius:8px;cursor:pointer;font-weight:600;transition:all 0.3s;min-width:250px;position:relative;z-index:2;}
+.menu-btn:hover{transform:scale(1.05);}
 .menu-btn.secondary{background:linear-gradient(135deg,#4a6741,#3d5a35);color:#e8d5b7;}
+.menu-btn.secondary:hover{box-shadow:0 4px 20px rgba(78,140,80,0.4);}
+.menu-btn.btn-normal{background:linear-gradient(135deg,#e8d5b7,#d4a574);color:#1a1a2e;}
+.menu-btn.btn-normal:hover{box-shadow:0 4px 20px rgba(232,213,183,0.5);}
+.menu-btn.btn-endless{background:linear-gradient(135deg,#7eb8da,#4a90b8);color:#0d1b2a;}
+.menu-btn.btn-endless:hover{box-shadow:0 4px 20px rgba(126,184,218,0.5);}
+.menu-btn.btn-creative{background:linear-gradient(135deg,#c49bde,#9b6bbf);color:#1a102e;}
+.menu-btn.btn-creative:hover{box-shadow:0 4px 20px rgba(196,155,222,0.5);}
+.menu-btn .btn-icon{display:inline-block;transition:transform 0.3s;margin-right:4px;}
+.menu-btn:hover .btn-icon{animation:btnIconWiggle 0.8s ease-in-out infinite;}
+@keyframes btnIconWiggle{0%,100%{transform:rotate(0deg);}25%{transform:rotate(-8deg);}75%{transform:rotate(8deg);}}
+.iso-cube-wrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-58%);z-index:1;perspective:600px;pointer-events:none;}
+.iso-cube{width:120px;height:120px;position:relative;transform-style:preserve-3d;animation:cubeRotate 30s linear infinite;}
+@keyframes cubeRotate{0%{transform:rotateX(-25deg) rotateY(0deg);}100%{transform:rotateX(-25deg) rotateY(360deg);}}
+.iso-cube-face{position:absolute;width:120px;height:120px;border:2px solid rgba(212,165,116,0.25);border-radius:4px;opacity:0.5;}
+.iso-cube-face.front{transform:translateZ(60px);background:repeating-linear-gradient(45deg,rgba(140,120,90,0.3),rgba(140,120,90,0.3) 8px,rgba(100,90,70,0.3) 8px,rgba(100,90,70,0.3) 16px);}
+.iso-cube-face.back{transform:rotateY(180deg) translateZ(60px);background:repeating-linear-gradient(45deg,rgba(120,100,80,0.25),rgba(120,100,80,0.25) 8px,rgba(90,80,60,0.25) 8px,rgba(90,80,60,0.25) 16px);}
+.iso-cube-face.right{transform:rotateY(90deg) translateZ(60px);background:repeating-linear-gradient(-45deg,rgba(130,110,85,0.3),rgba(130,110,85,0.3) 8px,rgba(95,85,65,0.3) 8px,rgba(95,85,65,0.3) 16px);}
+.iso-cube-face.left{transform:rotateY(-90deg) translateZ(60px);background:repeating-linear-gradient(-45deg,rgba(110,95,75,0.25),rgba(110,95,75,0.25) 8px,rgba(80,70,55,0.25) 8px,rgba(80,70,55,0.25) 16px);}
+.iso-cube-face.top{transform:rotateX(90deg) translateZ(60px);background:linear-gradient(135deg,rgba(78,140,80,0.35),rgba(65,120,60,0.25));border-color:rgba(78,140,80,0.3);}
+.iso-cube-face.bottom{transform:rotateX(-90deg) translateZ(60px);background:rgba(40,35,30,0.3);}
+#loreTicker{position:absolute;bottom:20px;left:0;width:100%;overflow:hidden;z-index:2;pointer-events:none;}
+#loreTickerInner{display:inline-block;white-space:nowrap;animation:tickerScroll 45s linear infinite;color:rgba(168,144,112,0.6);font-size:12px;font-style:italic;letter-spacing:0.5px;padding:6px 0;}
 #hud{position:fixed;top:10px;left:10px;z-index:100;pointer-events:none;}
 #hud>div{pointer-events:auto;}
 .hud-bar{background:rgba(26,26,46,0.88);border-radius:10px;padding:8px 14px;color:#e8d5b7;font-size:13px;display:flex;gap:14px;align-items:center;backdrop-filter:blur(6px);border:1px solid rgba(232,213,183,0.15);margin-bottom:6px;}
@@ -97,20 +131,28 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 #artifactPopup .dismiss-btn{background:linear-gradient(135deg,#4a6741,#3d5a35);color:#e8d5b7;border:none;padding:6px 18px;border-radius:6px;cursor:pointer;font-size:12px;transition:all 0.2s;}
 #artifactPopup .dismiss-btn:hover{transform:scale(1.05);box-shadow:0 2px 10px rgba(78,140,80,0.3);}
 @keyframes artifactSlideDown{0%{opacity:0;transform:translateX(-50%) translateY(-30px);}100%{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes tickerScroll{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
 </style>
 </head>
 <body>
 <div id="mainMenu">
+<canvas id="menuBgCanvas" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;"></canvas>
+<div class="iso-cube-wrap"><div class="iso-cube">
+<div class="iso-cube-face front"></div><div class="iso-cube-face back"></div>
+<div class="iso-cube-face right"></div><div class="iso-cube-face left"></div>
+<div class="iso-cube-face top"></div><div class="iso-cube-face bottom"></div>
+</div></div>
 <h1>Tiny Town Traffic</h1>
 <p class="subtitle">Build roads. Grow towns. Survive the commute.</p>
-<div class="menu-icons">🏘️ 🚗 🛣️ 🚦 🏢 🌉</div>
-<button class="menu-btn" onclick="startGame('normal')">🏘️ New Game</button>
-<button class="menu-btn" onclick="startGame('endless')">♾️ Endless Mode</button>
-<button class="menu-btn" onclick="startGame('creative')">🎨 Creative Mode</button>
-<button class="menu-btn secondary" onclick="loadGame()">💾 Continue</button>
-<button class="menu-btn secondary" onclick="showSettings()">⚙️ Settings</button>
-<button class="menu-btn secondary" onclick="showTutorial()">📖 How to Play</button>
-<p style="color:#6a7a8a;margin-top:30px;font-size:11px;">A cozy traffic sim — Santo's project</p>
+<div class="menu-icons" id="menuIcons"></div>
+<button class="menu-btn btn-normal" onclick="startGame('normal')"><span class="btn-icon">🏘️</span> New Game</button>
+<button class="menu-btn btn-endless" onclick="startGame('endless')"><span class="btn-icon">♾️</span> Endless Mode</button>
+<button class="menu-btn btn-creative" onclick="startGame('creative')"><span class="btn-icon">🎨</span> Creative Mode</button>
+<button class="menu-btn secondary" onclick="loadGame()"><span class="btn-icon">💾</span> Continue</button>
+<button class="menu-btn secondary" onclick="showSettings()"><span class="btn-icon">⚙️</span> Settings</button>
+<button class="menu-btn secondary" onclick="showTutorial()"><span class="btn-icon">📖</span> How to Play</button>
+<p style="color:#6a7a8a;margin-top:30px;font-size:11px;position:relative;z-index:2;">A cozy traffic sim — Santo's project</p>
+<div id="loreTicker"><div id="loreTickerInner"></div></div>
 </div>
 
 <canvas id="gameCanvas"></canvas>
@@ -334,6 +376,285 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 </div>
 
 <script>
+// ===== MAIN MENU INIT =====
+(function initMainMenu() {
+// Wave-bobbing emoji icons
+const icons = ['🏘️','🚗','🛣️','🚦','🏢','🌉'];
+const container = document.getElementById('menuIcons');
+if (container) {
+icons.forEach((icon, i) => {
+const span = document.createElement('span');
+span.className = 'menu-icon-char';
+span.textContent = icon;
+span.style.animationDelay = (i * 0.5) + 's';
+container.appendChild(span);
+});
+}
+// Lore ticker tape
+const ticker = document.getElementById('loreTickerInner');
+if (ticker) {
+const tips = [
+'Legend says the first road was paved by a wanderer who just wanted to find a good taco.',
+'Old miners speak of golden veins hidden deep within the mountains...',
+'They say if you build enough roads, the town spirit Izzy blesses your treasury.',
+'The previous Transport Commissioner vanished under unclear circumstances.',
+'Certain old families have lived here since before the roads were built. They never seem to age.',
+'The bedrock underneath the town has structure. Almost like architecture.',
+'Rosa Caruso\'s tiramisu is the best in town. Nobody asks how she stays so young.',
+'A child\'s drawing found under a road shows a town with roads spreading outward like roots.',
+'The roads didn\'t bring people here. Something else did.',
+'Elias Holt described the valley as "almost eager to be connected."',
+'The Golden Lotus has reported exactly $4,847.00 in revenue every single week since 1941.',
+'Some roads, when demolished, reveal ghost asphalt underneath — from a network that predates the town.'
+];
+// Shuffle and join with separator
+const shuffled = tips.sort(() => Math.random() - 0.5);
+ticker.textContent = shuffled.map(t => '\u00a0\u00a0\u00a0\u2022 ' + t).join('\u00a0\u00a0\u00a0\u00a0\u00a0');
+}
+// ===== ISOMETRIC CITY BACKGROUND WITH DRIVING CARS =====
+const bgCanvas = document.getElementById('menuBgCanvas');
+if (bgCanvas) {
+const bctx = bgCanvas.getContext('2d');
+const TW = 40; // tile width
+const TH = 20; // tile height
+const GRID_W = 28;
+const GRID_H = 28;
+// Seeded random for consistent city layout
+let _seed = 42;
+function srand() { _seed = (_seed * 16807 + 0) % 2147483647; return (_seed & 0x7fffffff) / 0x7fffffff; }
+// City grid: 0=grass, 1=road, 2=building, 3=water, 4=park
+const grid = [];
+for (let y = 0; y < GRID_H; y++) { grid[y] = []; for (let x = 0; x < GRID_W; x++) grid[y][x] = 0; }
+// Lay out roads in a loose grid pattern with some variation
+const roadRowsBase = [4, 8, 13, 18, 23];
+const roadColsBase = [3, 8, 13, 18, 23];
+const roadRows = roadRowsBase.filter(() => srand() > 0.15);
+const roadCols = roadColsBase.filter(() => srand() > 0.15);
+roadRows.forEach(ry => { for (let x = 0; x < GRID_W; x++) if (ry < GRID_H) grid[ry][x] = 1; });
+roadCols.forEach(cx => { for (let y = 0; y < GRID_H; y++) if (cx < GRID_W) grid[y][cx] = 1; });
+// Add some short side streets
+for (let i = 0; i < 8; i++) {
+const sx = Math.floor(srand() * GRID_W);
+const sy = Math.floor(srand() * GRID_H);
+const horiz = srand() > 0.5;
+const len = 2 + Math.floor(srand() * 4);
+for (let j = 0; j < len; j++) {
+const nx = horiz ? sx + j : sx;
+const ny = horiz ? sy : sy + j;
+if (nx >= 0 && nx < GRID_W && ny >= 0 && ny < GRID_H) grid[ny][nx] = 1;
+}
+}
+// Place buildings next to roads
+for (let y = 1; y < GRID_H - 1; y++) {
+for (let x = 1; x < GRID_W - 1; x++) {
+if (grid[y][x] !== 0) continue;
+const nearRoad = grid[y-1][x]===1||grid[y+1][x]===1||grid[y][x-1]===1||grid[y][x+1]===1;
+if (nearRoad && srand() > 0.45) grid[y][x] = 2;
+}
+}
+// A few water tiles and parks
+for (let i = 0; i < 3; i++) {
+const wx = 2 + Math.floor(srand() * (GRID_W - 4));
+const wy = 2 + Math.floor(srand() * (GRID_H - 4));
+const ws = 2 + Math.floor(srand() * 3);
+for (let dy = 0; dy < ws; dy++) for (let dx = 0; dx < ws; dx++) {
+const nx = wx+dx, ny = wy+dy;
+if (nx < GRID_W && ny < GRID_H && grid[ny][nx] === 0) grid[ny][nx] = 3;
+}
+}
+for (let i = 0; i < 4; i++) {
+const px = 1 + Math.floor(srand() * (GRID_W - 2));
+const py = 1 + Math.floor(srand() * (GRID_H - 2));
+if (grid[py][px] === 0) grid[py][px] = 4;
+if (px+1<GRID_W && grid[py][px+1]===0) grid[py][px+1]=4;
+}
+// Collect road tiles for car paths
+const roadTiles = [];
+for (let y = 0; y < GRID_H; y++) for (let x = 0; x < GRID_W; x++) if (grid[y][x] === 1) roadTiles.push({x, y});
+// Build adjacency for pathfinding
+function roadNeighbors(x, y) {
+const n = [];
+if (x>0 && grid[y][x-1]===1) n.push({x:x-1,y});
+if (x<GRID_W-1 && grid[y][x+1]===1) n.push({x:x+1,y});
+if (y>0 && grid[y-1][x]===1) n.push({x,y:y-1});
+if (y<GRID_H-1 && grid[y+1][x]===1) n.push({x,y:y+1});
+return n;
+}
+// Building properties (seeded)
+const buildingProps = [];
+for (let y = 0; y < GRID_H; y++) for (let x = 0; x < GRID_W; x++) {
+if (grid[y][x] === 2) {
+const h = 8 + Math.floor(srand() * 28);
+const hue = srand();
+let r, g, b;
+if (hue < 0.25) { r=180+srand()*40; g=140+srand()*30; b=100+srand()*20; } // warm
+else if (hue < 0.5) { r=140+srand()*30; g=150+srand()*30; b=170+srand()*40; } // cool
+else if (hue < 0.75) { r=170+srand()*40; g=130+srand()*30; b=130+srand()*30; } // reddish
+else { r=160+srand()*30; g=170+srand()*30; b=150+srand()*20; } // green-ish
+buildingProps.push({x, y, h, r:Math.floor(r), g:Math.floor(g), b:Math.floor(b)});
+}
+}
+// Cars
+const carColors = ['#e85454','#5485e8','#e8d454','#54c878','#e87830','#c854d8','#54bce8','#e8e8e8'];
+const cars = [];
+function spawnCar() {
+const start = roadTiles[Math.floor(Math.random() * roadTiles.length)];
+const color = carColors[Math.floor(Math.random() * carColors.length)];
+// Pick a direction and follow road
+const car = { x: start.x, y: start.y, tx: start.x, ty: start.y, progress: 0, color, speed: 0.008 + Math.random() * 0.012, path: [start], dead: false };
+// Build a random path by walking along roads
+let cx = start.x, cy = start.y, prevX = -1, prevY = -1;
+const pathLen = 8 + Math.floor(Math.random() * 20);
+for (let i = 0; i < pathLen; i++) {
+const neighbors = roadNeighbors(cx, cy).filter(n => !(n.x === prevX && n.y === prevY));
+if (neighbors.length === 0) break;
+const next = neighbors[Math.floor(Math.random() * neighbors.length)];
+prevX = cx; prevY = cy;
+cx = next.x; cy = next.y;
+car.path.push({x: cx, y: cy});
+}
+car.pathIdx = 0;
+car.tx = car.path[0].x; car.ty = car.path[0].y;
+if (car.path.length > 1) { car.tx = car.path[1].x; car.ty = car.path[1].y; car.pathIdx = 1; }
+return car;
+}
+for (let i = 0; i < 14; i++) cars.push(spawnCar());
+// Iso helpers
+function toIso(x, y, ox, oy) {
+return { sx: (x - y) * TW/2 + ox, sy: (x + y) * TH/2 + oy };
+}
+function drawDiamond(ctx2, sx, sy, w, h, color) {
+ctx2.fillStyle = color;
+ctx2.beginPath();
+ctx2.moveTo(sx, sy - h/2);
+ctx2.lineTo(sx + w/2, sy);
+ctx2.lineTo(sx, sy + h/2);
+ctx2.lineTo(sx - w/2, sy);
+ctx2.closePath();
+ctx2.fill();
+}
+function drawIsoBlock(ctx2, sx, sy, w, h, blockH, r, g, b, a) {
+// Top
+ctx2.fillStyle = `rgba(${r},${g},${b},${a})`;
+ctx2.beginPath();
+ctx2.moveTo(sx, sy - blockH - h/2);
+ctx2.lineTo(sx + w/2, sy - blockH);
+ctx2.lineTo(sx, sy - blockH + h/2);
+ctx2.lineTo(sx - w/2, sy - blockH);
+ctx2.closePath(); ctx2.fill();
+// Right face
+const dr = Math.max(0,r-40), dg = Math.max(0,g-40), db = Math.max(0,b-40);
+ctx2.fillStyle = `rgba(${dr},${dg},${db},${a})`;
+ctx2.beginPath();
+ctx2.moveTo(sx + w/2, sy - blockH);
+ctx2.lineTo(sx, sy - blockH + h/2);
+ctx2.lineTo(sx, sy + h/2);
+ctx2.lineTo(sx + w/2, sy);
+ctx2.closePath(); ctx2.fill();
+// Left face
+const lr = Math.max(0,r-65), lg = Math.max(0,g-65), lb = Math.max(0,b-65);
+ctx2.fillStyle = `rgba(${lr},${lg},${lb},${a})`;
+ctx2.beginPath();
+ctx2.moveTo(sx - w/2, sy - blockH);
+ctx2.lineTo(sx, sy - blockH + h/2);
+ctx2.lineTo(sx, sy + h/2);
+ctx2.lineTo(sx - w/2, sy);
+ctx2.closePath(); ctx2.fill();
+}
+let bgAnimId = null;
+function renderBg() {
+bgAnimId = requestAnimationFrame(renderBg);
+if (document.getElementById('mainMenu').style.display === 'none') { cancelAnimationFrame(bgAnimId); bgAnimId = null; return; }
+const dpr = window.devicePixelRatio || 1;
+bgCanvas.width = bgCanvas.clientWidth * dpr;
+bgCanvas.height = bgCanvas.clientHeight * dpr;
+bctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+const cw = bgCanvas.clientWidth, ch = bgCanvas.clientHeight;
+bctx.clearRect(0, 0, cw, ch);
+// Center the grid
+const ox = cw / 2;
+const oy = ch / 2 - (GRID_H * TH / 2) + 40;
+const alpha = 0.35; // subtle behind UI
+bctx.globalAlpha = alpha;
+// Draw terrain tiles
+for (let y = 0; y < GRID_H; y++) {
+for (let x = 0; x < GRID_W; x++) {
+const p = toIso(x, y, ox, oy);
+const t = grid[y][x];
+let color;
+if (t === 1) color = 'rgb(145,140,130)'; // road grey
+else if (t === 2) continue; // buildings drawn separately
+else if (t === 3) color = 'rgb(55,140,195)'; // water
+else if (t === 4) color = 'rgb(60,160,50)'; // park - brighter green
+else { // grass with variation
+const n = ((Math.sin(x*12.98+y*78.23)*43758.5)%1)*0.08;
+color = `rgb(${65+Math.floor(n*40)},${155+Math.floor(n*25)},${50+Math.floor(n*20)})`;
+}
+drawDiamond(bctx, p.sx, p.sy, TW, TH, color);
+// Road markings
+if (t === 1) {
+bctx.fillStyle = 'rgba(220,210,190,0.3)';
+// Check if horizontal or vertical road for center line
+const hRoad = (x>0 && grid[y][x-1]===1) || (x<GRID_W-1 && grid[y][x+1]===1);
+const vRoad = (y>0 && grid[y-1][x]===1) || (y<GRID_H-1 && grid[y+1][x]===1);
+if (hRoad && !vRoad) {
+bctx.fillRect(p.sx - TW*0.15, p.sy - 1, TW*0.3, 1.5);
+} else if (vRoad && !hRoad) {
+bctx.fillRect(p.sx - 0.75, p.sy - TH*0.15, 1.5, TH*0.3);
+}
+}
+}
+}
+// Draw buildings (sorted by iso depth)
+buildingProps.forEach(bp => {
+const p = toIso(bp.x, bp.y, ox, oy);
+const bw = TW * 0.75, bh = TH * 0.75;
+drawIsoBlock(bctx, p.sx, p.sy, bw, bh, bp.h, bp.r, bp.g, bp.b, 1.0);
+// Window dots
+bctx.fillStyle = 'rgba(255,240,180,0.4)';
+const floors = Math.floor(bp.h / 7);
+for (let f = 0; f < floors; f++) {
+const wy = p.sy - 4 - f * 7;
+bctx.fillRect(p.sx + TW*0.08, wy, 2, 2);
+bctx.fillRect(p.sx + TW*0.2, wy, 2, 2);
+}
+});
+// Update and draw cars
+bctx.globalAlpha = alpha * 1.4;
+cars.forEach(car => {
+if (car.dead) return;
+car.progress += car.speed;
+if (car.progress >= 1) {
+car.progress = 0;
+car.x = car.tx; car.y = car.ty;
+car.pathIdx++;
+if (car.pathIdx >= car.path.length) { car.dead = true; return; }
+car.tx = car.path[car.pathIdx].x;
+car.ty = car.path[car.pathIdx].y;
+}
+const cx = car.x + (car.tx - car.x) * car.progress;
+const cy = car.y + (car.ty - car.y) * car.progress;
+const p = toIso(cx, cy, ox, oy);
+// Shadow
+bctx.fillStyle = 'rgba(0,0,0,0.2)';
+drawDiamond(bctx, p.sx + 1, p.sy + 2, 8, 4, 'rgba(0,0,0,0.2)');
+// Car body
+drawDiamond(bctx, p.sx, p.sy - 2, 8, 4, car.color);
+// Roof highlight
+drawDiamond(bctx, p.sx, p.sy - 3.5, 5, 2.5, 'rgba(255,255,255,0.2)');
+});
+bctx.globalAlpha = 1;
+// Respawn dead cars
+cars.forEach((car, i) => { if (car.dead) cars[i] = spawnCar(); });
+}
+renderBg();
+// Restart bg animation when menu reappears
+const menuEl = document.getElementById('mainMenu');
+new MutationObserver(() => {
+if (menuEl.style.display !== 'none' && !bgAnimId) renderBg();
+}).observe(menuEl, {attributes: true, attributeFilter: ['style']});
+}
+})();
 // ===== TINY TOWN TRAFFIC — Complete Game Engine =====
 const C = document.getElementById('gameCanvas');
 const ctx = C.getContext('2d');
