@@ -81,6 +81,51 @@ highlightTool: 'road_2lane',
 highlightBuildings: null
 },
 {
+id: 'artifact_road',
+title: '🗺️ Artifacts & Clues',
+text: 'Artifacts can be found by placing roads, clicking terrain with Inspect, or exploring near buildings.<br><br>Place <b>any road tile</b> to uncover the first clue.',
+hint: 'Place a road to find a clue',
+check: 'tutorial_artifact_1',
+highlightTool: null,
+highlightBuildings: null
+},
+{
+id: 'artifact_inspect',
+title: '🔍 Using Inspect',
+text: 'Select the <b>Inspect</b> tool and click any tile on the map to search for clues.<br><br>Find the second clue using Inspect.',
+hint: 'Inspect a tile to find a clue',
+check: 'tutorial_artifact_2',
+highlightTool: 'inspect',
+highlightBuildings: null
+},
+{
+id: 'pin_evidence',
+title: '📌 Pin the Evidence',
+text: 'Open your <b>Lore Journal</b> (press <b>N</b> or click 📜 in the HUD), go to the <b>Journal</b> tab, and pin both clues about the bear using the 📌 button.',
+hint: 'Pin both clues in the journal',
+check: 'tutorial_both_pinned',
+highlightTool: null,
+highlightBuildings: null
+},
+{
+id: 'draw_connection',
+title: '🔗 Connect the Evidence',
+text: 'Go to the <b>Mystery Board</b> tab (press <b>N</b> to open the Journal if closed). Click one evidence card, then click the other to draw a connection between them.',
+hint: 'Connect the two clues',
+check: 'tutorial_connected',
+highlightTool: null,
+highlightBuildings: null
+},
+{
+id: 'solve_deduction',
+title: '🧩 Solve the Case',
+text: 'A deduction challenge has unlocked in the Mystery Board. Read the question and choose your answer.',
+hint: 'Solve the mystery',
+check: 'tutorial_deduction_solved',
+highlightTool: null,
+highlightBuildings: null
+},
+{
 id: 'complete',
 title: '🎉 Tutorial Complete!',
 text: 'You\'ve learned the basics!<br><br>• Connect buildings with roads so families can commute<br>• Faster roads reduce travel time<br>• Inspect buildings to check worker status<br>• Watch your budget in Normal mode!<br><br>Click <b>Finish</b> to keep playing in this sandbox, or go to <b>Settings → Main Menu</b> to start a real game.',
@@ -160,8 +205,54 @@ document.querySelectorAll('.tool-btn.tut-highlight').forEach(b => b.classList.re
 showNotification('Tutorial complete! You\'re ready to build.');
 }
 
+function giveTutorialArtifact(id) {
+if (!G || G.artifactsFound.includes(id)) return;
+const art = ARTIFACT_POOL.tutorial.find(a => a.id === id);
+if (!art) return;
+G.artifactsFound.push(id);
+addToJournal('legends', art.text, []);
+showArtifactPopup(art.title, art.text);
+}
+
+function checkTutorialArtifact1() {
+return G.artifactsFound.includes('teddy_note_1');
+}
+
+function checkTutorialArtifact2() {
+return G.artifactsFound.includes('teddy_note_2');
+}
+
+function checkTutorialBothPinned() {
+if (!G.mysteryBoard) return false;
+const art1 = ARTIFACT_POOL.tutorial.find(a => a.id === 'teddy_note_1');
+const art2 = ARTIFACT_POOL.tutorial.find(a => a.id === 'teddy_note_2');
+if (!art1 || !art2) return false;
+const pinnedTexts = G.mysteryBoard.pinnedEntries.map(p => p.text);
+return pinnedTexts.includes(art1.text) && pinnedTexts.includes(art2.text);
+}
+
+function checkTutorialConnected() {
+if (!G.mysteryBoard || G.mysteryBoard.connections.length === 0) return false;
+const art1 = ARTIFACT_POOL.tutorial.find(a => a.id === 'teddy_note_1');
+const art2 = ARTIFACT_POOL.tutorial.find(a => a.id === 'teddy_note_2');
+if (!art1 || !art2) return false;
+return G.mysteryBoard.connections.some(c =>
+(c.entryA === art1.text && c.entryB === art2.text) ||
+(c.entryA === art2.text && c.entryB === art1.text)
+);
+}
+
+function checkTutorialDeductionSolved() {
+return G.mysteryBoard && G.mysteryBoard.solvedDeductions.includes('mystery_of_the_teddy_bear');
+}
+
 function checkTutorialProgress() {
 if (!G || !G.tutorial) return;
+// Stage tutorial artifacts on first tick
+if (G.tutorial && !G.tutorialArtifactsGiven) {
+G.tutorialArtifactsGiven = true;
+G._pendingTutorialArtifact = 'teddy_note_1';
+}
 const step = TUTORIAL_STEPS[G.tutorial.step];
 if (!step || !step.check) return;
 
@@ -194,6 +285,33 @@ case 'twolane_placed': {
 let has2lane = false;
 G.roads.forEach(r => { if (r.type === 'road_2lane') has2lane = true; });
 satisfied = has2lane;
+break;
+}
+case 'tutorial_artifact_1': {
+// Give artifact when a road was placed since this step became active
+const prevRoadCount = G.tutorial._artifactStepRoads;
+if (prevRoadCount === undefined) G.tutorial._artifactStepRoads = G.roads.size;
+if (G.roads.size > G.tutorial._artifactStepRoads && G._pendingTutorialArtifact === 'teddy_note_1') {
+giveTutorialArtifact('teddy_note_1');
+delete G._pendingTutorialArtifact;
+}
+satisfied = checkTutorialArtifact1();
+break;
+}
+case 'tutorial_artifact_2': {
+satisfied = checkTutorialArtifact2();
+break;
+}
+case 'tutorial_both_pinned': {
+satisfied = checkTutorialBothPinned();
+break;
+}
+case 'tutorial_connected': {
+satisfied = checkTutorialConnected();
+break;
+}
+case 'tutorial_deduction_solved': {
+satisfied = checkTutorialDeductionSolved();
 break;
 }
 }

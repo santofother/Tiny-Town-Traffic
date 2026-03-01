@@ -724,6 +724,7 @@ member.atWork = true;
 const arrivalHour = getTimeOfDay();
 const shiftStart = member.nightShift ? NIGHT_SHIFT_START : DAY_SHIFT_START;
 member.arrivedOnTime = arrivalHour <= shiftStart;
+member.minutesLate = arrivalHour > shiftStart ? Math.round((arrivalHour - shiftStart) * 60) : 0;
 }
 G.commuteStats.officeTotal++;
 const arrHour = getTimeOfDay();
@@ -1182,13 +1183,15 @@ G.commuteStats = { officeTotal:0, officeLate:0, restaurantTotal:0, restaurantLat
 // Check unconnected houses — penalties
 let unconnected = 0;
 G.families.forEach(f => {
+// Skip Voss house from disconnection penalties unless Voss has returned
+const house = G.buildings.find(b => b.id === f.houseId);
+if (house && house.vossHouse && !G.vossReturned) { f.disconnectedDays = 0; return; }
 if (f.houseTile && !hasNearbyRoad(f.houseTile.x, f.houseTile.y)) {
 unconnected++;
 // Family loses happiness & may leave
 f.disconnectedDays = (f.disconnectedDays || 0) + 1;
 if (f.disconnectedDays >= 5 && Math.random() < 0.15) {
 // Family abandons house
-const house = G.buildings.find(b => b.id === f.houseId);
 if (house) house.abandoned = true;
 f.members = []; // family leaves
 }
@@ -1296,6 +1299,7 @@ if (ghostCar.path) G.vehicles.push(ghostCar);
 if (hour < 22) G.ghostCarSpawned = false;
 // Compute network completion for potential game over
 G.networkCompletion = Math.min(99, Math.round((G.roads.size + G.elevatedRoads.size) / (MAP_W * MAP_H * 0.3) * 100));
+updateLateReport('day');
 updateHUD();
 }
 
@@ -1383,11 +1387,12 @@ const roadCount = G.roads.size + G.elevatedRoads.size;
 const upkeepCost = roadCount * UPKEEP_COST[G.upkeepTier];
 // Maintenance building cost
 const maintCost = G.maintenanceBuildings.length * 30;
-// Family population tax: $5 per connected family
-const connectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
+// Family population tax: $8 per connected family
+const isVossExcluded = (f) => { const h = G.buildings.find(b => b.id === f.houseId); return h && h.vossHouse && !G.vossReturned; };
+const connectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && !isVossExcluded(f) && hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
 const familyTax = connectedFamilies * 8;
 // Unconnected house penalty: $20 per disconnected family (emergency services, complaints)
-const disconnectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && !hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
+const disconnectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && !isVossExcluded(f) && !hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
 const disconnectPenalty = disconnectedFamilies * 20;
 // Remove abandoned families
 G.families = G.families.filter(f => f.members.length > 0);
@@ -1475,6 +1480,7 @@ placeRandomBuilding(sType, cx, cy, pr);
 // Reassign families for new buildings
 assignFamilies();
 computeDepartureTicks();
+updateLateReport('week');
 }
 
 // ===== UI =====

@@ -138,6 +138,7 @@ function render() {
 C.width = window.innerWidth;
 C.height = window.innerHeight;
 ctx.globalAlpha = 1; // safety reset
+if (!G.terrain || G.terrain.length === 0) return; // terrain not yet generated
 // Sky
 ctx.fillStyle = getSkyColor();
 ctx.fillRect(0, 0, C.width, C.height);
@@ -752,7 +753,23 @@ else if (G.selectedTool && (G.selectedTool.startsWith('road') || G.selectedTool.
 const mp = screenToWorld(mouseX, mouseY);
 const sx = G.straightStart.x, sy = G.straightStart.y;
 const ex = mp.x, ey = mp.y;
-const tiles = getStraightRoadTiles(sx, sy, ex, ey);
+const baseTiles = getStraightRoadTiles(sx, sy, ex, ey);
+// For wide roads (multi-lane, highway), add parallel tiles
+const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway');
+let tiles = baseTiles;
+if (isWide && baseTiles.length >= 2) {
+tiles = [];
+// Determine drag direction from the line: mostly horizontal or mostly vertical
+const lineDx = ex - sx, lineDy = ey - sy;
+const dir = Math.abs(lineDx) >= Math.abs(lineDy) ? 'h' : 'v';
+for (const t of baseTiles) {
+tiles.push(t);
+// Widen perpendicular to drag direction
+const nx = dir === 'h' ? t.x : t.x + 1;
+const ny = dir === 'h' ? t.y + 1 : t.y;
+tiles.push({x: nx, y: ny});
+}
+}
 if (tiles.length > 0) {
 const placeable = [];
 for (const t of tiles) {
@@ -764,8 +781,12 @@ drawTileSurface(psp.x, psp.y, canPlace ? '#4ea050' : '#cc5544', tw * 0.7, th * 0
 ctx.globalAlpha = 1;
 if (canPlace) placeable.push(t);
 }
-// Cost preview
-const cost = placeable.length * (ROAD_COSTS[G.selectedTool] || 25);
+// Cost preview — for highways flanking tiles are free, count only base tiles
+const costTiles = isWide ? placeable.filter((t, i) => {
+// Base tiles are at even indices in the expanded array
+return baseTiles.some(bt => bt.x === t.x && bt.y === t.y);
+}).length : placeable.length;
+const cost = costTiles * (ROAD_COSTS[G.selectedTool] || 25);
 const midTile = tiles[Math.floor(tiles.length / 2)];
 const midSp = worldToScreen(midTile.x, midTile.y);
 ctx.fillStyle = 'rgba(26,26,46,0.85)';

@@ -60,10 +60,40 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 .speed-btn{background:rgba(232,213,183,0.15);border:1px solid rgba(232,213,183,0.3);color:#e8d5b7;padding:4px 10px;border-radius:5px;cursor:pointer;font-size:12px;transition:all 0.2s;}
 .speed-btn.active{background:rgba(232,213,183,0.4);border-color:#e8d5b7;}
 .speed-btn:hover{background:rgba(232,213,183,0.3);}
+.collapse-btn{min-width:36px;min-height:36px;background:rgba(26,26,46,0.88);border:1px solid rgba(232,213,183,0.25);color:#a89070;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;pointer-events:auto;transition:background 0.2s;flex-shrink:0;}
+.collapse-btn:hover{background:rgba(232,213,183,0.2);color:#e8d5b7;}
+.hud-bar{transition:opacity 0.25s,max-width 0.3s;}
+.hud-bar.collapsed .hud-inner{display:none;}
+.hud-inner{display:flex;gap:14px;align-items:center;overflow:hidden;transition:opacity 0.25s;}
 #sidePanel{position:fixed;top:10px;right:10px;width:200px;z-index:100;display:flex;flex-direction:column;gap:6px;max-height:calc(100vh - 20px);overflow-y:auto;scrollbar-width:thin;}
+#sidePanel.collapsed{width:auto;overflow:visible;}
+#sidePanel.collapsed .panel-section{display:none;}
 #sidePanel::-webkit-scrollbar{width:4px;}
 #sidePanel::-webkit-scrollbar-thumb{background:rgba(232,213,183,0.3);border-radius:2px;}
 .panel-section{background:rgba(26,26,46,0.88);border-radius:10px;padding:10px;color:#e8d5b7;backdrop-filter:blur(6px);border:1px solid rgba(232,213,183,0.15);}
+#lateReportPanel{position:fixed;top:10px;right:220px;width:400px;max-height:calc(100vh - 20px);overflow-y:auto;z-index:150;background:rgba(26,26,46,0.95);border:1px solid rgba(232,213,183,0.2);border-radius:12px;padding:16px;color:#e8d5b7;font-size:13px;scrollbar-width:thin;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+#lateReportPanel h2{color:#d4a574;font-size:16px;margin:0 0 10px 0;}
+.lr-tabs{display:flex;gap:6px;margin-bottom:8px;}
+.lr-tab{background:rgba(232,213,183,0.1);border:1px solid rgba(232,213,183,0.2);color:#a89070;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:all 0.2s;}
+.lr-tab.active{background:rgba(232,213,183,0.25);color:#e8d5b7;border-color:rgba(232,213,183,0.4);}
+.lr-tab:hover{background:rgba(232,213,183,0.18);}
+.lr-toggle{display:flex;gap:6px;margin-bottom:10px;}
+.lr-toggle-btn{background:rgba(232,213,183,0.08);border:1px solid rgba(232,213,183,0.15);color:#8a7a60;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;transition:all 0.2s;}
+.lr-toggle-btn.active{background:rgba(212,165,116,0.2);color:#d4a574;border-color:rgba(212,165,116,0.4);}
+.lr-section{margin-bottom:6px;border:1px solid rgba(232,213,183,0.1);border-radius:8px;overflow:hidden;}
+.lr-section-hdr{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;cursor:pointer;background:rgba(232,213,183,0.05);transition:background 0.15s;}
+.lr-section-hdr:hover{background:rgba(232,213,183,0.1);}
+.lr-section-hdr .lr-name{font-weight:600;font-size:12px;flex:1;}
+.lr-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#1a1a2e;}
+.lr-badge-yellow{background:#f0c040;}
+.lr-badge-orange{background:#e08030;}
+.lr-badge-red{background:#cf6679;}
+.lr-rows{padding:4px 10px 6px 10px;}
+.lr-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px;color:#c4b49a;cursor:pointer;transition:color 0.15s;}
+.lr-row:hover{color:#e8d5b7;}
+.lr-row .lr-arrow{color:#6a7a5a;}
+.lr-close{position:absolute;top:12px;right:14px;background:none;border:1px solid rgba(232,213,183,0.2);color:#a89070;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:all 0.2s;}
+.lr-close:hover{color:#e8d5b7;border-color:rgba(232,213,183,0.4);}
 .panel-section h3{font-size:12px;color:#a89070;margin-bottom:6px;text-transform:uppercase;letter-spacing:1px;}
 .tool-btn{width:100%;background:rgba(232,213,183,0.1);border:1px solid rgba(232,213,183,0.2);color:#e8d5b7;padding:6px 8px;border-radius:6px;cursor:pointer;font-size:12px;text-align:left;margin-bottom:4px;transition:all 0.2s;display:flex;justify-content:space-between;align-items:center;}
 .tool-btn:hover{background:rgba(232,213,183,0.2);}
@@ -204,6 +234,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 
 <div id="hud" style="display:none;">
 <div class="hud-bar">
+<div class="hud-inner">
 <div><span class="label">Day</span><br><span class="value" id="dayCount">1</span></div>
 <div><span class="label">Time</span><br><span class="value" id="timeDisplay">6:00 AM</span></div>
 <div><span class="label">Balance</span><br><span class="value" id="balance">$1,000</span></div>
@@ -223,15 +254,19 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 </div>
 <button class="speed-btn" onclick="showSettings()" title="Settings">⚙</button>
 <button class="speed-btn" onclick="openLoreJournal()" title="Lore Journal">📜</button>
+<button class="speed-btn" id="lateReportBtn" onclick="showLateReport()" title="Late Report" style="display:none;">⏰</button>
 <div style="position:relative;">
 <input id="searchBar" type="text" placeholder="🔍 Search..." oninput="updateSearchSuggestions()" onkeydown="handleSearchKey(event)" onfocus="updateSearchSuggestions()" onblur="setTimeout(()=>hideSearch(),200)" style="background:rgba(232,213,183,0.12);border:1px solid rgba(232,213,183,0.25);color:#e8d5b7;padding:4px 8px;border-radius:5px;font-size:12px;width:150px;outline:none;">
 <div id="searchDropdown" style="display:none;position:absolute;top:100%;left:0;width:220px;max-height:250px;overflow-y:auto;background:rgba(26,26,46,0.97);border:1px solid rgba(232,213,183,0.25);border-radius:8px;margin-top:4px;z-index:500;scrollbar-width:thin;"></div>
 </div>
 <button class="speed-btn" onclick="returnToCenter()" title="Return to center of map">⌖</button>
 </div>
+<button class="collapse-btn" id="hudCollapseBtn" onclick="toggleHudCollapse()" title="Collapse HUD">◀</button>
+</div>
 </div>
 
 <div id="sidePanel" style="display:none;">
+<button class="collapse-btn" id="panelCollapseBtn" onclick="togglePanelCollapse()" title="Collapse Panel" style="align-self:flex-end;">▶</button>
 <div class="panel-section">
 <h3>Roads</h3>
 <button class="tool-btn" onclick="selectTool('road_1lane')" data-tool="road_1lane">Dirt Road<span class="btn-right"><span class="cost">$10</span><span class="kb-hint">R</span></span></button>
@@ -275,6 +310,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div id="notification"></div>
 <div id="artifactPopup"><h3 id="artifactPopupTitle"></h3><p id="artifactPopupText"></p><button class="dismiss-btn" onclick="closeArtifactPopup()">Dismiss</button></div>
 <div id="weekSummary"></div>
+<div id="lateReportPanel" style="display:none;"></div>
 <div id="loreJournal"></div>
 <div id="tutorialPopup" style="display:none;">
 <div class="tut-pop-header">
@@ -877,7 +913,10 @@ vossIncomeBoost: 1, // multiplier for weekly income
 vossTunnelDiscount: 1, // multiplier for tunnel costs (0.5 = half price)
 vossSpeedBoost: 1, // multiplier for road speeds
 vossMiningBoost: 1, // multiplier for mountain treasure/artifact chances
-tutorial: null // {step:0, cameraStartX, cameraStartY, speedChanged, inspectedBuilding, roadsPlaced}
+tutorial: null, // {step:0, cameraStartX, cameraStartY, speedChanged, inspectedBuilding, roadsPlaced}
+tutorialArtifactsGiven: false,
+lateReportDay: { byHouse: [], byBusiness: [] },
+lateReportWeek: { byHouse: [], byBusiness: [] }
 };
 }
 
@@ -995,6 +1034,36 @@ const b = G.buildings.find(b => b.x === x && b.y === y);
 return b ? b.id : null;
 }
 
+
+// ===== COLLAPSE TOGGLES =====
+let hudCollapsed = false;
+let panelCollapsed = false;
+
+function toggleHudCollapse() {
+hudCollapsed = !hudCollapsed;
+const inner = document.querySelector('.hud-inner');
+const btn = document.getElementById('hudCollapseBtn');
+if (hudCollapsed) {
+inner.style.display = 'none';
+btn.textContent = '▶';
+} else {
+inner.style.display = 'flex';
+btn.textContent = '◀';
+}
+}
+
+function togglePanelCollapse() {
+panelCollapsed = !panelCollapsed;
+const panel = document.getElementById('sidePanel');
+const btn = document.getElementById('panelCollapseBtn');
+if (panelCollapsed) {
+panel.classList.add('collapsed');
+btn.textContent = '◀';
+} else {
+panel.classList.remove('collapsed');
+btn.textContent = '▶';
+}
+}
 
 // ===== VEHICLE SYSTEM =====
 let weeklyTruckTolls = 0;
@@ -1612,6 +1681,7 @@ MC.style.display = 'block';
 updateHUD();
 showNotification('Welcome back, Commissioner.');
 } catch(e) {
+G = null;
 showNotification('Failed to load save.');
 }
 }
@@ -1868,6 +1938,7 @@ function closeModals() {
 document.getElementById('settingsModal').style.display = 'none';
 document.getElementById('loreJournal').style.display = 'none';
 document.getElementById('tutorialModal').style.display = 'none';
+document.getElementById('lateReportPanel').style.display = 'none';
 document.getElementById('overlay').style.display = 'none';
 const kb = document.getElementById('keybindsCard');
 if (kb) kb.classList.remove('visible');
@@ -2035,9 +2106,10 @@ if (!G || !G.mysteryBoard) return [];
 const mb = G.mysteryBoard;
 const pinnedTexts = mb.pinnedEntries.map(p => p.text);
 // Build a flat list of all artifacts for ID lookup
-const allArtifacts = [...ARTIFACT_POOL.ground, ...ARTIFACT_POOL.mountain, ...ARTIFACT_POOL.lake];
+const allArtifacts = [...ARTIFACT_POOL.ground, ...ARTIFACT_POOL.mountain, ...ARTIFACT_POOL.lake, ...(ARTIFACT_POOL.tutorial || [])];
 return MYSTERY_DEDUCTIONS.filter(ded => {
 if (mb.solvedDeductions.includes(ded.id)) return false;
+if (ded.tutorialOnly && !G.tutorial) return false;
 // Check all required artifacts are pinned (by matching artifact text via ID)
 const requiredTexts = ded.requiredPins.map(id => {
 const art = allArtifacts.find(a => a.id === id);

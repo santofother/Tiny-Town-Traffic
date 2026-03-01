@@ -265,6 +265,10 @@ const content = document.getElementById('infoContent');
 if (!G.tutorial) G.highlightBuildings = [];
 G.highlightColor = '#44ff44';
 G.commuteZoneCenter = null;
+// Tutorial: give second artifact when inspect step is active
+if (G.tutorial && TUTORIAL_STEPS[G.tutorial.step] && TUTORIAL_STEPS[G.tutorial.step].id === 'artifact_inspect' && !G.artifactsFound.includes('teddy_note_2')) {
+giveTutorialArtifact('teddy_note_2');
+}
 
 // Check vehicles first (closest to click point)
 const clickedVehicle = G.vehicles.find(v => v.active && Math.abs(v.x - x) < 1.5 && Math.abs(v.y - y) < 1.5);
@@ -924,13 +928,17 @@ html += `<div class="coll-entries" style="display:none;">`;
 if (entries.length === 0) {
 html += '<div class="empty-category">No entries discovered yet...</div>';
 } else {
+let hasUnrevealed = false;
 for (const e of entries) {
 const isRevealed = mb.revealedCollections[e.text] && mb.revealedCollections[e.text].includes(colKey);
 if (isRevealed) {
 html += `<div class="journal-entry" style="margin-bottom:3px;"><span class="entry-day">Day ${e.day}</span>${e.text}</div>`;
 } else {
-html += `<div class="journal-entry" style="margin-bottom:3px;color:#504840;"><span class="entry-day">Day ${e.day}</span>🔒 <em>Solve a mystery to reveal this entry...</em></div>`;
+hasUnrevealed = true;
 }
+}
+if (hasUnrevealed) {
+html += `<div class="journal-entry" style="margin-bottom:3px;color:#504840;">🔒 <em>Solve a mystery to reveal hidden entries...</em></div>`;
 }
 }
 html += `</div></div>`;
@@ -1021,5 +1029,173 @@ html += `</div>`;
 html += '</div>';
 }
 return html;
+}
+
+// ===== LATE REPORT =====
+let lateReportTab = 'house'; // 'house' or 'business'
+let lateReportPeriod = 'day'; // 'day' or 'week'
+let lateReportExpanded = {}; // keyed by id, true if expanded
+
+function updateLateReport(period) {
+if (!G) return;
+const snapshot = { byHouse: [], byBusiness: [] };
+const houseMap = {};
+const bizMap = {};
+for (const f of G.families) {
+if (!f.members || f.members.length === 0) continue;
+const house = G.buildings.find(b => b.id === f.houseId);
+if (!house) continue;
+for (const m of f.members) {
+if (m.role !== 'adult' || !m.workplaceId || !m.minutesLate || m.minutesLate <= 0) continue;
+const workplace = G.buildings.find(b => b.id === m.workplaceId);
+if (!workplace) continue;
+// By house
+if (!houseMap[house.id]) houseMap[house.id] = { houseId: house.id, houseName: house.name, workers: [] };
+houseMap[house.id].workers.push({ name: m.name, destName: workplace.name, destId: workplace.id, minutesLate: m.minutesLate });
+// By business
+if (!bizMap[workplace.id]) bizMap[workplace.id] = { bizId: workplace.id, bizName: workplace.name, workers: [] };
+bizMap[workplace.id].workers.push({ name: m.name, homeName: house.name, homeId: house.id, minutesLate: m.minutesLate });
+}
+}
+// Sort sections by total lateness descending
+const sortByTotal = arr => arr.sort((a, b) => {
+const ta = a.workers.reduce((s, w) => s + w.minutesLate, 0);
+const tb = b.workers.reduce((s, w) => s + w.minutesLate, 0);
+return tb - ta;
+});
+// Sort workers within each section worst first
+const sortWorkers = arr => { for (const s of arr) s.workers.sort((a, b) => b.minutesLate - a.minutesLate); };
+snapshot.byHouse = sortByTotal(Object.values(houseMap));
+snapshot.byBusiness = sortByTotal(Object.values(bizMap));
+sortWorkers(snapshot.byHouse);
+sortWorkers(snapshot.byBusiness);
+if (period === 'day') {
+G.lateReportDay = snapshot;
+// Reset week accumulator at start of new week (day 1 of each week)
+if (G.day % 7 === 1) {
+G.lateReportWeek = { byHouse: [], byBusiness: [] };
+}
+} else {
+// Accumulate into week: merge workers into existing entries
+const week = G.lateReportWeek;
+mergeSnapshot(week.byHouse, snapshot.byHouse, 'houseId', 'houseName');
+mergeSnapshot(week.byBusiness, snapshot.byBusiness, 'bizId', 'bizName');
+// Re-sort after merge
+sortByTotal(week.byHouse);
+sortByTotal(week.byBusiness);
+sortWorkers(week.byHouse);
+sortWorkers(week.byBusiness);
+}
+// Show/hide HUD button
+const btn = document.getElementById('lateReportBtn');
+const hasData = G.lateReportDay.byHouse.length > 0 || G.lateReportDay.byBusiness.length > 0;
+if (btn) btn.style.display = hasData ? '' : 'none';
+}
+
+function mergeSnapshot(target, source, idKey, nameKey) {
+for (const entry of source) {
+let existing = target.find(t => t[idKey] === entry[idKey]);
+if (!existing) {
+existing = { [idKey]: entry[idKey], [nameKey]: entry[nameKey], workers: [] };
+target.push(existing);
+}
+existing.workers.push(...entry.workers);
+}
+}
+
+function getBadgeClass(totalMin) {
+if (totalMin > 30) return 'lr-badge lr-badge-red';
+if (totalMin >= 10) return 'lr-badge lr-badge-orange';
+return 'lr-badge lr-badge-yellow';
+}
+
+function jumpToBuilding(buildingId) {
+if (!G) return;
+const b = G.buildings.find(b => b.id === buildingId);
+if (!b) return;
+const iso = toISO(b.x, b.y);
+G.camera.x = iso.sx;
+G.camera.y = iso.sy;
+}
+
+function showLateReport() {
+if (!G) return;
+const panel = document.getElementById('lateReportPanel');
+if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
+renderLateReport();
+panel.style.display = 'block';
+}
+
+function closeLateReport() {
+document.getElementById('lateReportPanel').style.display = 'none';
+}
+
+function setLateReportTab(tab) {
+lateReportTab = tab;
+renderLateReport();
+}
+
+function setLateReportPeriod(p) {
+lateReportPeriod = p;
+renderLateReport();
+}
+
+function toggleLateSection(id) {
+lateReportExpanded[id] = !lateReportExpanded[id];
+renderLateReport();
+}
+
+function renderLateReport() {
+if (!G) return;
+const panel = document.getElementById('lateReportPanel');
+const data = lateReportPeriod === 'day' ? G.lateReportDay : G.lateReportWeek;
+const list = lateReportTab === 'house' ? data.byHouse : data.byBusiness;
+const idKey = lateReportTab === 'house' ? 'houseId' : 'bizId';
+const nameKey = lateReportTab === 'house' ? 'houseName' : 'bizName';
+let html = '<h2>⏰ Late Report</h2>';
+html += '<button class="lr-close" onclick="closeLateReport()">✕ Close</button>';
+// Tabs
+html += '<div class="lr-tabs">';
+html += `<div class="lr-tab ${lateReportTab==='house'?'active':''}" onclick="setLateReportTab('house')">By House</div>`;
+html += `<div class="lr-tab ${lateReportTab==='business'?'active':''}" onclick="setLateReportTab('business')">By Business</div>`;
+html += '</div>';
+// Period toggle
+html += '<div class="lr-toggle">';
+html += `<div class="lr-toggle-btn ${lateReportPeriod==='day'?'active':''}" onclick="setLateReportPeriod('day')">Yesterday</div>`;
+html += `<div class="lr-toggle-btn ${lateReportPeriod==='week'?'active':''}" onclick="setLateReportPeriod('week')">Last Week</div>`;
+html += '</div>';
+if (list.length === 0) {
+html += '<div style="color:#6a7a5a;font-style:italic;padding:12px 0;">No late workers recorded.</div>';
+} else {
+for (const section of list) {
+const sid = section[idKey];
+const total = section.workers.reduce((s, w) => s + w.minutesLate, 0);
+const expanded = !!lateReportExpanded[sid];
+const badge = getBadgeClass(total);
+html += '<div class="lr-section">';
+html += `<div class="lr-section-hdr" onclick="toggleLateSection(${sid})">`;
+html += `<span class="lr-name" onclick="event.stopPropagation();jumpToBuilding(${sid})">${section[nameKey]}</span>`;
+html += `<span class="${badge}">${total}m late</span>`;
+html += `<span style="color:#6a7a5a;font-size:10px;margin-left:6px;">${expanded ? '▾' : '▸'}</span>`;
+html += '</div>';
+if (expanded) {
+html += '<div class="lr-rows">';
+for (const w of section.workers) {
+const wBadge = getBadgeClass(w.minutesLate);
+const dest = lateReportTab === 'house' ? w.destName : w.homeName;
+const destId = lateReportTab === 'house' ? w.destId : w.homeId;
+html += `<div class="lr-row" onclick="jumpToBuilding(${destId})">`;
+html += `<span>${w.name}</span>`;
+html += `<span class="lr-arrow">→</span>`;
+html += `<span>${dest}</span>`;
+html += `<span style="margin-left:auto;" class="${wBadge}">${w.minutesLate}m</span>`;
+html += '</div>';
+}
+html += '</div>';
+}
+html += '</div>';
+}
+}
+panel.innerHTML = html;
 }
 

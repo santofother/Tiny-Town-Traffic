@@ -358,7 +358,8 @@ m.name = firstName + ' ' + name;
 break; // avoid infinite loop
 }
 }
-// Create Voss's vacant house marker (pick a random house and mark it)
+// Create Voss's vacant house marker (pick a random house and mark it) — only once
+if (G.vossHouseId) { /* already created */ } else {
 const abandonedCandidates = G.buildings.filter(b => b.type === 'house' && !b.isApartment);
 if (abandonedCandidates.length > 0) {
 const vossHouse = abandonedCandidates[Math.floor(Math.random() * abandonedCandidates.length)];
@@ -373,7 +374,8 @@ G.families[vossFamIdx].lastName = 'Voss';
 G.families[vossFamIdx].loreTrait = 'retained';
 G.families[vossFamIdx].loreNote = LORE_FAMILIES.voss.note;
 }
-}
+} // end if abandonedCandidates
+} // end Voss house creation guard
 // Add one building with mysterious revenue (entity node)
 const mysteryOffice = G.buildings.find(b => b.type === 'office');
 if (mysteryOffice) {
