@@ -132,6 +132,36 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 #artifactPopup .dismiss-btn:hover{transform:scale(1.05);box-shadow:0 2px 10px rgba(78,140,80,0.3);}
 @keyframes artifactSlideDown{0%{opacity:0;transform:translateX(-50%) translateY(-30px);}100%{opacity:1;transform:translateX(-50%) translateY(0);}}
 @keyframes tickerScroll{0%{transform:translateX(100vw);}100%{transform:translateX(-100%);}}
+.journal-tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid rgba(212,165,116,0.3);padding-bottom:8px;}
+.journal-tab{flex:1;padding:7px 10px;border:1px solid rgba(212,165,116,0.25);border-radius:8px 8px 0 0;background:rgba(232,213,183,0.06);color:#a89070;font-size:12px;cursor:pointer;text-align:center;transition:all 0.2s;}
+.journal-tab:hover{background:rgba(232,213,183,0.12);color:#d4a574;}
+.journal-tab.active{background:rgba(212,165,116,0.2);color:#d4a574;border-color:rgba(212,165,116,0.5);font-weight:600;}
+.pin-btn{display:inline-block;cursor:pointer;font-size:13px;margin-left:6px;opacity:0.4;transition:all 0.2s;vertical-align:middle;}
+.pin-btn:hover{opacity:0.8;transform:scale(1.2);}
+.pin-btn.pinned{opacity:1;color:#d4a574;}
+.evidence-card{background:rgba(232,213,183,0.08);border:2px solid rgba(212,165,116,0.2);border-radius:8px;padding:8px 10px;margin-bottom:6px;font-size:11px;color:#c4b49a;cursor:pointer;transition:all 0.2s;position:relative;}
+.evidence-card:hover{border-color:rgba(212,165,116,0.5);background:rgba(232,213,183,0.12);}
+.evidence-card.selected{border-color:#d4a574;background:rgba(212,165,116,0.15);box-shadow:0 0 10px rgba(212,165,116,0.2);}
+.evidence-card .unpin-btn{position:absolute;top:4px;right:6px;cursor:pointer;font-size:12px;color:#a89070;opacity:0.5;transition:opacity 0.2s;}
+.evidence-card .unpin-btn:hover{opacity:1;color:#e07070;}
+.connection-item{display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:4px;background:rgba(232,213,183,0.05);border-radius:6px;font-size:11px;color:#a89070;border-left:3px solid rgba(212,165,116,0.4);}
+.connection-item .disconnect-btn{cursor:pointer;color:#a89070;opacity:0.5;transition:opacity 0.2s;margin-left:auto;font-size:10px;}
+.connection-item .disconnect-btn:hover{opacity:1;color:#e07070;}
+.deduction-card{background:rgba(120,80,180,0.12);border:1px solid rgba(150,100,200,0.3);border-radius:10px;padding:12px 14px;margin-bottom:10px;}
+.deduction-card h4{color:#c4a0e0;font-size:13px;margin-bottom:8px;}
+.deduction-card .difficulty{color:#a89070;font-size:11px;margin-bottom:6px;}
+.deduction-card p{color:#c4b49a;font-size:12px;line-height:1.5;margin-bottom:10px;}
+.deduction-choice{display:block;width:100%;padding:7px 12px;margin-bottom:5px;background:rgba(232,213,183,0.08);border:1px solid rgba(212,165,116,0.2);border-radius:6px;color:#c4b49a;font-size:11px;cursor:pointer;text-align:left;transition:all 0.2s;}
+.deduction-choice:hover{background:rgba(232,213,183,0.15);border-color:rgba(212,165,116,0.4);}
+.deduction-choice.correct{background:rgba(78,140,80,0.25);border-color:#4e8c50;color:#6abf69;}
+.deduction-choice.wrong{background:rgba(200,60,60,0.2);border-color:#c83c3c;color:#e07070;}
+.deduction-solved{background:rgba(78,140,80,0.1);border:1px solid rgba(78,140,80,0.3);border-radius:10px;padding:10px 14px;margin-bottom:8px;}
+.deduction-solved h4{color:#6abf69;font-size:12px;margin-bottom:6px;}
+.deduction-solved p{color:#a89070;font-size:11px;line-height:1.4;}
+.hint-text{font-style:italic;color:#c4a0e0;font-size:11px;margin-top:6px;padding:6px 8px;background:rgba(120,80,180,0.08);border-radius:5px;}
+.collection-hidden{display:inline-block;background:rgba(100,100,120,0.2);border:1px solid rgba(100,100,120,0.3);border-radius:10px;padding:0 6px;font-size:10px;color:#706070;margin-left:4px;}
+.collection-revealed{display:inline-block;background:rgba(212,165,116,0.15);border:1px solid rgba(212,165,116,0.3);border-radius:10px;padding:0 6px;font-size:10px;color:#a89070;margin-left:4px;animation:collectionReveal 0.6s ease-out;}
+@keyframes collectionReveal{0%{opacity:0;transform:scale(0.8);}50%{transform:scale(1.1);}100%{opacity:1;transform:scale(1);}}
 </style>
 </head>
 <body>
@@ -165,6 +195,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div><span class="label">Balance</span><br><span class="value" id="balance">$1,000</span></div>
 <div><span class="label">Weekly Rev</span><br><span class="value" id="weeklyRev">$0</span></div>
 <div id="debtIndicator" style="display:none;" title="Total outstanding loan debt"><span class="label">💰 Debt</span><br><span class="value" id="debtAmount">$0</span></div>
+<div id="vossBonusIndicator" style="display:none;" title="Voss bonus active"><span class="label" id="vossBonusLabel">📊 Voss</span><br><span class="value" id="vossBonusDays" style="color:#88ccff;">-</span></div>
 <div id="tollIndicator" style="display:none;" title="Paid road percentage — above 20% workers may strike"><span class="label">Toll %</span><br><span class="value" id="tollPercent">0%</span></div>
 <div id="disconnectIndicator" style="display:none;cursor:pointer;" title="Click to find disconnected houses" onclick="cycleDisconnectedHouse()"><span class="label">🏚️</span><br><span class="value" id="disconnectCount">0</span></div>
 <div id="disconnectOfficeIndicator" style="display:none;cursor:pointer;" title="Click to find disconnected offices" onclick="cycleDisconnectedBuilding('office')"><span class="label">🏢</span><br><span class="value" id="disconnectOfficeCount">0</span></div>
@@ -189,20 +220,20 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div id="sidePanel" style="display:none;">
 <div class="panel-section">
 <h3>Roads</h3>
-<button class="tool-btn" onclick="selectTool('road_1lane')" data-tool="road_1lane">One-Way Lane<span class="btn-right"><span class="cost">$10</span><span class="kb-hint">R</span></span></button>
+<button class="tool-btn" onclick="selectTool('road_1lane')" data-tool="road_1lane">Dirt Road<span class="btn-right"><span class="cost">$10</span><span class="kb-hint">R</span></span></button>
 <button class="tool-btn" onclick="selectTool('road_2lane')" data-tool="road_2lane">Two-Lane Road<span class="btn-right"><span class="cost">$25</span><span class="kb-hint">T</span></span></button>
+<button class="tool-btn" onclick="selectTool('road_oneway')" data-tool="road_oneway">One-Way Road<span class="btn-right"><span class="cost">$30</span><span class="kb-hint">V</span></span></button>
 <button class="tool-btn" onclick="selectTool('road_multi')" data-tool="road_multi">Multi-Lane<span class="btn-right"><span class="cost">$50</span><span class="kb-hint">Y</span></span></button>
-<button class="tool-btn" onclick="selectTool('road_highway')" data-tool="road_highway">Highway<span class="btn-right"><span class="cost">$100</span><span class="kb-hint">H</span></span></button>
-<button class="tool-btn" onclick="selectTool('road_bridge')" data-tool="road_bridge">Bridge<span class="btn-right"><span class="cost">$75</span><span class="kb-hint">B</span></span></button>
+<button class="tool-btn" onclick="selectTool('road_highway')" data-tool="road_highway">Highway<span class="btn-right"><span class="cost">$150+$15/tile</span><span class="kb-hint">H</span></span></button>
+<button class="tool-btn" onclick="selectTool('road_flyover')" data-tool="road_flyover">Flyover<span class="btn-right"><span class="cost">$75</span><span class="kb-hint">B</span></span></button>
 <button class="tool-btn" onclick="selectTool('road_tunnel')" data-tool="road_tunnel">Tunnel<span class="btn-right"><span class="cost">$120</span><span class="kb-hint">U</span></span></button>
-<button class="tool-btn" onclick="selectTool('road_elevated')" data-tool="road_elevated">Elevated Highway<span class="btn-right"><span class="cost">$150</span><span class="kb-hint">V</span></span></button>
 </div>
 <div class="panel-section">
 <h3>Paid Roads</h3>
 <p style="font-size:10px;color:#cc8844;margin-bottom:5px;">⚠ Keep under 20% of total roads to avoid worker strikes</p>
 <button class="tool-btn" onclick="selectTool('paid_2lane')" data-tool="paid_2lane">Paid 2-Lane<span class="btn-right"><span class="cost">$40</span><span class="kb-hint">4</span></span></button>
 <button class="tool-btn" onclick="selectTool('paid_multi')" data-tool="paid_multi">Paid Multi<span class="btn-right"><span class="cost">$70</span><span class="kb-hint">5</span></span></button>
-<button class="tool-btn" onclick="selectTool('paid_highway')" data-tool="paid_highway">Paid Highway<span class="btn-right"><span class="cost">$140</span><span class="kb-hint">6</span></span></button>
+<button class="tool-btn" onclick="selectTool('paid_highway')" data-tool="paid_highway">Paid Highway<span class="btn-right"><span class="cost">$200+$20/tile</span><span class="kb-hint">6</span></span></button>
 </div>
 <div class="panel-section">
 <h3>Buildings</h3>
@@ -268,13 +299,13 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div class="kb-row"><span class="kb-key">C</span><span class="kb-action">Center Camera</span></div>
 </div>
 <div class="kb-section"><h4>Roads</h4>
-<div class="kb-row"><span class="kb-key">R</span><span class="kb-action">One-Way Lane ($10)</span></div>
+<div class="kb-row"><span class="kb-key">R</span><span class="kb-action">Dirt Road ($10)</span></div>
 <div class="kb-row"><span class="kb-key">T</span><span class="kb-action">Two-Lane Road ($25)</span></div>
+<div class="kb-row"><span class="kb-key">V</span><span class="kb-action">One-Way Road ($30)</span></div>
 <div class="kb-row"><span class="kb-key">Y</span><span class="kb-action">Multi-Lane ($50)</span></div>
 <div class="kb-row"><span class="kb-key">H</span><span class="kb-action">Highway ($100)</span></div>
-<div class="kb-row"><span class="kb-key">B</span><span class="kb-action">Bridge ($75)</span></div>
+<div class="kb-row"><span class="kb-key">B</span><span class="kb-action">Flyover ($75)</span></div>
 <div class="kb-row"><span class="kb-key">U</span><span class="kb-action">Tunnel ($120)</span></div>
-<div class="kb-row"><span class="kb-key">V</span><span class="kb-action">Elevated Highway ($150)</span></div>
 </div>
 <div class="kb-section"><h4>Paid Roads</h4>
 <div class="kb-row"><span class="kb-key">4</span><span class="kb-action">Paid 2-Lane ($40)</span></div>
@@ -307,7 +338,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <h2 style="color:#ff8866;margin-bottom:12px;">Debug Menu <span style="font-size:11px;color:#888;">(~ to toggle)</span></h2>
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
 <div>
-<label style="color:#a89070;font-size:11px;">1-Lane Cost</label>
+<label style="color:#a89070;font-size:11px;">Dirt Road Cost</label>
 <input type="number" id="dbg_road_1lane" value="10" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_1lane=+this.value">
 </div>
 <div>
@@ -319,20 +350,16 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <input type="number" id="dbg_road_multi" value="50" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_multi=+this.value">
 </div>
 <div>
-<label style="color:#a89070;font-size:11px;">Highway Cost</label>
-<input type="number" id="dbg_road_highway" value="100" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_highway=+this.value">
+<label style="color:#a89070;font-size:11px;">Highway Extend Cost</label>
+<input type="number" id="dbg_road_highway" value="15" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_highway=+this.value">
 </div>
 <div>
-<label style="color:#a89070;font-size:11px;">Bridge Cost</label>
-<input type="number" id="dbg_road_bridge" value="75" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_bridge=+this.value">
+<label style="color:#a89070;font-size:11px;">Flyover Cost</label>
+<input type="number" id="dbg_road_flyover" value="75" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_flyover=+this.value">
 </div>
 <div>
 <label style="color:#a89070;font-size:11px;">Tunnel Cost</label>
 <input type="number" id="dbg_road_tunnel" value="120" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_tunnel=+this.value">
-</div>
-<div>
-<label style="color:#a89070;font-size:11px;">Elevated Hwy Cost</label>
-<input type="number" id="dbg_road_elevated" value="150" min="0" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="ROAD_COSTS.road_elevated=+this.value">
 </div>
 <div>
 <label style="color:#a89070;font-size:11px;">Upkeep Tier 1</label>
@@ -357,6 +384,24 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div>
 <label style="color:#a89070;font-size:11px;">Artifact Tiles</label>
 <button class="menu-btn" style="padding:4px 12px;font-size:11px;width:100%;" id="dbgArtifactBtn" onclick="G.debugShowArtifacts=!G.debugShowArtifacts; this.textContent=G.debugShowArtifacts?'Hide Artifacts':'Show Artifacts'">Show Artifacts</button>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px;">
+<div>
+<label style="color:#a89070;font-size:11px;">Day Shift Start</label>
+<input type="number" id="dbg_dayShiftStart" value="9" min="6" max="12" step="0.5" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="DAY_SHIFT_START=+this.value;computeDepartureTicks();">
+</div>
+<div>
+<label style="color:#a89070;font-size:11px;">Day Shift End</label>
+<input type="number" id="dbg_dayShiftEnd" value="17" min="12" max="22" step="0.5" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="DAY_SHIFT_END=+this.value;">
+</div>
+<div>
+<label style="color:#a89070;font-size:11px;">Night Shift Start</label>
+<input type="number" id="dbg_nightShiftStart" value="22" min="18" max="24" step="0.5" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="NIGHT_SHIFT_START=+this.value;computeDepartureTicks();">
+</div>
+<div>
+<label style="color:#a89070;font-size:11px;">Night Shift End</label>
+<input type="number" id="dbg_nightShiftEnd" value="6" min="4" max="10" step="0.5" style="width:100%;background:#222;color:#e8d5b7;border:1px solid #555;padding:4px;border-radius:4px;" onchange="NIGHT_SHIFT_END=+this.value;">
 </div>
 </div>
 <hr style="border-color:rgba(232,213,183,0.15);margin:12px 0;">
@@ -678,11 +723,47 @@ const TILE = 40;
 const MAP_W = 120, MAP_H = 120;
 const ISO_A = Math.PI/6;
 const COS_A = Math.cos(ISO_A), SIN_A = Math.sin(ISO_A);
-const ROAD_COSTS = {road_1lane:10,road_2lane:25,road_multi:50,road_highway:100,road_bridge:75,road_tunnel:120,road_elevated:150,paid_2lane:40,paid_multi:70,paid_highway:140};
-const ROAD_CAPACITY = {road_1lane:2,road_2lane:4,road_multi:8,road_highway:12,road_bridge:4,road_tunnel:4,road_elevated:12,paid_2lane:4,paid_multi:8,paid_highway:12};
-const ROAD_SPEED = {road_1lane:1,road_2lane:1.2,road_multi:1.5,road_highway:2,road_bridge:1.2,road_tunnel:1,road_elevated:2.0,paid_2lane:1.3,paid_multi:1.6,paid_highway:2.2};
+let DAY_SHIFT_START = 9.0;     // 9:00 AM (hour as decimal)
+let DAY_SHIFT_END = 17.0;      // 5:00 PM
+let NIGHT_SHIFT_START = 22.0;  // 10:00 PM
+let NIGHT_SHIFT_END = 6.0;     // 6:00 AM
+const COMMUTE_ZONES = [
+  { maxDist: 8, leadMinutes: 15 },
+  { maxDist: 16, leadMinutes: 30 },
+  { maxDist: 25, leadMinutes: 50 },
+  { maxDist: 35, leadMinutes: 75 },
+  { maxDist: Infinity, leadMinutes: 100 }
+];
+function getCommuteZone(dist) {
+  for (let i = 0; i < COMMUTE_ZONES.length; i++) {
+    if (dist <= COMMUTE_ZONES[i].maxDist) return COMMUTE_ZONES[i];
+  }
+  return COMMUTE_ZONES[COMMUTE_ZONES.length - 1];
+}
+const HIGHWAY_SETUP_COST = 150;
+const HIGHWAY_EXTEND_COST = 15;
+const HIGHWAY_EXTEND_COST_GROUND = 10;
+const PAID_HIGHWAY_SETUP_COST = 200;
+const PAID_HIGHWAY_EXTEND_COST = 20;
+const ROAD_COSTS = {road_1lane:10,road_2lane:25,road_oneway:30,road_multi:50,road_highway:15,road_flyover:75,road_tunnel:120,paid_2lane:40,paid_multi:70,paid_highway:20};
+const ROAD_CAPACITY = {road_1lane:2,road_2lane:4,road_oneway:3,road_multi:8,road_highway:20,road_flyover:4,road_tunnel:4,paid_2lane:4,paid_multi:8,paid_highway:20};
+const ROAD_SPEED = {road_1lane:0.5,road_2lane:0.6,road_oneway:1.0,road_multi:2.0,road_highway:4.0,road_flyover:1.2,road_tunnel:1,paid_2lane:0.65,paid_multi:2.2,paid_highway:4.5};
+const ROAD_LANES_PER_DIR = {road_1lane:1,road_2lane:1,road_oneway:2,road_multi:2,road_highway:1,road_flyover:1,road_tunnel:1,paid_2lane:1,paid_multi:2,paid_highway:1};
 const UPKEEP_COST = [0,2,5,10];
 const BREAKDOWN_CHANCE = [0,0.015,0.005,0.001]; // per road per day
+// Voss discovery bonuses — 5 types, randomly chosen each time he's found
+const VOSS_BONUSES = [
+{id:'voss_income',name:'Voss\'s Revenue Map',desc:'Voss marked optimal tax collection routes. +25% income for 30 days.',icon:'📊',durationDays:30,
+ apply:(g)=>{g.vossIncomeBoost=1.25;},remove:(g)=>{g.vossIncomeBoost=1;}},
+{id:'voss_tunnel',name:'Voss\'s Tunnel Charts',desc:'Voss\'s geological surveys reveal weak points. Tunnels cost 50% less for 30 days.',icon:'🗺️',durationDays:30,
+ apply:(g)=>{g.vossTunnelDiscount=0.5;},remove:(g)=>{g.vossTunnelDiscount=1;}},
+{id:'voss_treasure',name:'Voss\'s Hidden Cache',desc:'Voss buried emergency funds throughout the mountains. +$15,000!',icon:'💰',durationDays:0,
+ apply:(g)=>{g.money+=15000;},remove:()=>{}},
+{id:'voss_speed',name:'Voss\'s Bypass Routes',desc:'Voss mapped shortcuts through the network. All roads +20% speed for 30 days.',icon:'⚡',durationDays:30,
+ apply:(g)=>{g.vossSpeedBoost=1.2;},remove:(g)=>{g.vossSpeedBoost=1;}},
+{id:'voss_reveal',name:'Voss\'s Survey Data',desc:'Voss\'s complete survey reveals all mountain treasure locations. +50% mountain discovery rate for 30 days.',icon:'🔍',durationDays:30,
+ apply:(g)=>{g.vossMiningBoost=2.0;},remove:(g)=>{g.vossMiningBoost=1;}}
+];
 const CUISINE_TYPES = ['Chinese','Mexican','Italian','American','Indian'];
 const FIRST_NAMES = ['Emma','Liam','Olivia','Noah','Ava','Ethan','Sophia','Mason','Isabella','James','Mia','Logan','Charlotte','Lucas','Amelia','Jack','Harper','Henry','Evelyn','Alex','Lily','Ben','Grace','Owen','Zoe','Ella','Leo','Aria','Caleb','Chloe','Wyatt','Nora','Luke','Riley','Grayson','Hazel','Izzy','Luna','Violet','Stella','Elijah','Aiden','Scarlett','Jackson','Penelope','Sebastian','Layla','Mateo','Camila','Daniel','Gianna','Michael','Aaliyah','Abigail','Samuel','Elena','David','Madelyn','Carter','Skylar','Jayden','Paisley','Julian','Savannah','Hannah','Nathan','Aurora','Dylan','Ellie','Gabriel','Naomi','Aubrey','Kai','Willow','Clara','Theodore','Ruby','Josie','Ryan','Vivian','Asher','Ivy','Levi','Emilia','Isla','Maya','Jasper','Alice','Sienna','Max','Sadie','Felix','Piper','Oscar','Freya','Miles','Blake','Parker','Quinn','Rowan','Sage','Finn','River','Jade','Nova','Iris','Pearl','Cole','Beckett','Elena','Archer','Wren','Tessa','Margot','Theo','Elliot','Mila','Brielle','Ezra','Valentina','Alice','Rose','Arthur','Daisy','August','Poppy','Atlas','Claire','Axel','Thea','Brooks','Maeve','Dean','Fiona','Grant','Lydia','Hank','Vera','Ivan','Daphne','Knox','Gemma','Rhett','Ingrid','Seth','Lena','Troy','Nina','Vince','Opal','Wesley','Pia'];
 const LAST_NAMES = ['Smith','Johnson','Garcia','Martinez','Brown','Jones','Wilson','Davis','Taylor','Clark','Hall','Young','King','Wright','Hill','Scott','Green','Baker','Adams','Nelson','Carter','Mitchell','Rivera','Chen','Kim','Patel','Lopez','Lee','Walker','Robinson','Torres','Flores','Nguyen','Murphy','Stewart','Fothergill','Bennett','Brooks','Price','Reed','Cooper','Morgan','Bell','Ward','Rogers','Foster','Sanders','Ross','Powell','Long','Hughes','Diaz','Perry','Sullivan','Graham','Reynolds','Butler','Barnes','Fisher','Henderson','Coleman','Simmons','Patterson','Jordan','Hamilton','Wallace','Ellis','Harrison','Hunt','Hart','Mason','Griffin','Fox','Spencer','Wagner','Palmer','Stone','Dean','Boyd','Black','Webb','Gordon','Shaw','Burns','Warren','Fields','Oliver','Walsh','Park','Hoffman','Jensen','Dunn','Carr','Knight','Wells','Schmidt','Fuller','Harvey','Holland','Keller','May','Moran','Pearson','Quinn','Riley','Sharp','Snyder','Stephens','Tucker','Vega','West','Wolfe','Woods','York','Zimmerman'];
@@ -725,7 +806,7 @@ const RESTAURANT_LORE_GENERIC = {
 const SCHOOL_NAMES = {elementary:['Sunshine Elementary','Meadowbrook Elementary','Riverside Elementary','Oakdale Elementary','Pinewood Elementary','Maplewood Elementary','Birchwood Elementary','Lakeview Elementary','Hillcrest Elementary','Cedar Grove Elementary','Willowbrook Elementary','Stonehill Elementary'],middle:['Westview Middle School','Ridgecrest Middle','Lakewood Middle','Summit Middle School','Eagle Ridge Middle','Greenfield Middle','Horizon Middle School','Bayside Middle','Clearwater Middle','Valley Forge Middle'],high:['Northridge High','Eastview Academy','Tigard Tigers High','Westmont High','Crestwood Prep','Lincoln High','Roosevelt Academy','Central High','Skyline High','Pinnacle Prep','Heritage Academy','Coastal High','Thunder Ridge High']};
 const RIVER_NAMES = ['Whispering Creek','Silverbrook River','Cedar Run','Willow Stream','Copper Creek','Moonlight River','Starfall Creek','Izzy\'s Brook','Golden Current','Amber Flow','Crystal Run','Fothergill Creek','Twilight Stream','Sunrise River','Blackwater Run','Shepherd\'s Creek','The Winding Vein','Coldspring Branch','Tanner\'s Fork','Mill Race','Bitterroot Creek','Pale Water','Holt\'s Crossing','Snakebend River','Ironwash Creek','Dead Man\'s Run'];
 const LAKE_NAMES = ['Mirror Lake','Emerald Lake','Sapphire Pond','Sunset Lake','Serenity Lake','Crystal Lake','Moonrise Lake','Starlight Lake','Willow Pond','Izzy\'s Lagoon','Stillwater Mere','Blackglass Tarn','The Drowning Pool','Bellini\'s Pond','Cairn Lake','Shepherd\'s Basin','Lost Penny Pond','Foghollow Lake','The Old Reservoir','Heron\'s Rest'];
-const MOUNTAIN_NAMES = ['Eagle Peak','Stonewatch Ridge','Thunder Mountain','Sentinel Peak','Ironclad Summit','Cloudrest Peak','Amber Heights','Copper Ridge','Fothergill Mountain','Twilight Bluff','Starfall Ridge','Izzy\'s Lookout','The Jawbone','Voss\'s Overlook','Gallows Hill','Ashenmount','The Crooked Spine','Cairnstack Peak','Raven\'s Perch','Hollow Crown Ridge','The Iron Teeth','Watcher\'s Bluff','Holt\'s Folly','Greymantle Summit'];
+const MOUNTAIN_NAMES = ['Eagle Peak','Stonewatch Ridge','Thunder Mountain','Sentinel Peak','Ironclad Summit','Cloudrest Peak','Amber Heights','Copper Ridge','Fothergill Mountain','Twilight Bluff','Starfall Ridge','Izzy\'s Lookout','The Jawbone','Voss\'s Overlook','Gallows Hill','Ashenmount','The Crooked Spine','Cairnstack Peak','Raven\'s Perch','Hollow Crown Ridge','The Iron Teeth','Watcher\'s Bluff','Holt\'s Folly','Greymantle Summit','The Lantern Ridge','Commissioner\'s Rest','Voss\'s Descent','The Deep Arch','Blackvein Mountain','Sleeper\'s Peak'];
 const TERRAIN_LORE = {
 'Blackwater Run':'The water runs dark here. Locals say it\'s tannins from the peat. The geologist\'s report says otherwise, but it was never published.',
 'The Winding Vein':'Named by Elias Holt in 1923. He wrote that the river moved "as if it had a pulse." His survey maps show the river in a slightly different position than it is today.',
@@ -739,7 +820,7 @@ const TERRAIN_LORE = {
 'Foghollow Lake':'Fog rises from this lake at dawn regardless of temperature or season. It always drifts toward the center of town.',
 'The Old Reservoir':'Built in 1941, decommissioned in 1968. The pipes underneath still carry water. Nobody turned them back on.',
 'The Jawbone':'The ridgeline looks like a jawbone from the south approach. Hikers report the resemblance is more convincing in person than it should be.',
-'Voss\'s Overlook':'Commissioner Voss spent his last weeks here, surveying the road network from above. His binoculars were found on the ledge. He left them deliberately.',
+'Voss\'s Overlook':'Commissioner Voss spent his last weeks here, surveying the road network from above. His binoculars were found on the ledge. He left them deliberately. At night, hikers report a faint lantern glow from somewhere inside the mountain below.',
 'Gallows Hill':'No gallows were ever built here. The name is from a Potawatomi word that roughly translates to "the place that holds things up."',
 'Ashenmount':'The soil here is unnaturally grey. Nothing grows on the summit. Something grew here once — the root impressions in the stone are enormous.',
 'The Crooked Spine':'A ridge that curves in a way that shouldn\'t be geologically possible. The bend happened sometime between the 1923 and 1962 surveys.',
@@ -747,7 +828,12 @@ const TERRAIN_LORE = {
 'The Iron Teeth':'Jagged peaks that contain unusually high iron content. Compasses behave erratically near the summit.',
 'Watcher\'s Bluff':'Overlooks the entire town. Residents report seeing a figure standing on the bluff at dusk. When they hike up, no one is there.',
 'Holt\'s Folly':'Elias Holt tried to build a road over this mountain in 1924. The road kept sinking into the earth overnight. He gave up after the fourth attempt.',
-'Greymantle Summit':'Perpetually overcast at the peak, even when the rest of the sky is clear. Climbers describe a feeling of being watched.'
+'Greymantle Summit':'Perpetually overcast at the peak, even when the rest of the sky is clear. Climbers describe a feeling of being watched.',
+'The Lantern Ridge':'A warm glow has been reported deep inside this mountain at night. No mining operations are active. No one has claimed the light.',
+'Commissioner\'s Rest':'Named by Public Works employees after Voss resigned. They say he used to sit here for hours, staring at the tunnel entrance below. Some say he still does.',
+'Voss\'s Descent':'The tunnel entrance on the eastern face leads further than any survey has mapped. Maintenance crews refuse to go past the second junction. They say the air gets warm and the walls hum.',
+'Blackvein Mountain':'Dark mineral veins run through the stone in patterns that look deliberate. Geologists disagree on whether they are natural. The veins point inward.',
+'Sleeper\'s Peak':'Unusually quiet. No wind, no birds, no insects near the summit. The stone is warm year-round. Locals say something inside is breathing.'
 };
 const BANK_NAMES = ['First National Bank','Tiny Town Savings','Commerce Bank','Heritage Credit Union','Summit Financial','Valley Trust Bank'];
 const LOAN_INTEREST_RATE = 0.05;
@@ -763,6 +849,10 @@ const LORE_TIPS = [
 'Izzy is the guardian spirit of Tiny Town. She watches over every intersection with love.',
 'The ancient road builders left treasures buried under the mountains as gifts for the future.',
 'The previous Transport Commissioner vanished under unclear circumstances. Nobody talks about it.',
+'Maintenance crews report seeing a lantern light deep in the eastern tunnels. No workers are assigned there.',
+'Commissioner Voss\'s binoculars were found on the overlook, but his survey notebooks were not. He took them with him.',
+'A hiker near the eastern ridge swears she heard someone humming inside the mountain. The tune was a traffic report jingle from the \'90s.',
+'They say if you tunnel deep enough into the right mountain, you\'ll find someone who never left Millhaven.',
 'Certain old families have lived here since before the roads were built. They never seem to age.',
 'Late at night, some residents report seeing a car on the road that doesn\'t belong to anyone.',
 'The bedrock underneath the town has structure. Almost like architecture.',
@@ -783,46 +873,46 @@ const LORE_TIPS = [
 const ARTIFACT_POOL = {
 // Artifacts found when building roads on normal ground tiles (low chance)
 ground: [
-{id:'time_capsule',title:'Time Capsule (1987)',text:'A school time capsule from 1987. Kids writing about their dreams — one shares a surname with a family still living in town.',category:'discoveries',chance:0.004,collections:['millhaven','founding']},
-{id:'ghost_road',title:'Ghost Road',text:'Beneath the soil, old asphalt from a road network that predates the town. Someone built roads here before. The routes look familiar.',category:'discoveries',chance:0.003,collections:['entity','deep_history']},
-{id:'wooden_sign',title:'Old Road Sign',text:'A small wooden road sign for a street that doesn\'t exist and never appears on any map. The paint is old but the wood isn\'t weathered.',category:'discoveries',chance:0.003,collections:['entity','millhaven']},
-{id:'lovers_note',title:'A Lover\'s Note',text:'A sweet note tucked under the soil — dated 1987, but it mentions a building that wasn\'t built until 2003. The handwriting is beautiful.',category:'discoveries',chance:0.003,collections:['millhaven']},
-{id:'bellini_matchbook',title:'Bellini\'s Matchbook',text:'A matchbook from a restaurant called "Bellini\'s" — an address that now corresponds to an office complex built in 1989. Someone printed matchbooks before the restaurant ever opened.',category:'discoveries',chance:0.003,collections:['bellini','caruso']},
-{id:'police_report',title:'Redacted Police Report (1987)',text:'An internal police report, heavily redacted. Legible lines: "...witness recanted statement..." "...Deputy Commissioner Caruso recommended closing investigation..." Case: missing person.',category:'discoveries',chance:0.002,collections:['bellini','caruso']},
-{id:'caruso_ledger',title:'Torn Ledger Page',text:'A torn page from a financial ledger — two columns labeled "visible" and "family." The visible column matches La Dolce Via\'s reported revenue. The family column is three times larger.',category:'discoveries',chance:0.002,collections:['caruso']},
-{id:'dale_note',title:'Note to Dale Pitts',text:'"Dale — arrangement as discussed. Room in back, kept clear, one key only. Payment monthly, no questions, no names. — G.C." Gerald Caruso. The diner was part of it from the beginning.',category:'discoveries',chance:0.002,collections:['caruso','pitts']},
-{id:'holt_survey',title:'Holt\'s 1923 Survey Notes',text:'Elias Holt\'s original survey notes, enthusiastic and excited. He describes the valley as "almost eager to be connected." The terrain seemed to guide his pen.',category:'history',chance:0.003,collections:['founding','entity']},
-{id:'1940s_plan',title:'1940s City Planning Document',text:'Recommended road routes "for geological stability." If you map them out, the routes form a pattern that looks unsettlingly like a circulatory system.',category:'history',chance:0.002,collections:['entity','founding']},
-{id:'child_drawing',title:'Child\'s Drawing',text:'Found under a residential road — a child\'s crayon drawing of a town with roads spreading outward like roots. At the center, underground, something round and dark.',category:'discoveries',chance:0.003,collections:['entity']},
-{id:'civic_surcharge',title:'Civic Development Surcharge Memo',text:'A memo establishing a financial penalty for "insufficient infrastructure development." Written by Gerald Caruso during his time as Deputy Commissioner. A corrupt law to pressure commissioners.',category:'history',chance:0.001,collections:['caruso']},
-{id:'bellini_letter',title:'Marco Bellini\'s Unsent Letter',text:'"There is one family here I cannot get a read on. They smile at everything... Papa always said you should trust a man who knows how to frown. The lake is beautiful in the morning. I am going fishing tomorrow." Dated October 3rd, 1987. No further letters.',category:'discoveries',chance:0.002,collections:['bellini','caruso']},
-{id:'naples_letter',title:'Letter from Naples (1951)',text:'"The arrangement is acceptable. Millhaven is small enough to manage. Establish the restaurant first. Everything else follows. If local officials become difficult, handle it quietly. You know how." — addressed to Antonio Caruso.',category:'history',chance:0.001,collections:['caruso']}
+{id:'time_capsule',title:'Time Capsule (1987)',text:'MEADOWBROOK ELEMENTARY — CLASS OF 1987 TIME CAPSULE\n\n"When I grow up I want to be a fireman." — Danny R.\n"I want to be a vet and have 100 dogs." — Sarah M.\n"I want to build roads like my grandpa. He says the town needs us." — Tommy Aldridge\n"I want to leave Millhaven." — Katie P.\n[The next page is water-damaged. Only one line is legible:]\n"I drew the thing under the school. Mrs. Patterson says it isn\'t real but I can hear it at nap time."',category:'discoveries',chance:0.004,collections:['millhaven','founding']},
+{id:'ghost_road',title:'Ghost Road',text:'MILLHAVEN PUBLIC WORKS — INCIDENT LOG\nDate: 09/14/2003\nCrew: Daniels, Okafor, Pitts (J.)\nLocation: Lot 7, Block 22 (undeveloped)\n\n"Hit something at 18 inches. Thought it was a water main. It\'s asphalt. Old asphalt — black, dense, no air pockets. Runs northeast for at least 40 yards before we stopped digging.\nNo record of any road on this lot. Checked with planning — nothing. Checked the 1923 survey — nothing.\nOkafor says the route matches Cedar Ave exactly, just six feet deeper.\nForeman authorized backfill. Said not to log it. I\'m logging it anyway."\n— T. Daniels, crew lead',category:'discoveries',chance:0.003,collections:['entity','deep_history']},
+{id:'wooden_sign',title:'Old Road Sign',text:'A hand-carved wooden sign, recovered from two feet underground.\n\nIt reads: VEIN ROAD — NO OUTLET\n\nThe lettering style matches WPA-era signage from the 1930s. The paint has faded to a dull olive.\nThe wood has not rotted. Not even slightly. The grain is tight and warm to the touch.\nNo street called "Vein Road" appears on any survey, any map, or any planning document in Millhaven\'s records.\nThe sign was facing downward when it was found — as if meant to be read from below.',category:'discoveries',chance:0.003,collections:['entity','millhaven']},
+{id:'lovers_note',title:'A Lover\'s Note',text:'A folded note, sealed with candle wax, found in a glass jar beneath the topsoil.\n\n"My darling,\nMeet me Tuesday at the bench behind the Stonebridge building. I\'ll bring the blanket and the wine. If it rains we\'ll sit under the awning by the east entrance. You know the one — the door with the green tile.\nI miss you terribly.\nForever, J."\n\nThe note is dated June 12, 1987.\nThe Stonebridge LLC building was constructed in 2003. Its east entrance has a green tile threshold.\nThe handwriting is steady and unhurried. The ink has barely faded.',category:'discoveries',chance:0.003,collections:['millhaven']},
+{id:'bellini_matchbook',title:'Bellini\'s Matchbook',text:'A cardboard matchbook, barely faded. Twenty matches inside — none struck.\n\nFront (printed, red ink on cream):\nBELLINI\'S RISTORANTE\n26 Lakeside Drive, Millhaven\n"Opening Soon — Autumn 1987"\nAuthentic Neapolitan Cuisine\n\nBack (hand-drawn in ballpoint):\nA small map showing the route from Main Street to 26 Lakeside Drive, with a star marking the location and a note: "You can\'t miss it!"\n\nInside flap (stamped): Printed by Valley Press, June 1987. Order of 500.\n\n26 Lakeside Drive is currently the Stonewall Adjusters office complex, constructed in 1989. No restaurant has ever operated at that address.',category:'discoveries',chance:0.003,collections:['bellini','caruso']},
+{id:'police_report',title:'Redacted Police Report (1987)',text:'MILLHAVEN POLICE DEPARTMENT — INTERNAL REPORT\nCase #: 87-0441\nType: Missing Person\nDate Filed: 10/09/1987\nReporting Officer: Sgt. D. Holbrook\n\nSubject: ██████ ███████, male, age 29, last seen ██/██/1987 near ████████ Lake.\n\nSummary:\nSubject reported missing by ██████████ on 10/06/1987. Subject was last seen at ████████ on the evening of October 3rd. Witness (name withheld) initially reported seeing subject in the company of ██████████████████████ near the waterfront at approximately 11 PM.\n\nWitness recanted statement on 10/08/1987. No reason given. Witness has since relocated out of state.\n\n██████████████████████████████████████████\n██████████████████████████████████████████\n\nRecommendation: Deputy Commissioner G. Caruso has reviewed this case and recommends closure. "Insufficient evidence to continue. Subject likely left town voluntarily."\n\nCase Status: CLOSED\nClosed by: Sgt. Holbrook (under advisement)\nFollow-up: None',category:'discoveries',chance:0.002,collections:['bellini','caruso']},
+{id:'caruso_ledger',title:'Torn Ledger Page',text:'A torn page from a financial ledger. Two columns, labeled in neat handwriting:\nVISIBLE — Jan: $12,400 / Feb: $11,800 / Mar: $13,200\nFAMILY — Jan: $41,600 / Feb: $38,900 / Mar: $44,100\nThe "visible" figures match La Dolce Via\'s publicly filed tax returns for Q1 1986. The "family" column is not filed anywhere.',category:'discoveries',chance:0.002,collections:['caruso']},
+{id:'dale_note',title:'Note to Dale Pitts',text:'Folded paper tucked behind a wall panel at Holt\'s Diner. Handwriting is neat, authoritative:\n"Dale — arrangement as discussed. Room in back, kept clear, one key only. Payment monthly, no questions, no names. If anyone asks, it\'s storage. It is storage. You don\'t need to know what\'s stored.\nWe\'ll take care of the permits.\n— G.C."',category:'discoveries',chance:0.002,collections:['caruso','pitts']},
+{id:'holt_survey',title:'Holt\'s 1923 Survey Notes',text:'Field journal, E. Holt, June 1923.\n"Arrived at the valley today. Never seen terrain like this. The ground is soft where roads should go and hard where buildings should stand. I don\'t mean figuratively — I drove stakes and the soil yields along perfect straight lines, as if it\'s been prepared.\nThe valley feels almost eager to be connected. I sketched a road plan in twenty minutes. Normally takes me weeks. The pen just moved.\nThis is the place. I don\'t know how I know, but this is the place."',category:'history',chance:0.003,collections:['founding','entity']},
+{id:'1940s_plan',title:'1940s City Planning Document',text:'MILLHAVEN MUNICIPAL PLANNING — 1947\nRecommended Road Extensions (Priority Routes)\n"The following routes are recommended for geological stability. Soil surveys indicate these corridors offer optimal load-bearing capacity."\nAttached is a fold-out map. The routes branch from a central point, split into smaller paths, then reconnect in loops. Arteries to veins to capillaries. Someone has penciled in the margin: "Why does a road plan need to circulate?"',category:'history',chance:0.002,collections:['entity','founding']},
+{id:'child_drawing',title:'Child\'s Drawing',text:'A crayon drawing on manila paper, found folded inside a lunch box beneath a residential road.\n\nThe top half shows a town — houses in a row, stick-figure people, a yellow sun. Roads spread outward from the center in branching lines, drawn in heavy black crayon pressed hard into the paper.\n\nThe bottom half shows what\'s underneath. The child drew a line across the middle of the page and labeled it "GROUND" in wobbly letters. Below that, the roads continue downward like roots, all converging on a large dark circle filled in so hard the crayon tore through the paper.\n\nThe circle has two words written next to it in red:\n"IT\'S HUNGRY"\n\nOn the back, in a teacher\'s handwriting: "Very creative, Emily! But let\'s draw something happier next time."',category:'discoveries',chance:0.003,collections:['entity']},
+{id:'civic_surcharge',title:'Civic Development Surcharge Memo',text:'TOWN OF MILLHAVEN — OFFICE OF THE DEPUTY COMMISSIONER\nMEMO 14-C | INTERNAL | DO NOT DISTRIBUTE\nDate: March 3, 1972\nFrom: Gerald Caruso, Deputy Commissioner\nTo: Commissioner R. Voss (and all future holders of the office)\nRe: Civic Development Surcharge — Infrastructure Compliance Protocol\n\nCommissioner,\n\nAs you are aware, the continued growth and prosperity of Millhaven depends upon consistent expansion of our road infrastructure. Recent periods of administrative delay have resulted in measurable harm to local businesses, declining property values, and diminished public confidence in municipal leadership.\n\nEffective immediately, the following policy is enacted:\n\nAny sitting Commissioner who fails to authorize new road construction for a period exceeding fourteen (14) calendar days shall incur a Civic Development Surcharge of $500 per day, retroactive to Day 1 of the period of inaction.\n\nAppeals may be filed in writing with the Deputy Commissioner\'s office. Processing time: 90 business days.\n\nThis measure ensures accountability and reflects the expectations of the community — and of the families who have invested in Millhaven\'s future.\n\nI trust this will not be necessary for a commissioner of your caliber.\n\nRegards,\nGerald Caruso\nDeputy Commissioner, Town of Millhaven\n\n[Handwritten at bottom:] Co-signers: None. Council vote: Not submitted to council. Filed under Deputy Commissioner\'s sole authority, Section 9(b) — a provision that does not exist in the town charter.',category:'history',chance:0.001,collections:['caruso']},
+{id:'bellini_letter',title:'Marco Bellini\'s Unsent Letter',text:'A letter found in an unsealed envelope, addressed to "Mama" in Naples. Never mailed.\n\n"Cara Mama,\nThe permit was denied again. They say there is a \'proximity conflict\' with an existing restaurant, but Lakeside Drive is half a mile from the nearest kitchen. I asked to see the regulation. They said it was on file. I asked to see the file. They said come back Monday.\nI went back Monday. Different clerk. Same answer.\nThere is one family here I cannot get a read on. They smile at everything. The old woman brought me tiramisu when I moved in. Her son stops by the house. Friendly. Very friendly. Papa always said you should trust a man who knows how to frown.\nI will try the permit office one more time.\nThe lake is beautiful in the morning. I am going fishing tomorrow.\nYour loving son,\nMarco"\n\nDated October 3rd, 1987. No further letters were found.',category:'discoveries',chance:0.002,collections:['bellini','caruso']},
+{id:'naples_letter',title:'Letter from Naples (1951)',text:'Envelope postmarked Napoli, March 1951. Addressed to Antonio Caruso, 14 Founder\'s Row, Millhaven.\n"Antonio — The arrangement is acceptable. Millhaven is small enough to manage. Establish the restaurant first. Make it beloved. Make it necessary. Everything else follows from a place people trust.\nIf local officials become difficult, be patient with them first. You know what to do if patience doesn\'t work.\nYour mother sends her love. She says to name the restaurant something sweet.\n— Zio R."',category:'history',chance:0.001,collections:['caruso']}
 ],
 // Artifacts found when building tunnels through mountains (higher chance)
 mountain: [
-{id:'voss_notebook',title:'Voss\'s Survey Notebook',text:'Commissioner Raymond Voss\'s survey notebook. Normal infrastructure notes until the last pages — he found something while planning a highway route through the eastern hills. Traffic anomalies. Cars routed to destinations they didn\'t select.',category:'discoveries',chance:0.02,collections:['voss','entity']},
-{id:'voss_memo',title:'Crumpled Internal Memo',text:'Someone above Voss told him to reroute the highway "away from the eastern grid, no documentation." The memo is unsigned.',category:'discoveries',chance:0.015,collections:['voss','entity']},
-{id:'voss_journal',title:'Voss\'s Personal Journal',text:'Final weeks of entries. He mapped the entity\'s preferred network — a closed loop. Every road toward the eastern hills completes another segment. He\'d been unknowingly finishing its design for 11 years.',category:'discoveries',chance:0.01,collections:['voss','entity']},
-{id:'voss_map',title:'Voss\'s Hand-Drawn Map',text:'A map of the road network overlaid with something underneath. The subsurface structure and the road network are the same shape. The deepest tunnel leads to "a junction. The oldest one. Everything flows through here."',category:'discoveries',chance:0.008,collections:['voss','entity']},
-{id:'voss_final',title:'Voss\'s Last Entry',text:'"They were here before the town. The roads didn\'t bring people to Millhaven. The roads brought Millhaven to them." Written outside the tunnel entrance. He was gone within a week.',category:'discoveries',chance:0.005,collections:['voss','entity']},
-{id:'geological_survey',title:'Geological Survey Report',text:'The bedrock under the town isn\'t natural. It has structure. Almost like architecture. Voss commissioned this privately. The geologist asked for coordinates. Voss never responded.',category:'discoveries',chance:0.015,collections:['voss','entity','deep_history']},
-{id:'fossil_roads',title:'Fossil Roads',text:'At depth — compressed pathways in the prehistoric stone. Organic. Worm-like. Running in deliberate patterns. A colony of unknown species built these before humans. All routes converge on a central chamber. The human road network above follows the same routes.',category:'discoveries',chance:0.006,collections:['entity','deep_history']},
-{id:'pictographs',title:'Ancient Pictographs',text:'Cave walls showing a circle in the center with lines radiating outward. Small figures moving along the lines. The same image repeated with different figures — not human. Several iterations. Humans are the most recent panel. There is one more panel after humans. Unfinished.',category:'discoveries',chance:0.005,collections:['entity','deep_history']},
-{id:'mei_journal',title:'Mei Chen\'s Journal (1943)',text:'"Something changed in the spring. The restaurant feels different — fuller. Like something is paying attention. My mother would have called it ancestors. I feel well. I feel very well. I think I will be here for a long time."',category:'discoveries',chance:0.01,collections:['mei_chen','entity']},
-{id:'health_inspection',title:'Health Dept. Inspection (1987)',text:'Inspector\'s note: "Owner appears to be in her late thirties. Cross-referencing the business registration from 1941 makes her at minimum 65-70." The follow-up form is blank. Nothing was ever pursued.',category:'discoveries',chance:0.008,collections:['mei_chen']},
-{id:'mei_letter',title:'Mei Chen\'s Unsent Letter',text:'"Dear Daughter — I have been here for fifty years and I think I will be here for fifty more. Tell your children about the restaurant. It will always be here." Addressed to someone in San Francisco.',category:'discoveries',chance:0.008,collections:['mei_chen']},
-{id:'spice_survey',title:'Subsurface Examination — Meridian St.',text:'The building has been constructed, demolished, and reconstructed on this exact footprint a minimum of seven times. The oldest layer contains materials inconsistent with any known North American construction period.',category:'discoveries',chance:0.01,collections:['anand','entity','deep_history']},
-{id:'potawatomi',title:'Missionary Record (1804)',text:'A Potawatomi oral tradition describes this valley as a place the tribe deliberately avoided — a concept translating loosely as "a hunger that mistakes movement for offering."',category:'history',chance:0.008,collections:['entity','deep_history']},
-{id:'norse_inscription',title:'Norse Inscription',text:'Scratched into a rock formation near the eastern hills: "\u00C6\u00F0arvegr" — roughly translating to "the vein-road" or "the path that drinks." How Norse travelers reached this valley is unexplained.',category:'history',chance:0.006,collections:['entity','deep_history']},
-{id:'cave_paintings',title:'Prehistoric Cave Paintings',text:'Lines radiating from a central point underground. Archaeologists in 1962 catalogued them as "trade route maps" and moved on. They\'re not trade routes.',category:'history',chance:0.005,collections:['entity','deep_history']},
-{id:'voss_caruso_note',title:'Voss\'s Note on the Carusos',text:'A single line in Voss\'s notebook, before the supernatural entries: "Caruso operation confirmed. Larger than expected. Leaving it alone." Even Voss decided the Carusos were the smarter thing not to touch.',category:'discoveries',chance:0.008,collections:['voss','caruso']}
+{id:'voss_notebook',title:'Voss\'s Survey Notebook',text:'Survey notebook, leather-bound. Name on inside cover: R. Voss.\nMost pages are routine — lane widths, grade percentages, drainage notes. The last six pages are different.\n"March 14 — Ran traffic count on eastern bypass. 340 vehicles/hr. Expected 120. Where are they coming from?"\n"March 17 — Followed a sedan from the eastern grid. Driver turned left on Meridian. I watched him try to turn right. The wheel turned left. He didn\'t seem to notice."\n"March 20 — Repeated the test with my own car. I intended to drive north. I drove east. I don\'t remember deciding to."',category:'discoveries',chance:0.02,collections:['voss','entity']},
+{id:'voss_memo',title:'Crumpled Internal Memo',text:'Found crumpled in the commissioner\'s office filing cabinet. No letterhead. No signature. Typed on a typewriter that doesn\'t match any municipal equipment.\n"Commissioner Voss —\nReroute the highway extension away from the eastern grid. Do not survey east of Meridian St. Do not file documentation for any work already completed in that sector.\nThis is not a request.\nThere will be no follow-up correspondence on this matter."',category:'discoveries',chance:0.015,collections:['voss','entity']},
+{id:'voss_journal',title:'Voss\'s Personal Journal',text:'Personal journal. Pages water-stained. Final weeks of entries.\n"April 2 — I overlaid every road I\'ve approved in 11 years onto a single map. They form a closed loop. I didn\'t plan a loop. No one plans a loop. Each road made sense on its own. Together they make a shape."\n"April 5 — The shape matches something. I laid my map over the geological survey from \'94. The subsurface structures and my roads are the same drawing. I built this. I didn\'t know I was building this."\n"April 8 — Every new road toward the eastern hills completes another segment. I am not designing these routes. I sit at my desk, I pick up my pen, and the lines are already there."',category:'discoveries',chance:0.01,collections:['voss','entity']},
+{id:'voss_map',title:'Voss\'s Hand-Drawn Map',text:'A large sheet of drafting paper, folded into quarters. Two layers drawn in different ink:\n\nLayer 1 (black ink): The complete Millhaven road network as of 2015. Every street, every bypass, every cul-de-sac. Standard commissioner\'s reference map.\n\nLayer 2 (red ink): Traced from the 1994 geological survey. Subsurface formations at 40-80m depth. Channels, branches, junctions.\n\nThe two layers are identical.\n\nMargins are covered in Voss\'s handwriting, increasingly unsteady:\n"They\'re the same drawing."\n"I didn\'t copy this. I didn\'t know this was down there."\n"Eleven years of roads and I drew the thing that was already underneath."\n\nAn arrow points to a convergence point in the eastern grid, circled three times:\n"A junction. The oldest one. Everything flows through here.\nI have to see it."',category:'discoveries',chance:0.008,collections:['voss','entity']},
+{id:'voss_final',title:'Voss\'s Last Entry',text:'A single sheet of commissioner\'s letterhead, found weighted down with a stone at the eastern tunnel entrance.\n\n"I walked the deepest tunnel today. The one that goes past where the maps end.\n\nThe walls are warm. The floor is smooth — worn smooth, like a path that has been walked for a very long time. By what, I don\'t know. The air moves. It moves in rhythm.\n\nAt the end there is a chamber. I didn\'t go in. I stood at the threshold and I understood.\n\nThey were here before the town. Before Holt. Before the Potawatomi. Before anyone.\n\nThe roads didn\'t bring people to Millhaven. The roads brought Millhaven to them.\n\nI\'m going back tomorrow. I think I\'m meant to.\n\n— R. Voss"\n\nThe date is illegible. His office was cleared out within the week. No forwarding address was filed.',category:'discoveries',chance:0.005,collections:['voss','entity']},
+{id:'geological_survey',title:'Geological Survey Report',text:'PRIVATE GEOLOGICAL ASSESSMENT — Commissioned by R. Voss\nDr. Ellen Marsh, PhD Geology, State University\n"Subsurface imaging reveals structured formations at 40-80m depth inconsistent with natural bedrock. Symmetrical channels radiating from a central mass. Material composition:ite calciumite calciumite calcium —"\nThe line repeats for half a page. Then:\n"I\'m sorry. I don\'t know why I typed that. The formations appear to be load-bearing. Almost architectural. I would like to visit the site. Please send coordinates."\nA handwritten note in the margin, different hand: "Do NOT send coordinates. — V"',category:'discoveries',chance:0.015,collections:['voss','entity','deep_history']},
+{id:'fossil_roads',title:'Fossil Roads',text:'FENWICK GEOLOGICAL — FIELD NOTES (UNPUBLISHED)\nSite: Eastern tunnel system, depth 60m+\nGeologist: Dr. A. Kapoor\nDate: 11/18/1994\n\n"Compressed trace fossils in Carboniferous limestone. Organism unknown — vermiform, large-bore (est. 0.5m diameter). Radiocarbon dating: ~300 million years.\n\nThese are not random burrows. The pathways branch symmetrically, reconnect at fixed intervals, and intersect at consistent angles. There are junctions. There are what I can only describe as on-ramps.\n\nAll routes converge on a central chamber approximately 4m x 4m. The chamber walls are smooth. The chamber is warm — 4°C above ambient rock temperature. There is no geothermal explanation for this.\n\nI am not comfortable with what I am looking at.\n\nRecommendation: Do not extend tunnel system east. Do not send additional survey teams."\n\nDr. Kapoor resigned from Fenwick Geological the following week.',category:'discoveries',chance:0.006,collections:['entity','deep_history']},
+{id:'pictographs',title:'Ancient Pictographs',text:'STATE UNIVERSITY — DEPARTMENT OF ARCHAEOLOGY\nField Catalog Entry #1962-0047\nSite: Millhaven eastern cave system, chamber 3\nRecorded by: Prof. H. Whitfield\n\nPanel 1 (deepest layer, est. 8,000+ years): A large circle drawn below a ground line. Lines radiate upward from the circle to the surface. Small four-legged figures move along the lines.\n\nPanel 2 (overlaid): Same composition. The circle is larger. Different figures on the lines — multi-limbed, not identifiable with any known species.\n\nPanel 3 (overlaid): Same composition. Circle larger still. Figures are bipedal. Human.\n\nPanel 4 (most recent layer): Same composition. The circle fills most of the underground space. The lines reach further. The figures on the lines are—\n\nThe panel is unfinished. The pigment is fresh.\n\nNote: "Fresh" is relative — Dr. Whitfield estimated this layer at 200-400 years old. I re-tested it last week. The pigment is wet.\n\n[Addendum, unsigned:] "Recommend sealing chamber 3. Do not photograph Panel 4."',category:'discoveries',chance:0.005,collections:['entity','deep_history']},
+{id:'mei_journal',title:'Mei Chen\'s Journal (1943)',text:'A cloth-bound journal, Mandarin characters on the cover. Pages translated by State University linguistics department, 2006.\n\nApril 3, 1943:\n"Opened the kitchen window this morning and the air was different. Sweeter. The floorboards are warm even though the furnace has been off since March. Business has been steady — the same twelve customers every day, like clockwork. I don\'t advertise. They just come."\n\nApril 19, 1943:\n"Something changed in the spring. The restaurant feels different — fuller. Like something is paying attention. Like the walls are leaning in to listen. My mother would have called it ancestors. Maybe she was right."\n\nMay 2, 1943:\n"I cut my hand on a kitchen knife last week. A deep cut. It healed in two days. Not a scar.\nI feel well. I feel very well. I haven\'t felt tired since April.\nI think I will be here for a long time."\n\nThe journal continues for another 400 pages. The last entry is dated 2004. The handwriting never changes.',category:'discoveries',chance:0.01,collections:['mei_chen','entity']},
+{id:'health_inspection',title:'Health Dept. Inspection (1987)',text:'MILLHAVEN COUNTY HEALTH DEPARTMENT\nRoutine Inspection Report — Food Service Establishment\nDate: 06/14/1987\nEstablishment: Golden Lotus, 8 Meridian St.\nInspector: R. Farrow, Badge #114\n\nKitchen: Pass\nStorage: Pass\nRefrigeration: Pass\nPest Control: Pass\nHandwashing Station: Pass\nOverall Rating: SATISFACTORY\n\nInspector\'s Notes:\n"Spotless kitchen. Possibly the cleanest I\'ve seen in 20 years. Owner (Mei Chen) was present and cooperative. She appears to be in her late thirties — early forties at most.\n\nI cross-referenced the business registration on file. Golden Lotus was registered in 1941 by Mei Chen. Same name. If this is the same person, she is at minimum 65-70 years old.\n\nI asked her age. She smiled and said \'I\'ve lost count.\'\n\nI noted this discrepancy on Form 7-B for follow-up."\n\nForm 7-B: [BLANK]\nFollow-up inspection: Never scheduled\nInspector R. Farrow transferred to another county three weeks later.',category:'discoveries',chance:0.008,collections:['mei_chen']},
+{id:'mei_letter',title:'Mei Chen\'s Unsent Letter',text:'An unsealed envelope, addressed in careful handwriting:\nLin Chen\n1847 Grant Avenue\nSan Francisco, CA 94133\n\nReturn address: Golden Lotus, 8 Meridian St., Millhaven\n\n"Dear Lin,\n\nI hope this finds you well. I hope the children are growing. I wish I could see them. I wish I could leave.\n\nI don\'t mean that the way it sounds. No one is keeping me here. I simply cannot bring myself to go. I\'ve tried. Twice I packed a suitcase and got as far as the bus station. Both times my feet carried me back to the restaurant before I\'d bought a ticket.\n\nI have been here for fifty years. My hair has not gone grey. My hands do not ache. I think I will be here for fifty more.\n\nDo not come to Millhaven. I mean this.\n\nTell your children about the restaurant. Tell them their grandmother is well. Tell them the Golden Lotus will always be here. It was here before me. It will be here after — well. It will be here.\n\nAll my love,\nMama"\n\nThe letter was never mailed. It was found pressed between pages 312 and 313 of her journal.',category:'discoveries',chance:0.008,collections:['mei_chen']},
+{id:'spice_survey',title:'Subsurface Examination — Meridian St.',text:'GRAYCLIFF ARCHITECTS — STRUCTURAL ASSESSMENT\nClient: Priya Anand (Spice Meridian renovation)\nSite: 12 Meridian St., Millhaven\nDate: 03/22/2024\nEngineer: J. Torres, P.E.\n\n"Client requested standard foundation inspection prior to kitchen renovation. Core samples revealed the following:\n\nLayer 1 (current): Poured concrete, est. 2019\nLayer 2: Concrete block, est. 1988\nLayer 3: Brick and mortar, est. 1952\nLayer 4: Cut stone, est. 1920s\nLayer 5: Dry-stacked fieldstone, est. 1870-1900\nLayer 6: Hand-shaped sandstone, est. ???\nLayer 7: [Material unidentified —ite calciumite calcium]\n\nNote: I typed that twice and it came out the same way. The material in Layer 7 isite calcium\n\nI\'m sorry. I\'m going to describe it differently. The deepest layer is warm to the touch and appears to be calciumite calcium\n\nI have removed my equipment from the site. I recommend the client not excavate below Layer 5.\n\nThe building has been constructed, demolished, and reconstructed on this exact footprint a minimum of seven times. Every iteration sits on the same foundation point. Not approximately. Exactly.\n\nSomeone — or something — keeps rebuilding here."',category:'discoveries',chance:0.01,collections:['anand','entity','deep_history']},
+{id:'potawatomi',title:'Missionary Record (1804)',text:'JOURNAL OF FR. AUGUSTIN DELACROIX\nSociety of Jesus — Western Mission, 1804\n\n"June 9th — Asked the Potawatomi elders about the valley to the southeast. They will not go there. They will not explain why in full.\n\nThe eldest, whom I have come to respect deeply, spoke through the interpreter for some time. The interpreter struggled. He said the concept does not translate cleanly into French or English.\n\nThe closest he could manage: \'a hunger that mistakes movement for offering.\'\n\nI asked what this meant. The elder said: \'Things that move through the valley feed it. They do not know they are feeding it. They believe they are traveling. The roads are its mouth.\'\n\nI asked: \'What roads? There is nothing built there.\'\n\nThe elder looked at me as one looks at a child.\n\n\'There are always roads,\' he said. \'You will build them and believe they are yours.\'"\n\nFr. Delacroix\'s mission was abandoned later that year. His journal was archived at the diocese and not catalogued until 1971.',category:'history',chance:0.008,collections:['entity','deep_history']},
+{id:'norse_inscription',title:'Norse Inscription',text:'STATE UNIVERSITY — DEPARTMENT OF LINGUISTICS\nAnalysis Request #1997-221\nSubmitted by: Fenwick Geological (attn: Dr. Marsh)\n\nObject: Runic inscription carved into exposed rock face, eastern hills, Millhaven.\n\nTranscription: ᚨᚦᚨᚱᚹᛖᚷᚱ\nRomanized: ÆÐARVEGR\n\nTranslation: Compound word. "Æðar" (vein, as in blood vessel) + "vegr" (road, path). Literal: "the vein-road." Poetic interpretation: "the path that drinks."\n\nCarving depth: 3-4mm, consistent with iron or steel tool.\nEstimated age: Inconclusive. Patina suggests 800-1,100 years.\n\nNotes from Dr. K. Lindqvist (Norse Studies):\n"The inscription is genuine Old Norse. This is deeply problematic. There is no credible evidence of Norse exploration this far inland. The nearest confirmed Norse site is over 1,500 miles northeast.\n\nMore troubling: the word \'æðarvegr\' does not appear in any known Norse text, saga, or runic corpus. Whoever carved this either coined a new word or learned it somewhere we have no record of.\n\nThey named the road before it existed. They described it as something that drinks."\n\nFollow-up: None requested. File closed.',category:'history',chance:0.006,collections:['entity','deep_history']},
+{id:'cave_paintings',title:'Prehistoric Cave Paintings',text:'STATE UNIVERSITY — ARCHAEOLOGY FIELD REPORT\nExpedition: Millhaven Valley Survey, Summer 1962\nSite: Cave system, western ridge\nCatalog: "Trade route maps" (classification disputed)\n\nExcerpt from field notes, Prof. R. Yamamoto:\n\n"Five layers of painting, spanning an estimated 2,000-6,000 years. Each layer depicts the same subject: lines radiating from a central point beneath the ground.\n\nMy initial classification was \'trade route maps.\' I no longer believe this is correct.\n\nThe lines do not connect settlements. They do not connect water sources, hunting grounds, or any identifiable landmark. They connect to each other. Every line leads to the same central point, always depicted below the ground surface.\n\nThe central point is drawn larger in each successive layer. In the oldest painting it is the size of a fist. In the most recent it fills the wall.\n\nMultiple cultures painted this. Over thousands of years. They all drew the same thing growing.\n\nI\'ve requested carbon dating on the pigments. I\'ve also requested a geological survey of the area directly beneath this cave.\n\nI would like to know what is under the central point."\n\nThe geological survey was denied. Prof. Yamamoto did not publish this report.',category:'history',chance:0.005,collections:['entity','deep_history']},
+{id:'voss_caruso_note',title:'Voss\'s Note on the Carusos',text:'A page from Voss\'s notebook, dated months before the later entries. Neat handwriting, matter-of-fact:\n"Feb 9 — Confirmed the Caruso operation. Revenue laundering through at least four businesses. Larger than expected. Deputy Commissioner Gerald Caruso has been running it since \'67.\nI could pursue this. I could end my career pursuing this.\nLeaving it alone. Bigger problems east of Meridian."',category:'discoveries',chance:0.008,collections:['voss','caruso']}
 ],
 // Artifacts found when clicking on lake/water tiles
 lake: [
-{id:'tackle_box',title:'Rusted Tackle Box',text:'A fishing tackle box from summer 1987. Handwriting matches Bellini\'s permit application. Lists fishing spots until the last entry: "Someone following me from town again. Third time this week. Thought it was kids. It wasn\'t kids."',category:'discoveries',chance:0.02,collections:['bellini','caruso']},
-{id:'permit_copy',title:'Bellini\'s Permit — DENIED',text:'A waterproof copy of Marco Bellini\'s restaurant permit, stamped DENIED. Reason: "zoning conflict — existing establishment within proximity radius." This rule appears in no other permit denial. Signed by Deputy Commissioner Gerald Caruso.',category:'discoveries',chance:0.015,collections:['bellini','caruso']},
-{id:'weighted_coat',title:'The Weighted Coat',text:'A man\'s coat. Italian wool. One pocket contains a wallet — ID belonging to Marco Bellini, age 29. The other pocket contains stones. Several stones. Enough.',category:'discoveries',chance:0.008,collections:['bellini','caruso']},
-{id:'bridge_foundation',title:'Unfinished Bridge Foundation',text:'Partially built bridge supports underwater — never finished. No record of who started construction or when. The engineering style doesn\'t match any known period.',category:'discoveries',chance:0.01,collections:['entity','deep_history']}
+{id:'tackle_box',title:'Rusted Tackle Box',text:'A green metal tackle box, badly rusted. Latch broken. Inside: tangled line, corroded hooks, a dried-out tube of sunscreen, and a small waterproof notebook.\n\nThe notebook contains a fishing log. Same handwriting as the Bellini permit application.\n\nJune 14: Mirror Lake, north shore. 3 bass. Beautiful morning.\nJune 28: Stillwater Mere. Nothing biting. Water too clear.\nJuly 9: Mirror Lake again. 2 bass, 1 catfish. Met a nice old man — says he\'s fished here since \'55.\nJuly 22: Bellini\'s Pond. (They named it after me! Ha!) 4 bass.\nAug 5: Mirror Lake. Good haul. Saw a black car parked on the access road. No one fishing.\nAug 19: Bellini\'s Pond. Black car again. Parked across the lake. Someone sitting inside.\nSept 3: Didn\'t fish. Went to the permit office instead. Denied again.\nSept 20: Mirror Lake. Someone following me from town again. Third time this week. Thought it was kids.\nIt wasn\'t kids.\n\n[No further entries.]',category:'discoveries',chance:0.02,collections:['bellini','caruso']},
+{id:'permit_copy',title:'Bellini\'s Permit — DENIED',text:'TOWN OF MILLHAVEN — BUSINESS PERMIT APPLICATION\n[WATERPROOF COPY — found in sealed plastic bag at lake bottom]\n\nApplicant: Marco Bellini\nBusiness Name: Bellini\'s Ristorante\nProposed Address: 26 Lakeside Drive\nBusiness Type: Restaurant (Italian cuisine)\nDate Filed: 07/15/1987\n\nStatus: ██ DENIED ██\n\nReason for Denial:\n"Zoning conflict — existing establishment of same cuisine type within municipal proximity radius (Section 12.4.7). Applicant may reapply after a period of not less than 24 months."\n\nReviewed by: Gerald Caruso, Deputy Commissioner\nDate of Decision: 07/16/1987\n\n[Handwritten appeal on back, in Bellini\'s handwriting:]\n"There is no Section 12.4.7. I checked. I went to the town clerk and asked to see the zoning code. Section 12 has six subsections, not seven.\nThe nearest Italian restaurant is La Dolce Via — owned by the Caruso family.\nThe permit was denied by Gerald Caruso.\nI am filing this appeal with the Commissioner directly.\nI am also making a waterproof copy of everything."\n\nAppeal Status: No record of receipt.',category:'discoveries',chance:0.015,collections:['bellini','caruso']},
+{id:'weighted_coat',title:'The Weighted Coat',text:'A man\'s overcoat, pulled from the lake sediment. Italian wool, charcoal grey. Label reads "Sartoria Ferrante — Napoli." Good quality. Expensive for a 29-year-old who hadn\'t opened his restaurant yet.\n\nLeft pocket contents:\n— Wallet (leather, waterlogged)\n  — Driver\'s license: Marco Bellini, DOB 03/11/1958, 26 Lakeside Dr., Millhaven\n  — $14 in cash\n  — A photograph of an older woman, smiling, standing in front of a building with a hand-painted sign in Italian\n  — A business card: "Bellini\'s Ristorante — Coming Soon"\n\nRight pocket contents:\n— Stone (river rock, smooth, ~8 oz)\n— Stone (river rock, smooth, ~10 oz)\n— Stone (river rock, smooth, ~12 oz)\n— Stone (river rock, smooth, ~9 oz)\n— Stone (river rock, smooth, ~11 oz)\n— Stone (river rock, smooth, ~8 oz)\n\nThe stones are not from this lake. They are from the riverbed near La Dolce Via.\n\nThe coat\'s buttons are fastened. All of them. Top to bottom.',category:'discoveries',chance:0.008,collections:['bellini','caruso']},
+{id:'bridge_foundation',title:'Unfinished Bridge Foundation',text:'MILLHAVEN DEPT. OF PUBLIC WORKS — DIVE SURVEY\nDate: 08/03/2009\nDiver: K. Nguyen (contracted)\nSite: Lake bed, northwest quadrant, depth 22ft\n\n"Located four vertical support columns embedded in the lake bed. Approximately 18 inches in diameter, spaced at 30-foot intervals — consistent with a two-lane bridge span.\n\nConstruction is incomplete. The columns end 6 feet below the waterline. No deck, no crossbeams, no road surface.\n\nMaterial is unidentifiable. Not concrete, not steel, not wood. It is smooth and warm to the touch. I held my hand against it for ten seconds. I did not want to let go.\n\nThere is no construction permit, no engineering plan, no work order for a bridge at this location. The lake has been surveyed four times since 1923. No previous survey mentions these columns.\n\nThey were not here before. They are here now.\n\nI am declining further dive work at this site."',category:'discoveries',chance:0.01,collections:['entity','deep_history']}
 ]
 };
 
@@ -873,8 +963,142 @@ pressure:[
 ],
 fire:'A fire broke out overnight. Cause: undetermined. Arson has not been ruled out.',
 rosa_letter:`Dear Commissioner,\nMillhaven is a town that rewards movement. People need to get places. A town without roads is like a body without circulation \u2014 things start to go wrong in ways that are hard to predict and harder to fix.\nI've watched this town for a long time. I've seen commissioners who understood this thrive. I've seen those who didn't... struggle.\nCome for dinner sometime. First meal is on me.\nWarmly, Rosa Caruso`,
-final_warning:'La Dolce Via has been serving this town since 1951. Seventeen commissioners have come and gone. The restaurant has outlasted every one of them. The town needs to move. Things that don\'t move tend to stop.'
+final_warning:'Commissioner,\n\nI\'ll be direct. My family opened La Dolce Via in 1951. Seventeen commissioners have sat in your chair since then. Some built roads. Some didn\'t.\n\nThe ones who built roads are remembered fondly. The ones who didn\'t are not remembered at all.\n\nI\'m not threatening you. I\'m telling you what I\'ve seen. This town has a way of replacing people who don\'t keep things moving. I don\'t mean elections. I mean something quieter than that.\n\nBuild the roads, Commissioner. For your own sake.\n\n— Rosa Caruso'
 };
+
+// ===== MYSTERY DEDUCTIONS =====
+const MYSTERY_DEDUCTIONS = [
+{
+  id:'bellini_murder',
+  requiredPins:['bellini_matchbook','police_report'],
+  question:'The matchbook was printed before Bellini\'s restaurant opened, and the police report was closed by Deputy Commissioner Caruso. What does this suggest?',
+  choices:['Bellini was a criminal who fled town','The Carusos eliminated a business competitor before he could start','The police report is about an unrelated case','Bellini moved away voluntarily'],
+  correctIndex:1,
+  revealsCollections:['bellini','caruso'],
+  bonusLore:'An internal memo surfaces, typed on Deputy Commissioner\'s letterhead:\n\n"To file —\nThe Bellini situation has been resolved. The permit will not be reissued. No restaurant of that type will open on the Lakeside block or any adjacent block.\nThe applicant has been made aware of the town\'s position. He will not reapply.\n— G.C."\n\nDate stamp: October 2, 1987. One day before Bellini\'s last letter home.',
+  bonusCategory:'discoveries',
+  bonusCollections:['bellini','caruso'],
+  hint:'Think about who benefits from a competing restaurant never opening.',
+  difficulty:1
+},
+{
+  id:'bellini_lake',
+  requiredPins:['tackle_box','weighted_coat'],
+  question:'A tackle box with a final entry about being followed, and a coat with stones in the pockets. Both belong to Marco Bellini. What happened at the lake?',
+  choices:['Bellini drowned in a fishing accident','Bellini staged his own death and fled','Bellini was murdered and his death made to look like drowning','The coat belonged to someone else'],
+  correctIndex:2,
+  revealsCollections:['bellini','caruso'],
+  bonusLore:'A handwritten note on Millhaven PD stationery, paperclipped to the back of Case #87-0441. Never entered into evidence.\n\n"Sgt. Holbrook — I was night fishing Oct 4, north shore. Around 3 AM I saw headlights on the access road. Black car, couldn\'t make the model. Two men walked onto the dock. One was tall. The other was shorter, walking unsteady — maybe drunk, maybe not walking by choice.\nI heard a splash. One man walked back to the car.\nI\'m writing this down but I don\'t want my name on anything. You understand.\n— [name redacted by Holbrook]"',
+  bonusCategory:'discoveries',
+  bonusCollections:['bellini','caruso'],
+  hint:'Why would stones be placed in someone\'s coat pockets?',
+  difficulty:1
+},
+{
+  id:'voss_discovery',
+  requiredPins:['voss_notebook','voss_journal'],
+  question:'Voss started with normal survey notes but ended mapping a "closed loop" network. His roads unknowingly completed something. What was Voss building?',
+  choices:['A highway bypass for traffic relief','The entity\'s preferred network — finishing a design that predates the town','A secret escape route out of Millhaven','An irrigation system for the valley'],
+  correctIndex:1,
+  revealsCollections:['voss','entity'],
+  bonusLore:'Voss\'s wife later found a note taped under his desk: "11 years. Every road I built was a suggestion. Not mine. I thought I was planning routes. I was taking dictation."',
+  bonusCategory:'discoveries',
+  bonusCollections:['voss','entity'],
+  hint:'Voss discovered his roads matched something ancient underneath the town.',
+  difficulty:2
+},
+{
+  id:'voss_disappearance',
+  requiredPins:['voss_final','voss_map'],
+  question:'Voss mapped a subsurface structure identical to the road network and wrote "the roads brought Millhaven to them." Who are "them"?',
+  choices:['The Caruso family','The original Potawatomi inhabitants','The entity — something beneath the roads that has been here longer than humans','The state government'],
+  correctIndex:2,
+  revealsCollections:['voss','entity'],
+  bonusLore:'The tunnel entrance where Voss wrote his last entry has been sealed with concrete. No work order exists for the sealing. The concrete is warm to the touch, year-round.',
+  bonusCategory:'discoveries',
+  bonusCollections:['voss','entity'],
+  hint:'"The roads didn\'t bring people to Millhaven." Something else was already here.',
+  difficulty:2
+},
+{
+  id:'deep_network',
+  requiredPins:['fossil_roads','cave_paintings'],
+  question:'Fossil pathways from prehistoric organisms follow the same routes as modern roads. Ancient cave paintings show lines radiating from an underground center. What pattern emerges?',
+  choices:['Coincidental geological formations','A network entity that has guided road-building across multiple species and eras','Ancient humans built the first roads','Natural water drainage patterns'],
+  correctIndex:1,
+  revealsCollections:['entity','deep_history'],
+  bonusLore:'A geologist who studied both sites in 1994 wrote: "The fossil paths aren\'t random burrowing. They\'re infrastructure. Something was already building a transportation network 300 million years before humans arrived. We just paved over it."',
+  bonusCategory:'discoveries',
+  bonusCollections:['entity','deep_history'],
+  hint:'The same network pattern appears across millions of years and different species.',
+  difficulty:3
+},
+{
+  id:'mei_chen_immortal',
+  requiredPins:['mei_journal','health_inspection'],
+  question:'Mei Chen\'s 1943 journal says "I will be here for a long time." A 1987 inspector noted she looks 40 but should be at least 65. What is Mei Chen?',
+  choices:['She has excellent genes','The restaurant is a front and "Mei Chen" is a title passed down','Something in the valley — perhaps the entity — has preserved her','She is lying about her age on documents'],
+  correctIndex:2,
+  revealsCollections:['mei_chen','entity'],
+  bonusLore:'Mei Chen\'s restaurant sits directly above what Voss identified as a major junction in the subsurface network. Her daily revenue — $4,847.00, never varying — matches the numerical value ancient pictographs assign to the central node.',
+  bonusCategory:'discoveries',
+  bonusCollections:['mei_chen','entity'],
+  hint:'Her journal mentions feeling "fuller" as if something is paying attention.',
+  difficulty:2
+},
+{
+  id:'caruso_pitts',
+  requiredPins:['dale_note','caruso_ledger'],
+  question:'Gerald Caruso arranged a secret room at the diner with Dale Pitts. The ledger shows a "family" column three times larger than reported revenue. What was the arrangement?',
+  choices:['A private dining room for VIPs','A money laundering operation using local businesses as fronts','A storage space for restaurant supplies','A gambling operation'],
+  correctIndex:1,
+  revealsCollections:['caruso','pitts'],
+  bonusLore:'Tommy Pitts found a second ledger in Storage B, hidden under a false floor panel. The entries are in Gerald Caruso\'s handwriting.\n\nHolt\'s Diner — Key #1 — $200/mo — "storage"\nSilverline Inc — Key #2 — $350/mo — "document archival"\nHargrove Mutual — Key #3 — $400/mo — "overflow records"\nGilded Ledger Accounting — Key #4 — $275/mo — "seasonal inventory"\nHollow Creek Advisory — Key #5 — $300/mo — "client materials"\nCairn Insurance — Key #6 — $325/mo — "secure filing"\n\nSix businesses. Six keys. Monthly payments in cash. No receipts. No questions.\n\nTommy closed the panel and put the rug back. He hasn\'t opened it since.',
+  bonusCategory:'discoveries',
+  bonusCollections:['caruso','pitts'],
+  hint:'The "visible" and "family" columns suggest two sets of books.',
+  difficulty:1
+},
+{
+  id:'founding_entity',
+  requiredPins:['holt_survey','1940s_plan'],
+  question:'Holt described the valley as "eager to be connected" in 1923. By the 1940s, recommended road routes formed a circulatory system pattern. What guided the town\'s founding?',
+  choices:['Smart urban planning by educated surveyors','The entity\'s influence — the terrain itself guided where roads should go','Natural geography that happens to look like veins','Federal highway standards'],
+  correctIndex:1,
+  revealsCollections:['founding','entity'],
+  bonusLore:'A letter from Elias Holt to his wife, dated May 1923:\n\n"Dearest Martha,\nI know I said we\'d settle near the Hendricks plot up north. I know the paperwork is filed. But I have to tell you what happened.\n\nTwenty miles out, the horse stopped. Wouldn\'t go north. I turned her west — nothing. East — nothing. South — she started walking before I touched the reins.\n\nI let her lead. After ten miles I felt it too. A pulling, Martha. Not in my chest. In the wheels. Like the ground itself had ruts already laid down for us.\n\nThe valley opened up and I knew. My pen moved across the survey paper like it had been here before. I drew the road plan in twenty minutes. It usually takes me weeks.\n\nI\'m sorry. We\'re not going north. This is the place.\n\nYours,\nElias"',
+  bonusCategory:'history',
+  bonusCollections:['founding','entity'],
+  hint:'Holt said the terrain "guided his pen." The valley wanted to be found.',
+  difficulty:2
+},
+{
+  id:'anand_return',
+  requiredPins:['spice_survey','mei_journal'],
+  question:'Spice Meridian\'s foundation has been rebuilt seven times with ancient materials. Mei Chen\'s journal describes the entity\'s attention. Both sit on the network. What draws people to these specific locations?',
+  choices:['Good real estate prices in those neighborhoods','The entity feeds on human activity at network junctions and ensures they remain active','Historical zoning requirements','Family tradition and cultural heritage'],
+  correctIndex:1,
+  revealsCollections:['anand','entity','deep_history'],
+  bonusLore:'Priya Anand\'s mother kept a diary. Entry from 1983: "Left Millhaven today. The baby won\'t stop crying. I feel something pulling us back. We have to keep driving." Priya returned 40 years later, following a recipe box she doesn\'t remember packing.',
+  bonusCategory:'discoveries',
+  bonusCollections:['anand','entity'],
+  hint:'Seven rebuilds across unknown time periods — someone or something keeps bringing people back.',
+  difficulty:3
+},
+{
+  id:'voss_caruso_link',
+  requiredPins:['voss_caruso_note','civic_surcharge'],
+  question:'Voss confirmed the Caruso operation but left it alone. Caruso created a corrupt surcharge to pressure commissioners into building roads. Why would Voss ignore the Carusos?',
+  choices:['Voss was paid off by the Carusos','Voss realized the Carusos\' pressure to build roads served the entity\'s purpose — they were useful','Voss was afraid of the Caruso family','Voss didn\'t have enough evidence'],
+  correctIndex:1,
+  revealsCollections:['voss','caruso'],
+  bonusLore:'A margin note in Voss\'s journal, barely legible: "The Carusos think they run this town. They don\'t know what runs them. Every commissioner they pressure into building roads feeds the same thing I found in the tunnels. Let them keep pushing. It would happen anyway."',
+  bonusCategory:'discoveries',
+  bonusCollections:['voss','caruso','entity'],
+  hint:'Both the Carusos and the entity want the same thing: more roads built.',
+  difficulty:3
+}
+];
 
 // Specific restaurant lore names (guaranteed to spawn)
 const LORE_RESTAURANT_NAMES = {
@@ -918,6 +1142,7 @@ heightMap: [],
 roads: new Map(), // key "x,y" -> road object
 elevatedRoads: new Map(), // key "x,y" -> elevated road object
 dragDirection: null, // 'h' or 'v' for wide road placement
+_lastPlacedPos: null, // last placed road position for one-way direction
 buildings: [], // array of building objects
 vehicles: [], // array of vehicle objects
 intersections: new Map(), // key "x,y" -> intersection control
@@ -952,6 +1177,14 @@ lakeName: null,
 terrainNames: [], // named rivers, lakes, mountains
 loreJournal: { legends: [], discoveries: [], geography: [], history: [] },
 loreCollections: {}, // keyed by collection id → array of entries
+mysteryBoard: {
+  pinnedEntries: [],        // {text, category, day, pinnedAt}
+  connections: [],           // {entryA, entryB, createdAt}
+  solvedDeductions: [],      // deduction IDs
+  failedAttempts: {},        // {deductionId: count}
+  revealedCollections: {},   // {entryText: [collKey...]}
+  unlockedBonusLore: []      // bonus texts added
+},
 schoolNames: {},
 tickAccum: 0,
 lastSave: Date.now(),
@@ -961,6 +1194,7 @@ demolishStart: null, // for area demolish drag
 demolishEnd: null,
 highlightBuildings: [], // building IDs to highlight on map
 highlightColor: '#44ff44', // highlight ring color
+commuteZoneCenter: null, // {x,y} when inspecting office/restaurant
 failedCommutes: 0, // count of failed commute attempts this day
 commuteStats: { officeTotal:0, officeLate:0, restaurantTotal:0, restaurantLate:0, schoolTotal:0, schoolLate:0 },
 weeklyCommuteStats: { officeTotal:0, officeLate:0, restaurantTotal:0, restaurantLate:0, schoolTotal:0, schoolLate:0 },
@@ -969,7 +1203,15 @@ unconnectedHouses: 0, // houses not connected to road network
 tollPlacedThisWeek: false, // whether a toll road has been placed this week
 currentTollGroup: new Set(), // tile keys of this week's toll road placement
 loans: [], // [{amount, remaining, weeklyPayment, interestRate, weeksLeft, bankId}]
-totalDebt: 0 // sum of all remaining loan balances
+totalDebt: 0, // sum of all remaining loan balances
+// Voss discovery bonuses
+vossFound: false, // whether Voss has been found this session (resets each find)
+vossFindsTotal: 0, // lifetime count
+vossActiveBonus: null, // {id, name, desc, icon, expiresDay} or null
+vossIncomeBoost: 1, // multiplier for weekly income
+vossTunnelDiscount: 1, // multiplier for tunnel costs (0.5 = half price)
+vossSpeedBoost: 1, // multiplier for road speeds
+vossMiningBoost: 1 // multiplier for mountain treasure/artifact chances
 };
 }
 
@@ -1037,7 +1279,7 @@ for (let y = 0; y < MAP_H; y++) {
 G.terrain[y] = [];
 G.heightMap[y] = [];
 for (let x = 0; x < MAP_W; x++) {
-let h = perlin.octave(x / 30, y / 30, 5, 0.5);
+let h = perlin.octave(x / 35, y / 35, 5, 0.5);
 let moisture = perlin2.octave(x / 25, y / 25, 4, 0.5);
 G.heightMap[y][x] = h;
 if (hasVanKleekLake) {
@@ -1049,7 +1291,7 @@ h = -0.4;
 }
 if (h < -0.2) {
 G.terrain[y][x] = h < -0.35 ? 4 : 1; // deep water or water
-} else if (h > 0.35) {
+} else if (h > 0.30) {
 G.terrain[y][x] = 2; // mountain
 } else if (moisture > 0.3 && h < -0.05 && Math.random() < 0.15) {
 G.terrain[y][x] = 3; // river
@@ -1122,7 +1364,7 @@ for (let x = 5; x < MAP_W-5; x += 10) {
 if (G.terrain[y][x] === 2 && !visitedMtn.has(`${x},${y}`)) {
 let mSize = 0, sumX = 0, sumY = 0, maxH = 0, peakX = x, peakY = y;
 const queue = [{x,y}];
-while (queue.length > 0 && mSize < 300) {
+while (queue.length > 0 && mSize < 500) {
 const p = queue.pop();
 const pk = `${p.x},${p.y}`;
 if (visitedMtn.has(pk)) continue;
@@ -1190,6 +1432,7 @@ placeRandomBuilding('school_elementary', cx, cy, r - 3);
 placeRandomBuilding('bank', cx, cy, r - 3);
 // Assign families
 assignFamilies();
+computeDepartureTicks();
 }
 
 function placeRandomBuilding(type, cx, cy, range) {
@@ -1331,8 +1574,11 @@ workplaceType: workplace ? workplace.type : null,
 nightShift: isNightShift,
 paidRoadTrait: Math.floor(Math.random() * 4), // 0=always,1=heavy traffic,2=sometimes,3=never
 paidParkingTrait: Math.floor(Math.random() * 3), // 0=always,1=if full,2=never
+punctuality: Math.random() * 2 - 1, // -1.0 (early bird) to +1.0 (tardy)
 atWork: false,
-arrivedOnTime: true
+arrivedOnTime: true,
+targetDepartTick: null,
+spawnedToday: false
 });
 }
 // Children (50% chance)
@@ -1616,7 +1862,7 @@ for (let x = minX; x <= maxX; x++) {
 const sp = worldToScreen(x, y);
 if (sp.x < -tw || sp.x > C.width + tw || sp.y < -th*3 || sp.y > C.height + th*3) continue;
 const bRoad = G.roads.get(`${x},${y}`);
-if (bRoad && (bRoad.type === 'road_bridge' || bRoad.bridge)) continue;
+if (bRoad && (bRoad.type === 'road_flyover' || bRoad.bridge)) continue;
 const ttype = G.terrain[y][x];
 const color = getTerrainColor(ttype, x, y);
 drawTileSurface(sp.x, sp.y, color, tw, th);
@@ -1675,6 +1921,28 @@ ctx.font = `italic ${(tn.type === 'mountain' ? 11 : 10)*zoom}px 'Segoe UI'`;
 ctx.textAlign = 'center';
 ctx.fillText(tn.name, lp.x, lp.y - (tn.type === 'mountain' ? 30 : 8)*zoom);
 });
+// Draw commute zone rings when inspecting office/restaurant
+if (G.commuteZoneCenter) {
+const czc = G.commuteZoneCenter;
+const zoneColors = ['rgba(76,175,80,0.12)','rgba(255,235,59,0.10)','rgba(255,152,0,0.09)','rgba(244,67,54,0.08)','rgba(156,39,176,0.07)'];
+const zoneDistances = [8, 16, 25, 35, 50];
+ctx.save();
+for (let zi = zoneDistances.length - 1; zi >= 0; zi--) {
+const tileDist = zoneDistances[zi];
+const screenRadius = tileDist * TILE * zoom * COS_A * 1.4;
+const sp = worldToScreen(czc.x, czc.y);
+ctx.fillStyle = zoneColors[zi];
+ctx.beginPath();
+ctx.ellipse(sp.x, sp.y, screenRadius, screenRadius * 0.5, 0, 0, Math.PI * 2);
+ctx.fill();
+ctx.strokeStyle = zoneColors[zi].replace(/[\d.]+\)$/, '0.35)');
+ctx.lineWidth = 1.5;
+ctx.beginPath();
+ctx.ellipse(sp.x, sp.y, screenRadius, screenRadius * 0.5, 0, 0, Math.PI * 2);
+ctx.stroke();
+}
+ctx.restore();
+}
 // Draw roads
 G.roads.forEach((road, key) => {
 const [rx, ry] = key.split(',').map(Number);
@@ -1719,14 +1987,14 @@ ctx.fill();
 }
 }
 });
-// Bridge inter-tile diagonal gap filler
-G.roads.forEach((road, key) => {
-const isBr = road.type === 'road_bridge' || road.bridge;
+// Bridge/flyover inter-tile diagonal gap filler
+const gapFillRoads = (road, key) => {
+const isBr = road.type === 'road_flyover' || road.bridge;
 if (!isBr) return;
 const [rx, ry] = key.split(',').map(Number);
 const sp = worldToScreen(rx, ry);
 if (sp.x < -tw*2 || sp.x > C.width + tw*2 || sp.y < -th*3 || sp.y > C.height + th*3) return;
-const isBridgeAt2 = (k) => { const r = G.roads.get(k) || G.elevatedRoads.get(k); return r && (r.type==='road_bridge'||r.bridge||r.type==='road_elevated'); };
+const isBridgeAt2 = (k) => { const r = G.roads.get(k) || G.elevatedRoads.get(k); return r && (r.type==='road_flyover'||r.bridge); };
 const bl = 6 * zoom;
 const bridgeColor = getRoadColor(road);
 const bsp = {x: sp.x, y: sp.y - bl};
@@ -1748,7 +2016,9 @@ ctx.closePath();
 ctx.fill();
 }
 }
-});
+};
+G.roads.forEach(gapFillRoads);
+G.elevatedRoads.forEach(gapFillRoads);
 // Draw driveways from buildings to adjacent road (max 1 tile)
 // Draw driveways from buildings to adjacent road (max 1 tile)
 G.buildings.forEach(b => {
@@ -1757,7 +2027,8 @@ if (bsp.x < -tw*3 || bsp.x > C.width + tw*3 || bsp.y < -th*6 || bsp.y > C.height
 // Only draw driveway to directly adjacent road (1 tile away)
 for (const [ddx, ddy] of [[0,-1],[0,1],[-1,0],[1,0]]) {
 const rx = b.x + ddx, ry = b.y + ddy;
-if (G.roads.has(`${rx},${ry}`) || G.elevatedRoads.has(`${rx},${ry}`)) {
+const adjRoad = G.roads.get(`${rx},${ry}`) || G.elevatedRoads.get(`${rx},${ry}`);
+if (adjRoad && !adjRoad.type.includes('highway')) {
 const roadSp = worldToScreen(rx, ry);
 const driveColor = `rgba(155,150,140,${amb * 0.75})`;
 const edgeColor = `rgba(120,115,105,${amb * 0.5})`;
@@ -1976,6 +2247,10 @@ G.vehicles.forEach(v => {
 if (!v.active) return;
 const sp = worldToScreen(v.x, v.y);
 if (sp.x < -20 || sp.x > C.width + 20 || sp.y < -20 || sp.y > C.height + 20) return;
+// Offset Y for elevated vehicles (matching bridge lift)
+if (v.level === 1) {
+sp.y -= 12 * zoom; // match elevated bridgeLift
+}
 drawVehicle(sp, v, zoom);
 });
 // Draw maintenance vehicles
@@ -2264,20 +2539,20 @@ renderMinimap();
 function getRoadColor(road) {
 const amb = getAmbient();
 switch(road.type) {
-case 'road_1lane': return adjustBrightness('#909098', amb);
+case 'road_1lane': return adjustBrightness('#9a8868', amb);
 case 'road_2lane': case 'paid_2lane': return adjustBrightness('#a0a0a8', amb);
+case 'road_oneway': return adjustBrightness('#a8a0b0', amb);
 case 'road_multi': case 'paid_multi': return adjustBrightness('#b0b0b8', amb);
 case 'road_highway': case 'paid_highway': return adjustBrightness('#c8c0a8', amb);
-case 'road_bridge': return adjustBrightness('#c0a880', amb);
-case 'road_elevated': return adjustBrightness('#c8c0a8', amb);
+case 'road_flyover': return adjustBrightness('#b0b0b0', amb);
 case 'road_tunnel': return adjustBrightness('#787068', amb);
 default: return adjustBrightness('#989898', amb);
 }
 }
 function getRoadWidth(road) {
-if (road.type === 'road_elevated') return 0.42;
-if (road.type.includes('highway') || road.type.includes('multi')) return 0.42;
-if (road.type.includes('2lane') || road.type.includes('bridge')) return 0.32;
+if (road.type.includes('highway')) return 0.50;
+if (road.type.includes('multi')) return 0.42;
+if (road.type.includes('2lane') || road.type.includes('flyover') || road.type === 'road_oneway') return 0.32;
 return 0.24;
 }
 
@@ -2302,15 +2577,17 @@ const conCount = (hasN?1:0) + (hasS?1:0) + (hasE?1:0) + (hasW?1:0);
 
 // Tile-based approach: fill full isometric diamond as road surface
 const roadH = 2 * zoom;
-const isBridge = road.type === 'road_bridge' || road.bridge;
-const isElevated = road.type === 'road_elevated';
+const isFlyover = road.type === 'road_flyover';
+const isBridge = isFlyover || road.bridge;
+const isElevated = road.type.includes('highway') && road.elevation === 1;
+const isGroundHighway = road.type.includes('highway') && road.elevation === 0;
 const isTunnel = road.type === 'road_tunnel';
 
 // Bridge/tunnel/elevated neighbor detection for seamless rendering
-const isBridgeAt = (k) => { const r = G.roads.get(k); return r && (r.type==='road_bridge'||r.bridge); };
+const isBridgeAt = (k) => { const r = G.roads.get(k) || G.elevatedRoads.get(k); return r && (r.type==='road_flyover'||r.bridge); };
 const isTunnelAt = (k) => { const r = G.roads.get(k) || G.elevatedRoads.get(k); return r && r.type==='road_tunnel'; };
 const isElevatedAt = (k) => G.elevatedRoads.has(k);
-const isHighwayAt = (k) => { const r = G.roads.get(k) || G.elevatedRoads.get(k); return r && (r.type.includes('highway') || r.type === 'road_elevated'); };
+const isHighwayAt = (k) => { const r = G.roads.get(k) || G.elevatedRoads.get(k); return r && r.type.includes('highway'); };
 // Bridges/elevated connect to other bridges, elevated, highways, and regular roads (smooth on-ramp)
 const isBridgeNeighbor = (k) => isBridgeAt(k) || isElevatedAt(k) || isHighwayAt(k) || G.roads.has(k);
 const hasBridgeN = (isBridge || isElevated) && isBridgeNeighbor(`${rx},${ry-1}`);
@@ -2328,9 +2605,8 @@ if (isBridge || isElevated) {
 // Draw terrain underneath first (slightly oversized to cover gaps with adjacent water)
 const terrainType = (ry >= 0 && ry < MAP_H && rx >= 0 && rx < MAP_W) ? G.terrain[ry][rx] : 0;
 const underColor = getTerrainColor(terrainType, rx, ry);
-const overDraw = Math.max(1, zoom * 0.5); // pixel overlap to seal edges
+const overDraw = isElevated ? Math.max(4, zoom * 4) : Math.max(1, zoom * 0.5);
 drawTileSurface(sp.x, sp.y, underColor, tw + overDraw, th + overDraw);
-// Bridge/elevated deck raised above — slightly oversized to eliminate sub-pixel gaps
 const bridgeLift = isElevated ? 12 * zoom : 6 * zoom;
 drawTileSurface(sp.x, sp.y - bridgeLift, color, tw + overDraw, th + overDraw);
 // Side walls on non-connected edges to seal bridge visually against water
@@ -2488,7 +2764,7 @@ const cLeft = {x: sp.x - hx, y: sp.y};
 const terrainType = (ry >= 0 && ry < MAP_H && rx >= 0 && rx < MAP_W) ? G.terrain[ry][rx] : 0;
 const grassColor = getTerrainColor(terrainType, rx, ry);
 const shoulderW = (1 - rw * 1.3) / 2; // how much shoulder on each side (0 = no shoulder)
-if (shoulderW > 0.02 && !isBridge && !isTunnel) {
+if (shoulderW > 0.02 && !isBridge && !isTunnel && !isElevated) {
 // Draw shoulder wedges at non-connected edges
 if (!hasN) {
 // N edge (top→right): draw terrain wedge
@@ -2586,12 +2862,13 @@ ctx.closePath();
 ctx.fill();
 }
 
-// 4. Lane markings — number of lines reflects road type
-if (road.type !== 'road_1lane' && road.type !== 'road_tunnel' && conCount >= 2) {
+// Edge midpoints (needed for arrows/indicators even outside lane markings)
 const midN = {x:(cTop.x+cRight.x)/2, y:(cTop.y+cRight.y)/2};
 const midE = {x:(cRight.x+cBottom.x)/2, y:(cRight.y+cBottom.y)/2};
 const midS = {x:(cBottom.x+cLeft.x)/2, y:(cBottom.y+cLeft.y)/2};
 const midW = {x:(cLeft.x+cTop.x)/2, y:(cLeft.y+cTop.y)/2};
+// 4. Lane markings — number of lines reflects road type
+if (road.type !== 'road_1lane' && road.type !== 'road_tunnel' && conCount >= 2) {
 const mids = [];
 if (hasN) mids.push(midN);
 if (hasE) mids.push(midE);
@@ -2600,7 +2877,7 @@ if (hasW) mids.push(midW);
 // How many lane lines? 2lane=1 center, multi=2, highway=3
 const isMulti = road.type.includes('multi');
 const isHighway = road.type.includes('highway');
-const laneCount = isHighway ? 3 : isMulti ? 2 : 1;
+const laneCount = isHighway ? 2 : isMulti ? 2 : 1;
 // Helper: check if neighbor at direction is a narrower road type
 const isNarrowNeighbor = (dir) => {
 const nk = dir === 'N' ? `${rx},${ry-1}` : dir === 'S' ? `${rx},${ry+1}` : dir === 'E' ? `${rx+1},${ry}` : `${rx-1},${ry}`;
@@ -2665,12 +2942,37 @@ ctx.stroke();
 }
 }
 ctx.setLineDash([]);
+// One-way arrows for one-way roads
+if (road.oneWayDir && mids.length >= 2) {
+const owDir = road.oneWayDir;
+// Map direction to iso screen vector
+// N=(0,-1), S=(0,1), E=(1,0), W=(-1,0)
+// In iso: moving N means toward cTop, S toward cBottom, E toward cRight, W toward cLeft
+const dirMid = owDir.dy === -1 ? midN : owDir.dy === 1 ? midS : owDir.dx === 1 ? midE : midW;
+const arrowDx = dirMid.x - sp.x, arrowDy = dirMid.y - sp.y;
+const arrowLen = Math.sqrt(arrowDx*arrowDx + arrowDy*arrowDy) || 1;
+const adx = arrowDx / arrowLen, ady = arrowDy / arrowLen;
+const perpX = -ady, perpY = adx;
+const arrowSize = Math.max(3, zoom * 3.5);
+ctx.fillStyle = `rgba(255,255,255,${amb * 0.45})`;
+// Draw 2 arrows along the road direction, spaced apart
+for (const t of [0.3, 0.7]) {
+const ax = sp.x + arrowDx * t;
+const ay = sp.y + arrowDy * t;
+ctx.beginPath();
+ctx.moveTo(ax + adx * arrowSize, ay + ady * arrowSize);
+ctx.lineTo(ax - perpX * arrowSize * 0.5, ay - perpY * arrowSize * 0.5);
+ctx.lineTo(ax + perpX * arrowSize * 0.5, ay + perpY * arrowSize * 0.5);
+ctx.closePath();
+ctx.fill();
+}
+}
 // Highway edge lines (solid white) — taper at narrower neighbors
 if (isHighway && mids.length >= 2) {
 ctx.strokeStyle = `rgba(255,255,255,${amb * 0.5})`;
 ctx.lineWidth = Math.max(1, zoom * 0.8);
 ctx.setLineDash([]);
-const edgeOff = 0.22;
+const edgeOff = 0.32;
 if (mids.length === 2) {
 const ldx = mids[1].x - mids[0].x, ldy = mids[1].y - mids[0].y;
 const llen = Math.sqrt(ldx*ldx + ldy*ldy) || 1;
@@ -2689,6 +2991,58 @@ ctx.stroke();
 }
 }
 }
+// Highway: yellow center divider + bold one-way arrows
+if (isHighway && mids.length === 2) {
+const ldx = mids[1].x - mids[0].x, ldy = mids[1].y - mids[0].y;
+const llen = Math.sqrt(ldx*ldx + ldy*ldy) || 1;
+ctx.strokeStyle = `rgba(255,210,30,${amb * 0.85})`;
+ctx.lineWidth = Math.max(2, zoom * 1.8);
+ctx.setLineDash([]);
+ctx.beginPath();
+ctx.moveTo(mids[0].x, mids[0].y);
+ctx.lineTo(mids[1].x, mids[1].y);
+ctx.stroke();
+if (road.oneWayDir) {
+const owDir = road.oneWayDir;
+const dirMid = owDir.dy === -1 ? midN : owDir.dy === 1 ? midS : owDir.dx === 1 ? midE : midW;
+if (dirMid) {
+const arrowDx = dirMid.x - sp.x, arrowDy = dirMid.y - sp.y;
+const arrowLen = Math.sqrt(arrowDx*arrowDx + arrowDy*arrowDy) || 1;
+const adx = arrowDx / arrowLen, ady = arrowDy / arrowLen;
+const perpX2 = -ady, perpY2 = adx;
+const arrowSize = Math.max(6, zoom * 7);
+ctx.fillStyle = `rgba(255,255,255,${amb * 0.95})`;
+for (const t of [0.25, 0.50, 0.75]) {
+const ax = sp.x + arrowDx * t, ay = sp.y + arrowDy * t;
+ctx.beginPath();
+ctx.moveTo(ax + adx * arrowSize, ay + ady * arrowSize);
+ctx.lineTo(ax - perpX2 * arrowSize * 0.65, ay - perpY2 * arrowSize * 0.65);
+ctx.lineTo(ax + adx * arrowSize * 0.15, ay + ady * arrowSize * 0.15);
+ctx.lineTo(ax + perpX2 * arrowSize * 0.65, ay + perpY2 * arrowSize * 0.65);
+ctx.closePath(); ctx.fill();
+}
+}
+}
+ctx.setLineDash([]);
+}
+// Ground-level highway barrier lines (solid orange/red to show limited access)
+if (isGroundHighway && conCount >= 2 && mids.length >= 2) {
+ctx.strokeStyle = `rgba(255,140,40,${amb * 0.6})`;
+ctx.lineWidth = Math.max(1.5, zoom * 1.0);
+ctx.setLineDash([]);
+const barrierOff = 0.24;
+if (mids.length === 2) {
+const ldx = mids[1].x - mids[0].x, ldy = mids[1].y - mids[0].y;
+const llen = Math.sqrt(ldx*ldx + ldy*ldy) || 1;
+for (const side of [-1, 1]) {
+const px = (-ldy / llen) * barrierOff * side * tw, py = (ldx / llen) * barrierOff * side * th;
+ctx.beginPath();
+ctx.moveTo(mids[0].x + px, mids[0].y + py);
+ctx.lineTo(mids[1].x + px, mids[1].y + py);
+ctx.stroke();
+}
+}
+}
 }
 
 // Paid road indicator
@@ -2698,7 +3052,52 @@ ctx.font = `bold ${8*zoom}px sans-serif`;
 ctx.textAlign = 'center';
 ctx.fillText('$', sp.x, sp.y + 3*zoom);
 }
-// (Bridge and tunnel visuals handled in tile fill above)
+// Flyover indicator: entry dot (green), exit arrow (yellow), plus center direction arrow
+if (isFlyover && road.oneWayDir) {
+const fLift = 6 * zoom;
+const owDir = road.oneWayDir;
+// Center direction arrow on each flyover tile
+const dirMidFly = owDir.dy === -1 ? midN : owDir.dy === 1 ? midS : owDir.dx === 1 ? midE : midW;
+if (dirMidFly) {
+const aDx = dirMidFly.x - sp.x, aDy = dirMidFly.y - sp.y - fLift;
+const aLen = Math.sqrt(aDx*aDx + aDy*aDy) || 1;
+const adxN = aDx/aLen, adyN = aDy/aLen;
+const perpXF = -adyN, perpYF = adxN;
+const aSize = Math.max(4, zoom * 4.5);
+ctx.fillStyle = `rgba(255,220,50,${amb * 0.9})`;
+for (const t of [0.35, 0.65]) {
+const ax = sp.x + aDx * t, ay = sp.y - fLift + (dirMidFly.y - sp.y) * t;
+ctx.beginPath();
+ctx.moveTo(ax + adxN * aSize, ay + adyN * aSize);
+ctx.lineTo(ax - perpXF * aSize * 0.5, ay - perpYF * aSize * 0.5);
+ctx.lineTo(ax + adxN * aSize * 0.15, ay + adyN * aSize * 0.15);
+ctx.lineTo(ax + perpXF * aSize * 0.5, ay + perpYF * aSize * 0.5);
+ctx.closePath(); ctx.fill();
+}
+}
+// Entry/exit markers at tile edges
+for (const [ddx,ddy] of [[0,-1],[0,1],[1,0],[-1,0]]) {
+const isExit  = owDir.dx === ddx && owDir.dy === ddy;
+const isEntry = owDir.dx === -ddx && owDir.dy === -ddy;
+if (!isExit && !isEntry) continue;
+const ex = sp.x + ddx*tw*0.28, ey = sp.y + ddy*th*0.28 - fLift;
+if (isExit) {
+const ax = ddx*tw*0.15, ay = ddy*th*0.15;
+const px2 = -ddy*th*0.10, py2 = ddx*tw*0.10;
+ctx.fillStyle = `rgba(255,210,30,${amb * 0.95})`;
+ctx.beginPath();
+ctx.moveTo(ex+ax, ey+ay);
+ctx.lineTo(ex-ax+px2, ey-ay+py2);
+ctx.lineTo(ex-ax-px2, ey-ay-py2);
+ctx.closePath(); ctx.fill();
+} else {
+ctx.fillStyle = `rgba(60,210,100,${amb * 0.95})`;
+ctx.beginPath();
+ctx.arc(ex, ey, Math.max(3, zoom*3), 0, Math.PI*2);
+ctx.fill();
+}
+}
+}
 // Breakdown indicator
 if (road.breakdown) {
 ctx.fillStyle = '#ff6644';
@@ -3229,26 +3628,50 @@ Math.max(0,topLeft.y) * scaleY,
 }
 
 // ===== PATHFINDING (A*) =====
+function getRoadAtLevel(x, y, level) {
+const k = `${x},${y}`;
+if (level === 1) {
+const r = G.elevatedRoads.get(k);
+if (r && (r.elevation === 1 || r.type === 'road_flyover')) return r;
+return null;
+}
+// Level 0: ground roads + ground-level highways + flyovers (flyovers connect both levels)
+const r = G.roads.get(k);
+if (r && (r.elevation || 0) === 0) return r;
+const er = G.elevatedRoads.get(k);
+if (er && (er.elevation || 0) === 0) return er;
+if (er && er.type === 'road_flyover') return er;
+return null;
+}
+
+function isFlyoverTile(x, y) {
+const k = `${x},${y}`;
+const r = G.elevatedRoads.get(k);
+return r && r.type === 'road_flyover';
+}
+
 function findPath(startX, startY, endX, endY) {
 const cacheKey = `${startX},${startY}-${endX},${endY}-${G.lastRoadChangeId}`;
 if (G.pathCache.has(cacheKey)) return G.pathCache.get(cacheKey);
-// Find nearest road to start and end (max 2 tiles — must have driveway/road access)
-const startRoad = findNearestRoad(startX, startY, 2);
-const endRoad = findNearestRoad(endX, endY, 2);
+// Find nearest ground-level non-highway road to start and end
+const startRoad = findNearestRoad(startX, startY, 2, {excludeHighways: true, levelFilter: 0});
+const endRoad = findNearestRoad(endX, endY, 2, {excludeHighways: true, levelFilter: 0});
 if (!startRoad || !endRoad) return null;
 const open = new Map();
 const closed = new Set();
 const gScore = new Map();
 const fScore = new Map();
 const cameFrom = new Map();
-const startKey = `${startRoad.x},${startRoad.y}`;
-const endKey = `${endRoad.x},${endRoad.y}`;
+const startLevel = 0; // buildings always connect at ground level
+const endLevel = 0;
+const startKey = `${startRoad.x},${startRoad.y},${startLevel}`;
+const endKey = `${endRoad.x},${endRoad.y},${endLevel}`;
 gScore.set(startKey, 0);
 const heuristic = (x1,y1,x2,y2) => Math.abs(x1-x2) + Math.abs(y1-y2);
 fScore.set(startKey, heuristic(startRoad.x, startRoad.y, endRoad.x, endRoad.y));
-open.set(startKey, {x: startRoad.x, y: startRoad.y});
+open.set(startKey, {x: startRoad.x, y: startRoad.y, level: startLevel});
 let iterations = 0;
-while (open.size > 0 && iterations < 5000) {
+while (open.size > 0 && iterations < 8000) {
 iterations++;
 // Find lowest fScore in open
 let current = null, currentKey = null, lowestF = Infinity;
@@ -3259,12 +3682,12 @@ if (f < lowestF) { lowestF = f; current = node; currentKey = key; }
 if (!current) break;
 if (currentKey === endKey) {
 // Reconstruct path
-const path = [{x: current.x, y: current.y}];
+const path = [{x: current.x, y: current.y, level: current.level}];
 let k = currentKey;
 while (cameFrom.has(k)) {
 k = cameFrom.get(k);
-const [px, py] = k.split(',').map(Number);
-path.unshift({x: px, y: py});
+const parts = k.split(',').map(Number);
+path.unshift({x: parts[0], y: parts[1], level: parts[2]});
 }
 if (G.pathCache.size > 500) G.pathCache.clear();
 G.pathCache.set(cacheKey, path);
@@ -3272,22 +3695,81 @@ return path;
 }
 open.delete(currentKey);
 closed.add(currentKey);
-// Neighbors (4 directions)
+// Neighbors (4 directions, same level)
 const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+const curLevel = current.level;
+const curIsFlyover = isFlyoverTile(current.x, current.y);
 for (const [dx, dy] of dirs) {
 const nx = current.x + dx, ny = current.y + dy;
-const nk = `${nx},${ny}`;
-if (closed.has(nk)) continue;
-const nRoad = G.roads.get(nk) || G.elevatedRoads.get(nk);
-if (!nRoad) continue;
-if (nRoad.breakdown && nRoad.blocking) continue;
+// Try same-level neighbor
+const nRoad = getRoadAtLevel(nx, ny, curLevel);
+if (nRoad && !(nRoad.breakdown && nRoad.blocking)) {
+// One-way enforcement: check if traveling FROM current TO neighbor is allowed
+const curRoad = getRoadAtLevel(current.x, current.y, curLevel);
+if (curRoad && curRoad.oneWayDir && (curRoad.oneWayDir.dx !== dx || curRoad.oneWayDir.dy !== dy)) {
+// Can't leave this tile in the wrong direction — skip
+} else if (nRoad.oneWayDir && (nRoad.oneWayDir.dx !== dx || nRoad.oneWayDir.dy !== dy)) {
+// Can't enter that tile going the wrong way — skip
+} else {
+const nk = `${nx},${ny},${curLevel}`;
+if (!closed.has(nk)) {
 const moveCost = 1 / (ROAD_SPEED[nRoad.type] || 1);
 const tentG = (gScore.get(currentKey) || 0) + moveCost;
 if (tentG < (gScore.get(nk) || Infinity)) {
 cameFrom.set(nk, currentKey);
 gScore.set(nk, tentG);
 fScore.set(nk, tentG + heuristic(nx, ny, endRoad.x, endRoad.y));
-if (!open.has(nk)) open.set(nk, {x: nx, y: ny});
+if (!open.has(nk)) open.set(nk, {x: nx, y: ny, level: curLevel});
+}
+}
+} // end one-way else
+}
+// Level transition: only via flyover tiles
+// If current tile is a flyover, we can reach adjacent tiles at the OTHER level
+if (curIsFlyover) {
+const otherLevel = curLevel === 0 ? 1 : 0;
+const nRoadOther = getRoadAtLevel(nx, ny, otherLevel);
+if (nRoadOther && !(nRoadOther.breakdown && nRoadOther.blocking)) {
+// One-way check: respect target tile's oneWayDir for level transitions too
+const canEnter = !nRoadOther.oneWayDir || (nRoadOther.oneWayDir.dx === dx && nRoadOther.oneWayDir.dy === dy);
+if (canEnter) {
+const nk = `${nx},${ny},${otherLevel}`;
+if (!closed.has(nk)) {
+const moveCost = 1 / (ROAD_SPEED[nRoadOther.type] || 1) + 0.5; // small penalty for level change
+const tentG = (gScore.get(currentKey) || 0) + moveCost;
+if (tentG < (gScore.get(nk) || Infinity)) {
+cameFrom.set(nk, currentKey);
+gScore.set(nk, tentG);
+fScore.set(nk, tentG + heuristic(nx, ny, endRoad.x, endRoad.y));
+if (!open.has(nk)) open.set(nk, {x: nx, y: ny, level: otherLevel});
+}
+}
+}
+}
+}
+// If the neighbor IS a flyover, we can enter it from either level
+const neighborIsFlyover = isFlyoverTile(nx, ny);
+if (neighborIsFlyover && curLevel !== 0) {
+// Can enter flyover from elevated level too
+const flyRoad = getRoadAtLevel(nx, ny, 1);
+if (flyRoad && !(flyRoad.breakdown && flyRoad.blocking)) {
+// One-way check on current tile leaving direction
+const curRoad2 = getRoadAtLevel(current.x, current.y, curLevel);
+const canLeave = !curRoad2 || !curRoad2.oneWayDir || (curRoad2.oneWayDir.dx === dx && curRoad2.oneWayDir.dy === dy);
+if (canLeave) {
+const nk = `${nx},${ny},${curLevel}`;
+if (!closed.has(nk)) {
+const moveCost = 1 / (ROAD_SPEED[flyRoad.type] || 1);
+const tentG = (gScore.get(currentKey) || 0) + moveCost;
+if (tentG < (gScore.get(nk) || Infinity)) {
+cameFrom.set(nk, currentKey);
+gScore.set(nk, tentG);
+fScore.set(nk, tentG + heuristic(nx, ny, endRoad.x, endRoad.y));
+if (!open.has(nk)) open.set(nk, {x: nx, y: ny, level: curLevel});
+}
+}
+}
+}
 }
 }
 }
@@ -3295,14 +3777,20 @@ G.pathCache.set(cacheKey, null);
 return null;
 }
 
-function findNearestRoad(x, y, maxR) {
+function findNearestRoad(x, y, maxR, opts) {
 const limit = maxR || 10;
+const excludeHighways = opts && opts.excludeHighways;
+const levelFilter = opts && opts.levelFilter !== undefined ? opts.levelFilter : null;
 for (let r = 0; r < limit; r++) {
 for (let dx = -r; dx <= r; dx++) {
 for (let dy = -r; dy <= r; dy++) {
 if (Math.abs(dx) !== r && Math.abs(dy) !== r) continue;
 const k = `${x+dx},${y+dy}`;
-if (G.roads.has(k) || G.elevatedRoads.has(k)) return {x: x+dx, y: y+dy};
+const road = G.roads.get(k) || G.elevatedRoads.get(k);
+if (!road) continue;
+if (excludeHighways && road.type.includes('highway')) continue;
+if (levelFilter !== null && (road.elevation || 0) !== levelFilter) continue;
+return {x: x+dx, y: y+dy};
 }
 }
 }
@@ -3345,11 +3833,14 @@ function hasNearbyRoad(x, y) {
 if (!G.connectedRoadSet || G.lastConnectedRoadChangeId !== G.lastRoadChangeId) {
 computeConnectedRoads();
 }
-// Check immediate cardinal neighbors (N/S/E/W) for a connected road
+// Check immediate cardinal neighbors (N/S/E/W) for a connected ground-level non-highway road
 const cardinals = [[0,-1],[0,1],[1,0],[-1,0]];
 for (const [dx, dy] of cardinals) {
 const k = `${x+dx},${y+dy}`;
-if (G.connectedRoadSet.has(k)) return true;
+if (!G.connectedRoadSet.has(k)) continue;
+const road = G.roads.get(k) || G.elevatedRoads.get(k);
+if (road && road.type.includes('highway')) continue;
+return true;
 }
 // Check if this building has an attached parking lot that connects to a road
 const parking = G.parkingLots.find(p => p.buildingId && p.buildingId === getBuildingIdAt(x, y));
@@ -3413,14 +3904,26 @@ if (x < 0 || x >= MAP_W || y < 0 || y >= MAP_H) return false;
 // Check playable area
 const pdx = x - G.playableCenter.x, pdy = y - G.playableCenter.y;
 if (Math.sqrt(pdx*pdx + pdy*pdy) > G.playableRadius + 1) return false;
-// Block road placement on building tiles
-if (G.buildings.some(b => b.x === x && b.y === y)) return false;
+// Block road placement on building tiles (highways/flyovers also blocked adjacent to buildings)
+const isHighwayType = type.includes('highway');
+if (G.buildings.some(b => {
+if (b.x === x && b.y === y) return true;
+if (isHighwayType && Math.abs(b.x - x) <= 1 && Math.abs(b.y - y) <= 1) return true;
+return false;
+})) return false;
 // Block road placement on parking lot tiles
 if (G.parkingLots.some(p => p.x === x && p.y === y)) return false;
 const key = `${x},${y}`;
-// Elevated roads can overlay existing ground roads
-if (type === 'road_elevated') {
+// Elevated roads and highways can overlay existing ground roads
+if (type === 'road_highway' || type === 'paid_highway') {
 if (G.elevatedRoads.has(key)) return false;
+const terrain = G.terrain[y][x];
+return terrain === 0 || terrain === 1 || terrain === 3 || terrain === 4 || G.roads.has(key);
+}
+// Flyovers go over ground roads (stored in elevatedRoads map)
+if (type === 'road_flyover') {
+if (G.elevatedRoads.has(key)) return false;
+// Block flyover if tile already has an elevated road (highway)
 const terrain = G.terrain[y][x];
 return terrain === 0 || terrain === 1 || terrain === 3 || terrain === 4 || G.roads.has(key);
 }
@@ -3433,7 +3936,6 @@ return terrain === 2 || terrain === 0 || G.roads.has(key);
 // Normal roads: can't place if tile already occupied
 if (G.roads.has(key)) return false;
 const terrain = G.terrain[y][x];
-if (type === 'road_bridge') return terrain === 1 || terrain === 3 || terrain === 4 || terrain === 0;
 // Auto-convert: any road type can go on water (becomes bridge) or mountain (becomes tunnel)
 if (terrain === 1 || terrain === 3 || terrain === 4 || terrain === 2) return true;
 if (terrain !== 0) return false;
@@ -3444,48 +3946,105 @@ return true;
 // Now preserves original road type for water — bridge flag is set in placeRoad instead
 function getAutoRoadType(type, x, y) {
 const terrain = G.terrain[y][x];
-// If explicitly placing a bridge or it's an elevated road, keep the type
-if (type === 'road_bridge' || type === 'road_elevated') return type;
+// If explicitly placing a flyover or it's an elevated road, keep the type
+if (type === 'road_flyover') return type;
 // Water terrain: keep original type (bridge flag added in placeRoad)
 if (terrain === 1 || terrain === 3 || terrain === 4) return type;
 if (terrain === 2) return 'road_tunnel'; // mountain -> tunnel
 return type;
 }
 
-function placeRoad(type, x, y) {
+function placeRoad(type, x, y, freePlacement) {
 const key = `${x},${y}`;
-if (type === 'road_elevated' || type === 'road_tunnel') {
+if (type === 'road_tunnel' || type === 'road_flyover' || type === 'road_highway' || type === 'paid_highway') {
 if (G.elevatedRoads.has(key)) return false;
 } else {
 if (G.roads.has(key)) return false;
 }
 // Auto-convert road type based on terrain
 type = getAutoRoadType(type, x, y);
-const cost = ROAD_COSTS[type] || 25;
+let cost = ROAD_COSTS[type] || 25;
+// Highway setup vs extend cost logic
+if (type === 'road_highway' || type === 'paid_highway') {
+const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+const adjacentHighway = dirs.some(([dx, dy]) => {
+const nk = `${x+dx},${y+dy}`;
+const r = G.roads.get(nk) || G.elevatedRoads.get(nk);
+return r && r.type.includes('highway');
+});
+if (adjacentHighway) {
+// Check if extending from a ground-level highway — cheaper cost
+const adjGroundHighway = dirs.some(([dx, dy]) => {
+const nk = `${x+dx},${y+dy}`;
+const r = G.roads.get(nk) || G.elevatedRoads.get(nk);
+return r && r.type.includes('highway') && (r.elevation || 0) === 0;
+});
+if (type === 'paid_highway') {
+cost = PAID_HIGHWAY_EXTEND_COST;
+} else {
+cost = adjGroundHighway ? HIGHWAY_EXTEND_COST_GROUND : HIGHWAY_EXTEND_COST;
+}
+} else {
+cost = type === 'paid_highway' ? PAID_HIGHWAY_SETUP_COST : HIGHWAY_SETUP_COST;
+}
+}
+// Apply Voss tunnel discount if active
+if (type === 'road_tunnel' && G.vossTunnelDiscount && G.vossTunnelDiscount < 1) {
+cost = Math.floor(cost * G.vossTunnelDiscount);
+}
 if (G.terrain[y][x] === 2) {
+// Apply mining boost from Voss bonus
+const miningMult = G.vossMiningBoost || 1;
+// Check for Raymond Voss discovery — requires 3+ Voss artifacts, extremely rare
+const vossArtifacts = (G.artifactsFound||[]).filter(a=>a.startsWith('voss_')).length;
+if (vossArtifacts >= 3 && Math.random() < 0.004) {
+// Found Voss! Pick a random bonus
+const bonus = VOSS_BONUSES[Math.floor(Math.random() * VOSS_BONUSES.length)];
+// Remove previous active bonus if any
+if (G.vossActiveBonus) {
+const prev = VOSS_BONUSES.find(b=>b.id===G.vossActiveBonus.id);
+if (prev) prev.remove(G);
+}
+bonus.apply(G);
+G.vossFindsTotal = (G.vossFindsTotal||0) + 1;
+G.vossActiveBonus = bonus.durationDays > 0 ? {id:bonus.id,name:bonus.name,desc:bonus.desc,icon:bonus.icon,expiresDay:G.day+bonus.durationDays} : null;
+G.discoveredSecrets.push('voss_found');
+const findNum = G.vossFindsTotal;
+const vossTexts = [
+'A figure sits in the deepest chamber, studying a map by lantern light. He looks up. "Another commissioner. You found me." He hands you his notes. "Use these. The network is patient, but you don\'t have to be."',
+'The tunnel opens into a warm chamber. Raymond Voss is here, tracing lines on the stone wall. "The routes are clearer from down here," he says. "Take this — it\'ll help you see what I see."',
+'At the end of the passage, a small camp. A bedroll. A lantern. Stacks of survey maps. Voss looks up from his work. "I wondered when you\'d dig this far. Here — I\'ve been preparing something for whoever came next."',
+'The chamber hums. Voss sits cross-legged at the center, eyes closed. He opens them slowly. "It told me you were coming," he says. "Don\'t ask what \'it\' is. You already know. Take this and build."',
+'You find him at a junction where six tunnels converge. He looks younger than his photographs. "Time moves differently down here," he says, smiling. "I mapped something for you. The mountains are full of gifts, if you know where to look."'
+];
+const vossText = vossTexts[Math.min(findNum-1, vossTexts.length-1)];
+showArtifactPopup('Raymond Voss', vossText + '\n\n' + bonus.icon + ' BONUS: ' + bonus.name + '\n' + bonus.desc);
+showNotification(`${bonus.icon} Found Raymond Voss! ${bonus.name}: ${bonus.desc}`);
+addToJournal('discoveries', `You found Raymond Voss in the deepest tunnel. ${bonus.icon} ${bonus.name}: ${bonus.desc}`, ['voss','entity']);
+}
 // Treasure in mountains — increased frequency and value
-if (Math.random() < 0.09) {
+else if (Math.random() < 0.09 * miningMult) {
 // Gold: common, good payout
 const goldAmount = 400 + Math.floor(Math.random() * 1200);
 G.money += goldAmount;
 G.discoveredSecrets.push('gold');
 showNotification(`⛏️ Gold vein struck! +$${goldAmount}! The mountain runs deep.`);
 addToJournal('discoveries', `⛏️ Gold vein struck while tunneling — +$${goldAmount}`, ['deep_history']);
-} else if (Math.random() < 0.04) {
+} else if (Math.random() < 0.04 * miningMult) {
 // Rare silver seam
 const silverAmount = 1500 + Math.floor(Math.random() * 1000);
 G.money += silverAmount;
 G.discoveredSecrets.push('silver_seam');
 showNotification(`🪨 Silver seam discovered! +$${silverAmount}! Pure ore, deep in the rock.`);
 addToJournal('discoveries', `🪨 Silver seam uncovered in the mountain — +$${silverAmount}`, ['deep_history']);
-} else if (Math.random() < 0.025) {
+} else if (Math.random() < 0.025 * miningMult) {
 // Ancient artifact cache
 const artifactAmount = 2500 + Math.floor(Math.random() * 1500);
 G.money += artifactAmount;
 G.discoveredSecrets.push('ancient_artifact');
 showNotification(`🏺 Ancient artifact cache! +$${artifactAmount}! These predate the town by centuries.`);
 addToJournal('discoveries', `🏺 Ancient artifact cache unearthed — +$${artifactAmount}`, ['deep_history','entity']);
-} else if (Math.random() < 0.012) {
+} else if (Math.random() < 0.012 * miningMult) {
 // Crystal cavern — rare, massive
 G.money += 12000;
 G.discoveredSecrets.push('crystal_cavern');
@@ -3501,17 +4060,68 @@ tryDiscoverArtifact('ground');
 }
 // Track road building for Caruso escalation
 G.lastRoadBuildDay = G.day;
+if (freePlacement) { cost = 0; }
 if (G.mode !== 'creative' && G.money < cost) {
 showNotification('Not enough money!');
 return false;
 }
-if (G.mode !== 'creative') G.money -= cost;
+if (G.mode !== 'creative' && cost > 0) G.money -= cost;
 // Show floating cost popup
-showCostPopup(x, y, cost, type);
-const road = {type, placedDay: G.day, placedTick: G.dayTick, breakdown: false, blocking: false, name: generateRoadName()};
+if (cost > 0) showCostPopup(x, y, cost, type);
+const isHighwayType = type.includes('highway');
+const elevation = isHighwayType ? 1 : 0;
+const road = {type, placedDay: G.day, placedTick: G.dayTick, breakdown: false, blocking: false, name: generateRoadName(), elevation};
+// One-way roads and flyovers — direction determined by drag direction
+if (type === 'road_oneway' || type === 'road_flyover') {
+const prev = G._lastPlacedPos;
+if (prev) {
+const ddx = x - prev.x, ddy = y - prev.y;
+if (Math.abs(ddx) + Math.abs(ddy) === 1) {
+road.oneWayDir = {dx: ddx, dy: ddy};
+} else {
+// Not adjacent: inherit from nearest flyover/oneway neighbor
+const dirs2 = [[0,-1],[0,1],[-1,0],[1,0]];
+for (const [adx,ady] of dirs2) {
+const nr = G.elevatedRoads.get(`${x+adx},${y+ady}`) || G.roads.get(`${x+adx},${y+ady}`);
+if (nr && nr.oneWayDir) { road.oneWayDir = nr.oneWayDir; break; }
+}
+}
+} else if (type === 'road_flyover') {
+// First flyover placed: default east
+road.oneWayDir = {dx: 1, dy: 0};
+}
+G._lastPlacedPos = {x, y};
+if (type === 'road_oneway') road.speedLimitMPH = 60;
+}
+// Highways — always one-lane one-way, direction set by drag direction (wrong-way forbidden)
+if (type === 'road_highway' || type === 'paid_highway') {
+const prev = G._lastPlacedPos;
+if (prev) {
+const ddx = x - prev.x, ddy = y - prev.y;
+if (Math.abs(ddx) + Math.abs(ddy) === 1) {
+road.oneWayDir = {dx: ddx, dy: ddy};
+} else {
+// Not adjacent: inherit direction from a neighboring highway tile
+const dirs2 = [[0,-1],[0,1],[-1,0],[1,0]];
+for (const [adx,ady] of dirs2) {
+const nr = G.elevatedRoads.get(`${x+adx},${y+ady}`);
+if (nr && nr.type.includes('highway') && nr.oneWayDir) { road.oneWayDir = nr.oneWayDir; break; }
+}
+}
+} else {
+// First tile placed: try to inherit from adjacent highway, else default east
+const dirs2 = [[0,-1],[0,1],[-1,0],[1,0]];
+for (const [adx,ady] of dirs2) {
+const nr = G.elevatedRoads.get(`${x+adx},${y+ady}`);
+if (nr && nr.type.includes('highway') && nr.oneWayDir) { road.oneWayDir = nr.oneWayDir; break; }
+}
+if (!road.oneWayDir) road.oneWayDir = {dx: 1, dy: 0}; // default: east
+}
+G._lastPlacedPos = {x, y};
+}
 // Set bridge flag for any road placed on water (preserves original type's capacity/speed)
 const terrain = G.terrain[y][x];
-if ((terrain === 1 || terrain === 3 || terrain === 4) && type !== 'road_bridge') {
+if ((terrain === 1 || terrain === 3 || terrain === 4) && type !== 'road_flyover') {
 road.bridge = true;
 }
 if (type.startsWith('paid')) {
@@ -3534,8 +4144,8 @@ road.paid = true;
 road.tollTier = 1;
 road.tollRevenue = 0;
 }
-// Elevated roads and tunnels go in separate map so they can overlay ground roads
-if (type === 'road_elevated' || type === 'road_tunnel') {
+// Elevated roads, flyovers, tunnels, and highways go in separate map so they can overlay ground roads
+if (type === 'road_tunnel' || type === 'road_flyover' || type === 'road_highway' || type === 'paid_highway') {
 G.elevatedRoads.set(key, road);
 } else {
 G.roads.set(key, road);
@@ -3559,39 +4169,82 @@ showNotification('🔥 Over 60% toll roads! Town economy grinding to a halt!');
 }
 updateHUD();
 }
+// Flyover placement guidance: warn if not adjacent to both ground and elevated roads
+if (type === 'road_flyover') {
+const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+let hasGroundAdj = false, hasElevatedAdj = false;
+for (const [dx, dy] of dirs) {
+const nk = `${x+dx},${y+dy}`;
+const nr = G.roads.get(nk) || G.elevatedRoads.get(nk);
+if (nr) {
+if ((nr.elevation || 0) === 0 && !nr.type.includes('highway')) hasGroundAdj = true;
+if ((nr.elevation || 0) === 1 || nr.type.includes('highway')) hasElevatedAdj = true;
+}
+}
+if (hasGroundAdj && hasElevatedAdj) {
+showNotification('Flyover ramp connects ground road to highway');
+} else if (!hasGroundAdj && !hasElevatedAdj) {
+showNotification('Tip: Place flyover between a ground road and an elevated highway for best results');
+} else if (hasGroundAdj) {
+showNotification('Tip: Place flyover between a ground road and an elevated highway for best results');
+} else {
+showNotification('Tip: Place flyover between a ground road and an elevated highway for best results');
+}
+}
 return true;
 }
 
-function placeWideRoad(type, x, y, direction) {
+function placeWideRoad(type, x, y, direction, flowDir) {
 // direction: 'h' = horizontal drag -> widen vertically, 'v' = vertical drag -> widen horizontally
+// flowDir: {dx, dy} = direction of traffic flow along the road (from drag step)
 const isMulti = type.includes('multi');
-const isHighway = type.includes('highway') || type === 'road_elevated';
-const width = isHighway ? 3 : isMulti ? 2 : 1;
+const isHighway = type.includes('highway');
+const width = isHighway ? 2 : isMulti ? 2 : 1;
 if (width === 1) { placeRoad(type, x, y); return; }
-const offsets = width === 3 ? [-1, 0, 1] : [0, 1]; // 3-wide or 2-wide
+const offsets = [0, 1]; // 2-wide for highway and multi
 const parentKey = `${x},${y}`;
 const childKeys = [];
 for (const off of offsets) {
 const nx = direction === 'h' ? x : x + off;
 const ny = direction === 'h' ? y + off : y;
 if (canPlaceRoad(type, nx, ny)) {
-if (placeRoad(type, nx, ny)) {
+// For highways: only the center tile (offset=0) pays, flanking tiles are free
+const isFlanking = (type.includes('highway')) && off !== 0;
+if (placeRoad(type, nx, ny, isFlanking)) {
 const nk = `${nx},${ny}`;
 childKeys.push(nk);
 // Mark child tiles with parent reference
-const roadMap = type === 'road_elevated' ? G.elevatedRoads : G.roads;
+const roadMap = (type === 'road_tunnel' || type === 'road_flyover' || type === 'road_highway' || type === 'paid_highway') ? G.elevatedRoads : G.roads;
 const r = roadMap.get(nk);
 if (r && (nx !== x || ny !== y)) {
 r.parentRoad = parentKey;
 }
+// Multi-lane & Highway: set one-way direction per tile
+if (r && (isMulti || isHighway) && flowDir) {
+r.multiLaneGroup = true; // tag for intersection skipping
+if (isHighway) {
+// Both lanes of highway go the SAME direction (one-way highway)
+r.oneWayDir = {dx: flowDir.dx, dy: flowDir.dy};
+} else if (off === 0) {
+r.oneWayDir = {dx: flowDir.dx, dy: flowDir.dy};
+} else {
+r.oneWayDir = {dx: -flowDir.dx, dy: -flowDir.dy};
 }
 }
 }
-// Mark parent with children
-const roadMap = type === 'road_elevated' ? G.elevatedRoads : G.roads;
+}
+}
+// Mark parent with children + multi-lane tag
+const roadMap = (type === 'road_tunnel' || type === 'road_flyover' || type === 'road_highway' || type === 'paid_highway') ? G.elevatedRoads : G.roads;
 const parentRoad = roadMap.get(parentKey);
 if (parentRoad) {
 parentRoad.childRoads = childKeys.filter(k => k !== parentKey);
+if ((isMulti || isHighway) && flowDir) {
+parentRoad.multiLaneGroup = true;
+if (!parentRoad.oneWayDir) {
+parentRoad.oneWayDir = {dx: flowDir.dx, dy: flowDir.dy};
+}
+}
 }
 }
 
@@ -3600,9 +4253,55 @@ return ROAD_NAME_PARTS[0][Math.floor(Math.random()*ROAD_NAME_PARTS[0].length)] +
 ROAD_NAME_PARTS[1][Math.floor(Math.random()*ROAD_NAME_PARTS[1].length)];
 }
 
+function toggleHighwayElevation(key) {
+const [x, y] = key.split(',').map(Number);
+// Find the road in either map
+let road = G.elevatedRoads.get(key);
+let fromElevated = true;
+if (!road) {
+road = G.roads.get(key);
+fromElevated = false;
+}
+if (!road) return;
+if (!road.type.includes('highway')) return;
+// Toggle elevation
+road.elevation = road.elevation === 1 ? 0 : 1;
+// Move between maps
+if (fromElevated && road.elevation === 0) {
+G.elevatedRoads.delete(key);
+G.roads.set(key, road);
+} else if (!fromElevated && road.elevation === 1) {
+G.roads.delete(key);
+G.elevatedRoads.set(key, road);
+}
+// Handle child tiles
+if (road.childRoads) {
+for (const ck of road.childRoads) {
+const child = G.elevatedRoads.get(ck) || G.roads.get(ck);
+if (child) {
+child.elevation = road.elevation;
+if (fromElevated && road.elevation === 0) {
+G.elevatedRoads.delete(ck);
+G.roads.set(ck, child);
+} else if (!fromElevated && road.elevation === 1) {
+G.roads.delete(ck);
+G.elevatedRoads.set(ck, child);
+}
+}
+}
+}
+G.lastRoadChangeId++;
+G.pathCache.clear();
+updateIntersections(x, y);
+showNotification(road.elevation === 1 ? 'Highway raised to elevated level — extend cost $15/tile' : 'Highway lowered — extend cost reduced to $10/tile');
+// Refresh inspect panel
+showInspectInfo(x, y);
+}
+
 function updateIntersections(x, y) {
 // Check this tile and all neighbors for intersection status
 const dirs = [[0,-1],[0,1],[-1,0],[1,0]];
+const dirNames = ['N','S','W','E']; // matching dirs array order
 const tilesToCheck = [{x, y}];
 for (const [dx, dy] of dirs) {
 tilesToCheck.push({x: x+dx, y: y+dy});
@@ -3612,14 +4311,49 @@ const tk = `${tile.x},${tile.y}`;
 const tileRoad = G.roads.get(tk) || G.elevatedRoads.get(tk);
 if (!tileRoad) continue;
 // No automatic stop signs on highways or elevated highways
-if (tileRoad.type && (tileRoad.type.includes('highway') || tileRoad.type === 'road_elevated')) continue;
+if (tileRoad.type && tileRoad.type.includes('highway')) continue;
+// Flyovers and tunnels never get intersections — they pass over/under ground roads
+if (tileRoad.type === 'road_flyover' || tileRoad.type === 'road_tunnel') continue;
+const isMultiLane = tileRoad.multiLaneGroup || (tileRoad.type && tileRoad.type.includes('multi'));
+// Count non-sibling road neighbors and track which are smaller roads
 let roadCount = 0;
-for (const [dx, dy] of dirs) {
-if (G.roads.has(`${tile.x+dx},${tile.y+dy}`) || G.elevatedRoads.has(`${tile.x+dx},${tile.y+dy}`)) roadCount++;
+let stopDirs = {N:false,S:false,E:false,W:false};
+let hasSmaller = false;
+let hasMulti = false;
+for (let di = 0; di < dirs.length; di++) {
+const [dx, dy] = dirs[di];
+const nk = `${tile.x+dx},${tile.y+dy}`;
+const neighbor = G.roads.get(nk);
+if (!neighbor || neighbor.multiLaneGroup) continue;
+roadCount++;
+const neighborIsMulti = neighbor.type && neighbor.type.includes('multi');
+if (neighborIsMulti) {
+hasMulti = true;
+} else {
+hasSmaller = true;
 }
-if (roadCount >= 3) {
+}
+if (roadCount >= 3 || (isMultiLane && hasSmaller && roadCount >= 1)) {
+if (isMultiLane) {
+// Multi-lane tile: only stop directions where smaller roads connect
+for (let di = 0; di < dirs.length; di++) {
+const [dx, dy] = dirs[di];
+const nk = `${tile.x+dx},${tile.y+dy}`;
+const neighbor = G.roads.get(nk);
+if (!neighbor || neighbor.multiLaneGroup) continue;
+const neighborIsMulti = neighbor.type && neighbor.type.includes('multi');
+if (!neighborIsMulti) {
+stopDirs[dirNames[di]] = true; // stop sign facing the smaller road
+}
+}
+if (Object.values(stopDirs).some(v => v)) {
+G.intersections.set(tk, {type: 'stop', stopDirs, greenAxis: 'NS', timer: 0});
+}
+} else {
+// Regular road: all-way stop as before
 if (!G.intersections.has(tk)) {
 G.intersections.set(tk, {type: 'stop', stopDirs: {N:true,S:true,E:true,W:true}, greenAxis: 'NS', timer: 0});
+}
 }
 }
 }
@@ -3723,16 +4457,60 @@ const CAR_COLORS = ['#e74c3c','#3498db','#2ecc71','#f1c40f','#9b59b6','#e67e22',
 const TRUCK_COLORS = ['#f5f5dc','#e8e8e8','#c0c8d0','#d4a574','#8b7355','#b0b0b0'];
 let weeklyTruckTolls = 0;
 
-function spawnVehicle(family, memberIdx, destX, destY, purpose) {
+function spawnVehicleFrom(family, memberIdx, fromX, fromY, destX, destY, purpose) {
 const member = family.members[memberIdx];
-const hx = family.houseTile.x, hy = family.houseTile.y;
-// House must have a directly adjacent road (driveway connection) to drive away
-if (!findNearestRoad(hx, hy, 2)) {
+if (!findNearestRoad(fromX, fromY, 2, {excludeHighways: true, levelFilter: 0})) {
 if (purpose === 'commute' || purpose === 'return') G.failedCommutes++;
 return null;
 }
-// Destination must also have a nearby road
-if (!findNearestRoad(destX, destY, 2)) {
+if (!findNearestRoad(destX, destY, 2, {excludeHighways: true, levelFilter: 0})) {
+if (purpose === 'commute' || purpose === 'return') G.failedCommutes++;
+return null;
+}
+const path = findPath(fromX, fromY, destX, destY);
+if (!path || path.length === 0) {
+if (purpose === 'commute' || purpose === 'return') G.failedCommutes++;
+return null;
+}
+const startPt = path[0];
+const v = {
+active: true,
+familyId: family.id,
+memberIdx,
+x: startPt.x,
+y: startPt.y,
+level: startPt.level || 0,
+destX, destY,
+purpose,
+path: path,
+pathIdx: 0,
+speed: 0.05,
+color: CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)],
+angle: 0,
+braking: false,
+departTick: G.dayTick,
+arrived: false,
+lane: 0,
+targetLane: 0,
+laneChangeTimer: 0,
+usePaidRoad: member ? member.paidRoadTrait : 3,
+usePaidParking: member ? member.paidParkingTrait : 2,
+tollPaidRoads: new Set()
+};
+G.vehicles.push(v);
+return v;
+}
+
+function spawnVehicle(family, memberIdx, destX, destY, purpose) {
+const member = family.members[memberIdx];
+const hx = family.houseTile.x, hy = family.houseTile.y;
+// House must have a directly adjacent ground-level non-highway road (driveway connection)
+if (!findNearestRoad(hx, hy, 2, {excludeHighways: true, levelFilter: 0})) {
+if (purpose === 'commute' || purpose === 'return') G.failedCommutes++;
+return null;
+}
+// Destination must also have a nearby ground-level non-highway road
+if (!findNearestRoad(destX, destY, 2, {excludeHighways: true, levelFilter: 0})) {
 if (purpose === 'commute' || purpose === 'return') G.failedCommutes++;
 return null;
 }
@@ -3749,6 +4527,7 @@ familyId: family.id,
 memberIdx,
 x: startPt.x,
 y: startPt.y,
+level: startPt.level || 0,
 destX, destY,
 purpose,
 path: path,
@@ -3759,6 +4538,9 @@ angle: 0,
 braking: false,
 departTick: G.dayTick,
 arrived: false,
+lane: 0,
+targetLane: 0,
+laneChangeTimer: 0,
 usePaidRoad: member ? member.paidRoadTrait : 3,
 usePaidParking: member ? member.paidParkingTrait : 2
 };
@@ -3777,6 +4559,13 @@ G.lastRoadChangeId++;
 G.pathCache.clear();
 }
 }
+// Build per-tile vehicle count map for capacity enforcement
+const tileVehicleCount = new Map();
+for (const v of G.vehicles) {
+if (!v.active || v.crashed) continue;
+const tk = `${Math.floor(v.x)},${Math.floor(v.y)}`;
+tileVehicleCount.set(tk, (tileVehicleCount.get(tk) || 0) + 1);
+}
 for (let i = G.vehicles.length - 1; i >= 0; i--) {
 const v = G.vehicles[i];
 if (!v.active) { G.vehicles.splice(i, 1); continue; }
@@ -3793,7 +4582,10 @@ const dist = Math.sqrt(dx*dx + dy*dy);
 // Check road speed
 const roadKey = `${Math.floor(v.x)},${Math.floor(v.y)}`;
 const road = G.roads.get(roadKey) || G.elevatedRoads.get(roadKey);
-const roadSpeed = road ? (ROAD_SPEED[road.type] || 1) : 0.5;
+const rawRoadSpeed = (road ? (ROAD_SPEED[road.type] || 1) : 0.5) * (G.vossSpeedBoost || 1);
+// Per-road speed limit (only one-way roads have adjustable limits)
+const perRoadLimit = road && road.speedLimitMPH ? road.speedLimitMPH / 30 : Infinity;
+const roadSpeed = Math.min(rawRoadSpeed, perRoadLimit);
 // Check for crash at or ahead of this location
 const vx = Math.floor(v.x), vy = Math.floor(v.y);
 const lookCos = Math.cos(v.angle || 0), lookSin = Math.sin(v.angle || 0);
@@ -3813,8 +4605,14 @@ let trafficSlowdown = 1;
 let tooClose = false;
 let closestAheadDist = Infinity;
 const vCos = Math.cos(v.angle || 0), vSin = Math.sin(v.angle || 0);
-// Determine if current vehicle is on a multi-lane road (2-lane, multi, highway, elevated, paid variants)
-const isMultiLane = road && road.type !== 'road_1lane' && road.type !== 'road_tunnel';
+// Determine lane count for current road
+const lanesPerDir = road ? (ROAD_LANES_PER_DIR[road.type] || 1) : 1;
+const isMultiLane = lanesPerDir >= 2;
+// Lane change cooldown
+if (v.laneChangeTimer > 0) v.laneChangeTimer -= dt;
+// Overtaking detection
+let blockedInLane = false;
+let blockedSpeed = Infinity;
 for (let j = 0; j < G.vehicles.length; j++) {
 const ov = G.vehicles[j];
 if (ov === v || !ov.active || ov.crashed) continue;
@@ -3823,22 +4621,33 @@ const oDist = Math.sqrt(odx*odx + ody*ody);
 // Check if this vehicle is ahead of us
 const dotProduct = odx * vCos + ody * vSin;
 if (oDist < 4.0 && dotProduct > 0) {
-// On multi-lane roads, skip vehicles traveling in the opposite direction (other lane)
-if (isMultiLane) {
+// On multi-lane roads, use lane index to filter
+if (lanesPerDir >= 1) {
 const ovCos = Math.cos(ov.angle || 0), ovSin = Math.sin(ov.angle || 0);
 const dirDot = vCos * ovCos + vSin * ovSin;
-// dirDot < 0 means roughly opposite direction — different lane, ignore
+// Skip opposite direction vehicles
 if (dirDot < 0) continue;
-// Also check lateral offset: if vehicle is far to the side, it's in another lane
-const lateralDist = Math.abs(-odx * vSin + ody * vCos);
-if (lateralDist > 0.35 && dirDot < 0.5) continue;
+// Skip vehicles in different lanes (same direction)
+if (isMultiLane && (v.lane || 0) !== (ov.lane || 0)) continue;
 }
 if (oDist < closestAheadDist) closestAheadDist = oDist;
+// Track blocking for overtake decisions
+if (oDist < 2.5 && isMultiLane) {
+blockedInLane = true;
+const ovRoadKey = `${Math.floor(ov.x)},${Math.floor(ov.y)}`;
+const ovRoad = G.roads.get(ovRoadKey) || G.elevatedRoads.get(ovRoadKey);
+const ovSpeed = ovRoad ? (ROAD_SPEED[ovRoad.type] || 1) : 0.5;
+blockedSpeed = Math.min(blockedSpeed, ovSpeed);
+}
 // Progressive braking based on distance to vehicle ahead
 if (oDist < 0.5) {
 tooClose = true;
-// Crash only at very close range AND both moving fast AND no stop sign nearby
-if (oDist < 0.15 && !v.braking && !ov.braking) {
+// Crash check — base crash at very close range, plus speed-based crash chance
+const effectiveMPH = road ? getRoadEffectiveMPH(road) : 15;
+const speedCrashMod = getSpeedCrashChance(effectiveMPH);
+const crashThreshold = speedCrashMod > 0 ? 0.25 : 0.15;
+const speedCrashRoll = speedCrashMod > 0 && oDist < 0.3 && !v.braking ? Math.random() < speedCrashMod * 0.002 : false;
+if ((oDist < crashThreshold && !v.braking && !ov.braking) || speedCrashRoll) {
 const crashKey = `${Math.floor((v.x+ov.x)/2)},${Math.floor((v.y+ov.y)/2)}`;
 const nearInt = G.intersections.get(crashKey);
 if (!nearInt || (nearInt.type !== 'stop' && nearInt.type !== 'light')) {
@@ -3884,6 +4693,50 @@ trafficSlowdown = Math.min(trafficSlowdown, 0.5 + (oDist - 2.5) / 3);
 }
 }
 if (v.crashed) continue;
+// Overtaking logic: if blocked in current lane on multi-lane road, try to change lanes
+if (isMultiLane && blockedInLane && v.laneChangeTimer <= 0) {
+const curLane = v.lane || 0;
+// Try passing lane (higher index)
+const passLane = curLane + 1;
+if (passLane < lanesPerDir) {
+// Check if passing lane is clear
+let passClear = true;
+for (let j = 0; j < G.vehicles.length; j++) {
+const ov = G.vehicles[j];
+if (ov === v || !ov.active || ov.crashed) continue;
+if ((ov.lane || 0) !== passLane) continue;
+const odx = ov.x - v.x, ody = ov.y - v.y;
+const oDist = Math.sqrt(odx*odx + ody*ody);
+const ovCos = Math.cos(ov.angle || 0), ovSin = Math.sin(ov.angle || 0);
+const dirDot = vCos * ovCos + vSin * ovSin;
+if (dirDot > 0 && oDist < 3.0) { passClear = false; break; }
+}
+if (passClear) {
+v.lane = passLane;
+v.targetLane = passLane;
+v.laneChangeTimer = 30;
+}
+}
+} else if (isMultiLane && !blockedInLane && (v.lane || 0) > 0 && v.laneChangeTimer <= 0) {
+// Return to slow lane (lane 0) when no longer blocked
+let slowClear = true;
+const targetLane = (v.lane || 0) - 1;
+for (let j = 0; j < G.vehicles.length; j++) {
+const ov = G.vehicles[j];
+if (ov === v || !ov.active || ov.crashed) continue;
+if ((ov.lane || 0) !== targetLane) continue;
+const odx = ov.x - v.x, ody = ov.y - v.y;
+const oDist = Math.sqrt(odx*odx + ody*ody);
+const ovCos = Math.cos(ov.angle || 0), ovSin = Math.sin(ov.angle || 0);
+const dirDot = vCos * ovCos + vSin * ovSin;
+if (dirDot > 0 && oDist < 2.5) { slowClear = false; break; }
+}
+if (slowClear) {
+v.lane = targetLane;
+v.targetLane = targetLane;
+v.laneChangeTimer = 30;
+}
+}
 // Stuck detection — reroute if vehicle hasn't moved significantly
 if (!v.stuckCheck) { v.stuckCheck = {x: v.x, y: v.y, tick: 0}; }
 v.stuckCheck.tick += dt;
@@ -3952,7 +4805,7 @@ const intersection = G.intersections.get(intKey);
 if (intersection && dist < 0.5) {
 // Skip stop signs on highways
 const intRoad = G.roads.get(intKey) || G.elevatedRoads.get(intKey);
-const isHighwayInt = intRoad && (intRoad.type.includes('highway') || intRoad.type === 'road_elevated');
+const isHighwayInt = intRoad && intRoad.type.includes('highway');
 if (isHighwayInt && intersection.type === 'stop') {
 G.intersections.delete(intKey); // clean up legacy stop signs on highways
 } else if (intersection.type === 'stop') {
@@ -4099,10 +4952,21 @@ trafficSlowdown *= 0.3;
 trafficSlowdown = 0;
 v.braking = true;
 }
+// Capacity-based congestion slowdown
+if (road) {
+const cap = ROAD_CAPACITY[road.type] || 4;
+const count = tileVehicleCount.get(roadKey) || 0;
+if (count >= cap) {
+trafficSlowdown *= 0.3; // at capacity: severe congestion
+} else if (count >= cap * 0.75) {
+trafficSlowdown *= 0.7; // approaching capacity
+}
+}
 const moveSpeed = v.speed * roadSpeed * trafficSlowdown * dt;
 if (dist < moveSpeed) {
 v.x = target.x;
 v.y = target.y;
+v.level = target.level || 0;
 v.pathIdx++;
 // Clear intersection state once vehicle moves past the intersection tile
 if (v.lastStopKey && v.lastStopKey !== `${Math.floor(target.x)},${Math.floor(target.y)}`) {
@@ -4134,15 +4998,18 @@ road.tollRevenue += tollAmount;
 v.angle = Math.atan2(dy, dx);
 let mx = (dx / dist) * moveSpeed;
 let my = (dy / dist) * moveSpeed;
-// Lane offset for wider roads — offset perpendicular to direction to reduce head-on
-if (road && (road.type.includes('multi') || road.type.includes('highway') || road.type === 'road_elevated')) {
-const perpX = -Math.sin(v.angle) * 0.15;
-const perpY = Math.cos(v.angle) * 0.15;
-// Use angle to determine which side of road to drive on
+// Lane-based perpendicular offset for smooth visual positioning
+if (road && lanesPerDir >= 1) {
+const perpX = -Math.sin(v.angle);
+const perpY = Math.cos(v.angle);
+// Direction determines which side of center (drive-right convention)
 const side = (v.angle >= 0) ? 1 : -1;
-v.laneOffset = v.laneOffset || side;
-mx += perpX * v.laneOffset * 0.02;
-my += perpY * v.laneOffset * 0.02;
+// Lane offset: base side offset + additional lane offset
+const laneIdx = v.lane || 0;
+const laneSpacing = 0.12 / lanesPerDir;
+const totalOffset = side * (0.08 + laneIdx * laneSpacing);
+mx += perpX * totalOffset * 0.3;
+my += perpY * totalOffset * 0.3;
 }
 v.x += mx;
 v.y += my;
@@ -4161,21 +5028,33 @@ if (v.purpose === 'commute') {
 const member = family.members[v.memberIdx];
 if (member) {
 member.atWork = true;
-member.arrivedOnTime = travelTime < 60; // 1 game hour
+const arrivalHour = getTimeOfDay();
+const shiftStart = member.nightShift ? NIGHT_SHIFT_START : DAY_SHIFT_START;
+member.arrivedOnTime = arrivalHour <= shiftStart;
 }
 G.commuteStats.officeTotal++;
-if (travelTime >= 60) G.commuteStats.officeLate++;
+const arrHour = getTimeOfDay();
+const memberForShift = family.members[v.memberIdx];
+const shift = memberForShift && memberForShift.nightShift ? NIGHT_SHIFT_START : DAY_SHIFT_START;
+if (arrHour > shift) G.commuteStats.officeLate++;
 } else if (v.purpose === 'lunch') {
 // Restaurant revenue affected by travel time
 const restaurant = G.buildings.find(b => b.id === v.destBuildingId);
 if (restaurant && travelTime < 60) {
-restaurant.weekRevenue += 5;
+restaurant.weekRevenue += 8;
 }
 G.commuteStats.restaurantTotal++;
 if (travelTime >= 60) G.commuteStats.restaurantLate++;
 } else if (v.purpose === 'school_dropoff') {
 G.commuteStats.schoolTotal++;
 if (travelTime >= 60) G.commuteStats.schoolLate++;
+// Continue to workplace after dropping off kids
+if (v.nextDest && family) {
+const nd = v.nextDest;
+const schoolX = Math.floor(v.destX), schoolY = Math.floor(v.destY);
+const newV = spawnVehicleFrom(family, v.memberIdx, schoolX, schoolY, nd.x, nd.y, nd.purpose);
+if (newV) newV.departTick = G.dayTick; // track from school departure
+}
 }
 }
 
@@ -4190,11 +5069,9 @@ G.dayTick = 0;
 endOfDay();
 }
 const hour = getTimeOfDay();
-// Morning commute (7-9 AM) — day shift workers
-if (hour >= 7 && hour < 9 && Math.random() < 0.05 * G.speed) {
-spawnCommuteVehicles(false);
-}
-// Night shift commute (9-11 PM)
+// Deterministic commute spawning — each worker departs at their computed tick
+spawnScheduledCommuters();
+// Night shift commute (legacy fallback for any night workers not caught by scheduler)
 if (hour >= 21 && hour < 23 && Math.random() < 0.04 * G.speed) {
 spawnCommuteVehicles(true);
 }
@@ -4321,15 +5198,92 @@ G.lastSave = Date.now();
 }
 }
 
+function computeDepartureTicks() {
+if (!G || !G.families) return;
+G.families.forEach(family => {
+for (let i = 0; i < family.members.length; i++) {
+const m = family.members[i];
+if (m.role !== 'adult' || !m.workplaceId) continue;
+m.spawnedToday = false;
+const workplace = G.buildings.find(b => b.id === m.workplaceId);
+if (!workplace) { m.targetDepartTick = null; continue; }
+const dx = workplace.x - family.houseTile.x;
+const dy = workplace.y - family.houseTile.y;
+const dist = Math.sqrt(dx * dx + dy * dy);
+const zone = getCommuteZone(dist);
+const shiftStart = m.nightShift ? NIGHT_SHIFT_START : DAY_SHIFT_START;
+const personalAdjust = (m.punctuality || 0) * 60; // -60 to +60 minutes
+// Parent modifier: primary adult with school children leaves 20 min earlier
+const children = family.members.filter(c => c.role === 'child' && c.schoolId);
+const parentExtra = (i === 0 && children.length > 0) ? 20 : 0;
+const totalLead = zone.leadMinutes + parentExtra - personalAdjust;
+let departHour = shiftStart - totalLead / 60;
+// Clamp departure to reasonable range (don't depart before 5 AM or negative ticks)
+if (!m.nightShift) departHour = Math.max(5, departHour);
+else departHour = Math.max(18, departHour);
+// Convert hour to dayTick: hour 6 = tick 0, hour 24 = tick 3600
+m.targetDepartTick = (departHour - 6) / 18 * 3600;
+if (m.targetDepartTick < 0) m.targetDepartTick = 0;
+}
+});
+}
+
+function spawnScheduledCommuters() {
+if (!G || !G.families) return;
+const tollPct = getPaidRoadPercent();
+let spawned = 0;
+const maxPerTick = 3;
+for (let fi = 0; fi < G.families.length && spawned < maxPerTick; fi++) {
+const family = G.families[fi];
+if (!family) continue;
+for (let i = 0; i < family.members.length && spawned < maxPerTick; i++) {
+const m = family.members[i];
+if (m.role !== 'adult' || m.atWork || !m.workplaceId || m.spawnedToday) continue;
+if (m.targetDepartTick == null || G.dayTick < m.targetDepartTick) continue;
+// Strike check
+if (tollPct > 0.2) {
+const excessPct = (tollPct - 0.2) / 0.8;
+const strikeThresholds = [0.7, 0.5, 0.3, 0.1];
+const strikeChance = Math.max(0, (excessPct - strikeThresholds[m.paidRoadTrait]) * 2);
+if (Math.random() < strikeChance) {
+m.onStrike = true;
+m.spawnedToday = true;
+continue;
+}
+}
+m.onStrike = false;
+const workplace = G.buildings.find(b => b.id === m.workplaceId);
+if (!workplace) { m.spawnedToday = true; continue; }
+// Day shift: check if children need school dropoff
+if (!m.nightShift) {
+const children = family.members.filter(c => c.role === 'child' && c.schoolId);
+if (children.length > 0 && i === 0) {
+const school = G.buildings.find(b => b.id === children[0].schoolId);
+if (school) {
+const v = spawnVehicle(family, i, school.x, school.y, 'school_dropoff');
+if (v) v.nextDest = {x: workplace.x, y: workplace.y, purpose: 'commute'};
+m.spawnedToday = true;
+spawned++;
+continue;
+}
+}
+}
+const v = spawnVehicle(family, i, workplace.x, workplace.y, 'commute');
+if (v) spawned++;
+m.spawnedToday = true;
+}
+}
+}
+
 function spawnCommuteVehicles(nightShift) {
+// Legacy function — kept for night shift random spawning fallback
 const family = G.families[Math.floor(Math.random() * G.families.length)];
 if (!family) return;
 const tollPct = getPaidRoadPercent();
 for (let i = 0; i < family.members.length; i++) {
 const m = family.members[i];
-// Only spawn matching shift type
 if (m.role === 'adult' && !m.atWork && m.workplaceId && !!m.nightShift === !!nightShift) {
-// Strike check: if paid roads > 20%, workers may refuse to commute
+if (m.spawnedToday) continue;
 if (tollPct > 0.2) {
 const excessPct = (tollPct - 0.2) / 0.8;
 const strikeThresholds = [0.7, 0.5, 0.3, 0.1];
@@ -4342,7 +5296,6 @@ continue;
 m.onStrike = false;
 const workplace = G.buildings.find(b => b.id === m.workplaceId);
 if (workplace) {
-// Day shift: check if children need school dropoff
 if (!nightShift) {
 const children = family.members.filter(c => c.role === 'child' && c.schoolId);
 if (children.length > 0 && i === 0) {
@@ -4513,6 +5466,13 @@ return nearest;
 function endOfDay() {
 G.day++;
 G.score = G.day;
+// Check Voss bonus expiration
+if (G.vossActiveBonus && G.vossActiveBonus.expiresDay && G.day >= G.vossActiveBonus.expiresDay) {
+const expired = VOSS_BONUSES.find(b=>b.id===G.vossActiveBonus.id);
+if (expired) expired.remove(G);
+showNotification(`${G.vossActiveBonus.icon} ${G.vossActiveBonus.name} has expired. Tunnel deeper to find Voss again.`);
+G.vossActiveBonus = null;
+}
 // Reset per-day toll tracking for all active vehicles
 G.vehicles.forEach(v => { if (v.tollPaidRoads) v.tollPaidRoads.clear(); });
 // Commute failure warning
@@ -4551,6 +5511,8 @@ showNotification(`🏚️ ${unconnected} ${unconnected > 1 ? 'families live' : '
 G.families.forEach(f => {
 f.members.forEach(m => { if (m.role === 'adult' && !m.nightShift) m.atWork = false; });
 });
+// Compute departure ticks for the new day
+computeDepartureTicks();
 // Clear vehicles
 G.vehicles = G.vehicles.filter(v => v.active);
 G.roadsDuringPause.clear();
@@ -4682,11 +5644,18 @@ return count + f.members.filter(m => m.role === 'adult' && m.workplaceId === off
 const totalEmp = G.families.reduce((count, f) => {
 return count + f.members.filter(m => m.role === 'adult' && m.workplaceId === office.id).length;
 }, 0);
-const onTimeRate = G.families.reduce((total, f) => {
+const onTimeCount = G.families.reduce((total, f) => {
 const workers = f.members.filter(m => m.role === 'adult' && m.workplaceId === office.id && !m.onStrike);
 return total + workers.filter(m => m.arrivedOnTime).length;
-}, 0) / Math.max(1, employees);
-const rev = employees * 80 * onTimeRate;
+}, 0);
+let rev = employees * 120;
+if (onTimeCount === employees && employees > 0) {
+rev *= 1.5; // 50% bonus for perfect on-time
+} else {
+const lateCount = employees - onTimeCount;
+rev -= lateCount * 80; // $80 deduction per late worker
+}
+rev = Math.max(0, rev);
 office.weekRevenue = rev;
 officeRevenue += rev;
 });
@@ -4694,12 +5663,23 @@ const taxOffice = Math.floor(officeRevenue * 0.20);
 let restaurantRevenue = 0;
 G.buildings.filter(b => b.type === 'restaurant').forEach(r => {
 // Base revenue: restaurants earn $80-150/week just from existing
-const baseRev = 80 + Math.floor(Math.random() * 70);
+const baseRev = 120 + Math.floor(Math.random() * 100);
 // Restaurant employees boost revenue — each working employee adds $50
 const employees = G.families.reduce((count, f) => {
 return count + f.members.filter(m => m.role === 'adult' && m.workplaceId === r.id && !m.onStrike).length;
 }, 0);
-const staffBonus = employees * 50;
+const onTimeCount = G.families.reduce((total, f) => {
+const workers = f.members.filter(m => m.role === 'adult' && m.workplaceId === r.id && !m.onStrike);
+return total + workers.filter(m => m.arrivedOnTime).length;
+}, 0);
+let staffBonus = employees * 75;
+if (onTimeCount === employees && employees > 0) {
+staffBonus *= 1.5; // 50% bonus for all on-time
+} else {
+const lateCount = employees - onTimeCount;
+staffBonus -= lateCount * 60; // $60 deduction per late
+}
+staffBonus = Math.max(0, staffBonus);
 const totalRev = baseRev + r.weekRevenue + staffBonus;
 restaurantRevenue += totalRev;
 r.weekRevenue = 0;
@@ -4712,13 +5692,17 @@ const upkeepCost = roadCount * UPKEEP_COST[G.upkeepTier];
 const maintCost = G.maintenanceBuildings.length * 30;
 // Family population tax: $5 per connected family
 const connectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
-const familyTax = connectedFamilies * 5;
+const familyTax = connectedFamilies * 8;
 // Unconnected house penalty: $20 per disconnected family (emergency services, complaints)
 const disconnectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && !hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
 const disconnectPenalty = disconnectedFamilies * 20;
 // Remove abandoned families
 G.families = G.families.filter(f => f.members.length > 0);
-const totalIncome = taxOffice + taxRestaurant + G.weekTollRoad + G.weekParking + familyTax;
+let totalIncome = taxOffice + taxRestaurant + G.weekTollRoad + G.weekParking + familyTax;
+// Apply Voss income boost if active
+if (G.vossIncomeBoost && G.vossIncomeBoost > 1) {
+totalIncome = Math.floor(totalIncome * G.vossIncomeBoost);
+}
 const totalCost = upkeepCost + maintCost + disconnectPenalty;
 if (G.mode !== 'creative') {
 G.money += totalIncome - totalCost;
@@ -4797,6 +5781,7 @@ placeRandomBuilding(sType, cx, cy, pr);
 }
 // Reassign families for new buildings
 assignFamilies();
+computeDepartureTicks();
 }
 
 function showWeeklySummary(taxO, taxR, toll, park, upkeep, maint, strikers, totalWorkers, tollPct, disconnected, disconnectPenalty, famTax, loanPay) {
@@ -4923,6 +5908,17 @@ debtValEl.style.color = G.totalDebt > 5000 ? '#cf6679' : '#ffaa44';
 } else {
 debtEl.style.display = 'none';
 }
+// Voss bonus indicator
+const vbEl = document.getElementById('vossBonusIndicator');
+if (G.vossActiveBonus) {
+vbEl.style.display = '';
+const daysLeft = G.vossActiveBonus.expiresDay - G.day;
+document.getElementById('vossBonusLabel').textContent = `${G.vossActiveBonus.icon} Voss`;
+document.getElementById('vossBonusDays').textContent = daysLeft > 0 ? `${daysLeft}d` : 'active';
+vbEl.title = `${G.vossActiveBonus.name}: ${G.vossActiveBonus.desc}`;
+} else {
+vbEl.style.display = 'none';
+}
 }
 
 let disconnectedCycleIndex = 0;
@@ -5034,7 +6030,7 @@ if (showArtifactPopup._timer) clearTimeout(showArtifactPopup._timer);
 // Floating cost popups that rise and fade
 const costPopups = [];
 function showCostPopup(tileX, tileY, cost, type) {
-const autoLabel = (type === 'road_bridge') ? ' (Bridge)' : (type === 'road_tunnel') ? ' (Tunnel)' : '';
+const autoLabel = (type === 'road_flyover') ? ' (Flyover)' : (type === 'road_tunnel') ? ' (Tunnel)' : '';
 costPopups.push({
 x: tileX, y: tileY,
 text: `-$${cost}${autoLabel}`,
@@ -5092,9 +6088,33 @@ document.getElementById('upkeep'+i).classList.toggle('active', i === tier);
 }
 }
 
+// Convert road to effective mph (base 30mph * multiplier, capped by per-road speed limit if set)
+function getRoadEffectiveMPH(road) {
+const baseMPH = 30;
+const rawMPH = baseMPH * (ROAD_SPEED[road.type] || 1);
+if (road.speedLimitMPH) return Math.min(rawMPH, road.speedLimitMPH);
+return rawMPH;
+}
+
+// Crash chance multiplier based on speed — exponential increase over 60mph
+function getSpeedCrashChance(effectiveMPH) {
+if (effectiveMPH <= 60) return 0;
+const excess = effectiveMPH - 60;
+return Math.pow(1.08, excess) - 1;
+}
+
+function setRoadSpeedLimit(x, y, mph) {
+const key = `${x},${y}`;
+const road = G.roads.get(key) || G.elevatedRoads.get(key);
+if (!road) return;
+road.speedLimitMPH = mph;
+showNotification(`Speed limit set to ${mph} mph`);
+showInspectInfo(x, y);
+}
+
 function closeInspect() {
 document.getElementById('infoPanel').style.display = 'none';
-if (G) { G.highlightBuildings = []; }
+if (G) { G.highlightBuildings = []; G.commuteZoneCenter = null; }
 }
 
 function showInspectPanel(content, html) {
@@ -5109,6 +6129,7 @@ const panel = document.getElementById('infoPanel');
 const content = document.getElementById('infoContent');
 G.highlightBuildings = [];
 G.highlightColor = '#44ff44';
+G.commuteZoneCenter = null;
 
 // Check vehicles first (closest to click point)
 const clickedVehicle = G.vehicles.find(v => v.active && Math.abs(v.x - x) < 1.5 && Math.abs(v.y - y) < 1.5);
@@ -5165,10 +6186,11 @@ if (building.burnedDown) html += `<p style="color:#ff6644;">🔥 Burned down ove
 if (building.vossHouse) {
 const vossArtifacts = (G.artifactsFound||[]).filter(a=>a.startsWith('voss_')).length;
 if (vossArtifacts >= 4) {
-html += `<p style="color:#998877;font-style:italic;">Status: <strong>Retained</strong>. Daily commute data shows one trip: to the eastern mountain and back.</p>`;
+html += `<p style="color:#998877;font-style:italic;">Status: <strong>Retained</strong>. Daily commute data shows one trip: to the eastern mountain and back. Every day. Same route. Into the tunnels.</p>`;
 html += `<p style="color:#776655;font-style:italic;font-size:10px;">Raymond. Retired. Enjoys long walks. Says this is the only place he's ever felt truly at home. Doesn't remember much before arriving here. Doesn't mind.</p>`;
+html += `<p style="color:#556677;font-style:italic;font-size:10px;">A neighbor reports: "He comes home smelling like stone dust. His hands are warm, even in winter. If you tunnel deep enough, you might run into him."</p>`;
 } else {
-html += `<p style="color:#998877;font-style:italic;">Status: Vacant. Previous occupant: Commissioner Raymond Voss. Relocated 18 months ago. Official story.</p>`;
+html += `<p style="color:#998877;font-style:italic;">Status: Vacant. Previous occupant: Commissioner Raymond Voss. Relocated 18 months ago.</p>`;
 }
 }
 const families = G.families.filter(f => f.houseId === building.id);
@@ -5201,6 +6223,7 @@ if (m.schoolId) linkedBuildingIds.push(m.schoolId);
 G.highlightBuildings = [...new Set(linkedBuildingIds)];
 G.highlightColor = '#44aaff';
 } else if (building.type === 'office') {
+G.commuteZoneCenter = {x: building.x, y: building.y};
 const employees = [];
 G.families.forEach(f => {
 f.members.forEach(m => {
@@ -5227,6 +6250,7 @@ html += `<p>&nbsp;👤 ${e.name} (${e.familyName}) ${e.atWork ? '✅' : '🏠'}<
 G.highlightBuildings = [...new Set(linkedBuildingIds)];
 G.highlightColor = '#ff9944';
 } else if (building.type === 'restaurant') {
+G.commuteZoneCenter = {x: building.x, y: building.y};
 html += `<p>Cuisine: ${building.cuisine}</p>`;
 if (building.loreOwner) html += `<p>Owner: ${building.loreOwner}</p>`;
 html += `<p>Capacity: ${building.capacity}</p>`;
@@ -5311,7 +6335,7 @@ const ctrl = G.intersections.get(`${x},${y}`);
 if (road || ctrl) {
 let html = '';
 if (road) {
-const typeLabels = {road_1lane:'One-Way Lane',road_2lane:'Two-Lane Road',road_multi:'Multi-Lane Road',road_highway:'Highway',road_bridge:'Bridge',road_tunnel:'Tunnel',road_elevated:'Elevated Highway',paid_2lane:'Paid Two-Lane',paid_multi:'Paid Multi-Lane',paid_highway:'Paid Highway'};
+const typeLabels = {road_1lane:'Dirt Road',road_2lane:'Two-Lane Road',road_oneway:'One-Way Road',road_multi:'Multi-Lane Road',road_highway:'Highway',road_flyover:'Flyover',road_tunnel:'Tunnel',paid_2lane:'Paid Two-Lane',paid_multi:'Paid Multi-Lane',paid_highway:'Paid Highway'};
 html += `<h3>${road.name || 'Road'}</h3>`;
 html += `<p>Type: ${typeLabels[road.type] || road.type}</p>`;
 // Health & breakdown chance
@@ -5325,7 +6349,20 @@ html += `<p>🔧 Health: <span style="color:${healthColor};font-weight:bold;">${
 html += `<p>⚡ Breakdown risk: ${breakdownPct}%/day</p>`;
 html += `<p>📅 Age: ${age} days</p>`;
 html += `<p>🚗 Capacity: ${ROAD_CAPACITY[road.type] || 4} vehicles</p>`;
-html += `<p>💨 Speed: ${((ROAD_SPEED[road.type] || 1) * 100).toFixed(0)}%</p>`;
+const effectMPH = getRoadEffectiveMPH(road);
+const maxMPH = Math.round(30 * (ROAD_SPEED[road.type] || 1));
+const crashPct = getSpeedCrashChance(effectMPH);
+html += `<p>💨 Speed: ${Math.round(effectMPH)} mph${road.speedLimitMPH && effectMPH < maxMPH ? ' (limit '+road.speedLimitMPH+', max '+maxMPH+')' : ''}${crashPct > 0 ? ' ⚠ Crash risk: '+(crashPct*100).toFixed(0)+'%' : ''}</p>`;
+// Per-road speed limit control for one-way roads
+if (road.type === 'road_oneway') {
+const slBtnStyle = 'padding:3px 8px;font-size:10px;margin:2px;';
+html += `<p style="margin-top:4px;">🚦 Speed Limit:</p>`;
+for (const spd of [30, 45, 60, 80, 100, 120]) {
+const active = (road.speedLimitMPH || 60) === spd;
+html += `<button class="menu-btn${active?' secondary':''}" style="${slBtnStyle}" onclick="setRoadSpeedLimit(${x},${y},${spd})">${spd} mph</button>`;
+}
+html += `<p style="font-size:10px;color:#cc8844;margin-top:3px;">⚠ Crash risk rises exponentially over 60 mph</p>`;
+}
 if (road.paid) {
 const tollAmounts = [0, 2, 5, 10];
 html += `<p style="color:#ffcc44;">💰 Toll: $${tollAmounts[road.tollTier || 1]}/vehicle</p>`;
@@ -5336,9 +6373,19 @@ html += `<button class="menu-btn${road.tollTier===1?' secondary':''}" style="${t
 html += `<button class="menu-btn${road.tollTier===2?' secondary':''}" style="${tBtnStyle}" onclick="setTollTier(${x},${y},2)">$5</button>`;
 html += `<button class="menu-btn${road.tollTier===3?' secondary':''}" style="${tBtnStyle}" onclick="setTollTier(${x},${y},3)">$10</button>`;
 }
-if (road.type === 'road_bridge' || road.bridge) html += `<p>🌉 Bridge — spans water/terrain</p>`;
-if (road.type === 'road_elevated') html += `<p>🏗 Elevated Highway — passes over roads</p>`;
+if (road.oneWayDir) {
+const dirNames = {'0,-1':'North','0,1':'South','1,0':'East','-1,0':'West'};
+html += `<p>➡ One-Way: ${dirNames[road.oneWayDir.dx+','+road.oneWayDir.dy] || '?'}</p>`;
+}
+if (road.type === 'road_flyover') html += `<p>🏗 Flyover — elevated overpass, no intersections with ground roads</p>`;
+if (road.bridge) html += `<p>🌉 Bridge — spans water/terrain</p>`;
 if (road.type === 'road_tunnel') html += `<p>🕳 Tunnel — passes through mountain</p>`;
+if (road.type.includes('highway')) {
+const extendCost = (road.elevation || 0) === 0 ? HIGHWAY_EXTEND_COST_GROUND : HIGHWAY_EXTEND_COST;
+html += `<p>📐 Elevation: <strong>${road.elevation === 1 ? 'Elevated' : 'Ground Level'}</strong> — $${extendCost}/tile extend</p>`;
+const elevBtnStyle = 'padding:4px 12px;font-size:11px;margin:3px;';
+html += `<button class="menu-btn" style="${elevBtnStyle}" onclick="toggleHighwayElevation('${x},${y}')">${road.elevation === 1 ? '⬇ Lower to Ground' : '⬆ Raise to Elevated'}</button>`;
+}
 if (road.breakdown) html += `<p style="color:#cf6679;">⚠ BREAKDOWN — ${road.blocking ? 'BLOCKED' : 'Slowed'}</p>`;
 }
 // Find the best intersection tile: this tile, or check adjacent tiles
@@ -5443,8 +6490,8 @@ const key = `${x},${y}`;
 // Block stop signs on highways
 if (type === 'stop') {
 const tileRoad = G.roads.get(key) || G.elevatedRoads.get(key);
-if (tileRoad && (tileRoad.type.includes('highway') || tileRoad.type === 'road_elevated')) {
-showNotification('🚫 Stop signs cannot be placed on highways! Use traffic lights or roundabouts.');
+if (tileRoad && (tileRoad.type.includes('highway') || tileRoad.multiLaneGroup)) {
+showNotification('🚫 Stop signs cannot be placed on highways or multi-lane roads!');
 return;
 }
 }
@@ -5525,11 +6572,51 @@ html += `<button class="menu-btn${active?' secondary':''}" style="${sBtnStyle}${
 } else if (road) {
 html += `<h3>🚦 Traffic Control</h3>`;
 html += `<p style="color:#888;font-size:11px;">Tip: Traffic controls can be added at intersections (3+ connecting roads)</p>`;
+// Highway lonely lane detection: offer to add parallel lane
+if (road.type && road.type.includes('highway') && road.oneWayDir) {
+const owd = road.oneWayDir;
+// Perpendicular offsets (both sides)
+const perps = owd.dx !== 0 ? [[0,-1],[0,1]] : [[-1,0],[1,0]];
+const hasParallel = perps.some(([pdx,pdy]) => {
+const nr = G.elevatedRoads.get(`${x+pdx},${y+pdy}`);
+return nr && nr.type && nr.type.includes('highway');
+});
+if (!hasParallel) {
+html += `<p style="margin-top:8px;color:#d4a574;font-size:11px;font-weight:bold;">⚠️ This highway has no parallel lane.</p>`;
+perps.forEach(([pdx,pdy]) => {
+const label = pdx === 0 ? (pdy < 0 ? 'North' : 'South') : (pdx < 0 ? 'West' : 'East');
+html += `<button class="menu-btn secondary" style="padding:5px 12px;font-size:11px;margin:3px;" onclick="addHighwayParallelLane(${x},${y},${pdx},${pdy})">➕ Add Parallel Lane (${label})</button>`;
+});
+}
+}
 } else {
 html += `<h3>🚦 Traffic Control</h3>`;
 html += `<p style="color:#888;font-size:11px;">No road here. Click on a road intersection to manage traffic controls.</p>`;
 }
 showInspectPanel(content, html);
+}
+
+function addHighwayParallelLane(x, y, pdx, pdy) {
+// Place a parallel highway tile beside a lonely highway tile, matching its direction
+const srcRoad = G.elevatedRoads.get(`${x},${y}`);
+if (!srcRoad || !srcRoad.type.includes('highway')) return;
+const nx = x + pdx, ny = y + pdy;
+if (!canPlaceRoad(srcRoad.type, nx, ny)) {
+showNotification('Cannot place parallel lane here (blocked or out of bounds).');
+return;
+}
+// Place using placeRoad directly, free (flanking lane)
+if (placeRoad(srcRoad.type, nx, ny, true)) {
+const newRoad = G.elevatedRoads.get(`${nx},${ny}`);
+if (newRoad && srcRoad.oneWayDir) {
+newRoad.oneWayDir = {dx: srcRoad.oneWayDir.dx, dy: srcRoad.oneWayDir.dy};
+newRoad.multiLaneGroup = true;
+}
+showNotification('Parallel highway lane added!');
+} else {
+showNotification('Could not place parallel lane here.');
+}
+document.getElementById('infoPanel').style.display = 'none';
 }
 
 function setTollTier(x, y, tier) {
@@ -5661,9 +6748,14 @@ G.straightStart = null;
 roadDrawing = true;
 lastRoadTile = {x: tile.x, y: tile.y};
 G.dragDirection = null; // reset drag direction for new stroke
-const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway') || G.selectedTool === 'road_elevated';
-if (isWide) {
-// For wide roads, place single tile on first click; direction determined on drag
+G._lastPlacedPos = null; // reset one-way tracking for new stroke
+G._highwayPendingStart = null;
+const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway');
+const isHighwayTool = G.selectedTool.includes('highway');
+if (isHighwayTool) {
+// Defer highway first tile — place 2-wide only once drag direction is known
+G._highwayPendingStart = {x: tile.x, y: tile.y};
+} else if (isWide) {
 if (canPlaceRoad(G.selectedTool, tile.x, tile.y)) {
 placeRoad(G.selectedTool, tile.x, tile.y);
 }
@@ -5705,13 +6797,25 @@ if (!G.dragDirection) {
 const adx = Math.abs(tx - lx), ady = Math.abs(ty - ly);
 G.dragDirection = adx >= ady ? 'h' : 'v';
 }
-const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway') || G.selectedTool === 'road_elevated';
+const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway');
+const isHighwayTool = G.selectedTool.includes('highway');
+// If a highway pending start exists, place it now that direction is known
+if (isHighwayTool && G._highwayPendingStart) {
+const ps = G._highwayPendingStart;
+const initStepX = tx > ps.x ? 1 : tx < ps.x ? -1 : (ty > ps.y ? 0 : 0);
+const initStepY = ty > ps.y ? 1 : ty < ps.y ? -1 : 0;
+const flowDx = tx !== ps.x ? (tx > ps.x ? 1 : -1) : 0;
+const flowDy = ty !== ps.y ? (ty > ps.y ? 1 : -1) : 0;
+const initFlow = flowDx !== 0 ? {dx: flowDx, dy: 0} : {dx: 0, dy: flowDy};
+placeWideRoad(G.selectedTool, ps.x, ps.y, G.dragDirection, initFlow);
+G._highwayPendingStart = null;
+}
 // L-shaped path: go horizontal first, then vertical (no diagonal roads)
 // Horizontal segment
 const stepX = tx > lx ? 1 : -1;
 for (let x = lx + stepX; x !== tx + stepX; x += stepX) {
 if (isWide) {
-placeWideRoad(G.selectedTool, x, ly, G.dragDirection);
+placeWideRoad(G.selectedTool, x, ly, G.dragDirection, {dx: stepX, dy: 0});
 } else if (canPlaceRoad(G.selectedTool, x, ly)) {
 placeRoad(G.selectedTool, x, ly);
 }
@@ -5720,7 +6824,7 @@ placeRoad(G.selectedTool, x, ly);
 const stepY = ty > ly ? 1 : -1;
 for (let y = ly; y !== ty + stepY; y += stepY) {
 if (isWide) {
-placeWideRoad(G.selectedTool, tx, y, G.dragDirection);
+placeWideRoad(G.selectedTool, tx, y, G.dragDirection, {dx: 0, dy: stepY});
 } else if (canPlaceRoad(G.selectedTool, tx, y)) {
 placeRoad(G.selectedTool, tx, y);
 }
@@ -5777,10 +6881,13 @@ function drawStraightRoad(start, end) {
 const tiles = getStraightRoadTiles(start.x, start.y, end.x, end.y);
 const dx = Math.abs(end.x - start.x), dy = Math.abs(end.y - start.y);
 const dir = dx >= dy ? 'h' : 'v';
-const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway') || G.selectedTool === 'road_elevated';
+const flowDx = end.x > start.x ? 1 : end.x < start.x ? -1 : 0;
+const flowDy = end.y > start.y ? 1 : end.y < start.y ? -1 : 0;
+const straightFlowDir = {dx: flowDx || 0, dy: flowDy || 0};
+const isWide = G.selectedTool.includes('multi') || G.selectedTool.includes('highway');
 for (const t of tiles) {
 if (isWide) {
-placeWideRoad(G.selectedTool, t.x, t.y, dir);
+placeWideRoad(G.selectedTool, t.x, t.y, dir, straightFlowDir);
 } else if (canPlaceRoad(G.selectedTool, t.x, t.y)) {
 placeRoad(G.selectedTool, t.x, t.y);
 }
@@ -5862,9 +6969,9 @@ if (k === 'r') selectTool('road_1lane');
 else if (k === 't') selectTool('road_2lane');
 else if (k === 'y') selectTool('road_multi');
 else if (k === 'h') selectTool('road_highway');
-else if (k === 'b') selectTool('road_bridge');
+else if (k === 'b') selectTool('road_flyover');
 else if (k === 'u') selectTool('road_tunnel');
-else if (k === 'v') selectTool('road_elevated');
+else if (k === 'v') selectTool('road_oneway');
 else if (e.key === '4') selectTool('paid_2lane');
 else if (e.key === '5') selectTool('paid_multi');
 else if (e.key === '6') selectTool('paid_highway');
@@ -5982,6 +7089,7 @@ playableRadius: G.playableRadius,
 playableCenter: G.playableCenter,
 loreJournal: G.loreJournal,
 loreCollections: G.loreCollections,
+mysteryBoard: G.mysteryBoard,
 loans: G.loans,
 totalDebt: G.totalDebt
 };
@@ -6018,6 +7126,10 @@ playableRadius: data.playableRadius || 50,
 playableCenter: data.playableCenter || {x: MAP_W/2, y: MAP_H/2},
 loreJournal: data.loreJournal || { legends: [], discoveries: [], geography: [], history: [] },
 loreCollections: data.loreCollections || {},
+mysteryBoard: data.mysteryBoard || {
+  pinnedEntries: [], connections: [], solvedDeductions: [],
+  failedAttempts: {}, revealedCollections: {}, unlockedBonusLore: []
+},
 loans: data.loans || [],
 totalDebt: data.totalDebt || 0
 });
@@ -6267,11 +7379,15 @@ document.getElementById('dbg_road_1lane').value = ROAD_COSTS.road_1lane;
 document.getElementById('dbg_road_2lane').value = ROAD_COSTS.road_2lane;
 document.getElementById('dbg_road_multi').value = ROAD_COSTS.road_multi;
 document.getElementById('dbg_road_highway').value = ROAD_COSTS.road_highway;
-document.getElementById('dbg_road_bridge').value = ROAD_COSTS.road_bridge;
+document.getElementById('dbg_road_flyover').value = ROAD_COSTS.road_flyover;
 document.getElementById('dbg_road_tunnel').value = ROAD_COSTS.road_tunnel;
 document.getElementById('dbg_upkeep1').value = UPKEEP_COST[1];
 document.getElementById('dbg_upkeep2').value = UPKEEP_COST[2];
 document.getElementById('dbg_upkeep3').value = UPKEEP_COST[3];
+document.getElementById('dbg_dayShiftStart').value = DAY_SHIFT_START;
+document.getElementById('dbg_dayShiftEnd').value = DAY_SHIFT_END;
+document.getElementById('dbg_nightShiftStart').value = NIGHT_SHIFT_START;
+document.getElementById('dbg_nightShiftEnd').value = NIGHT_SHIFT_END;
 }
 }
 function debugAutoConnectBuildings() {
@@ -6327,8 +7443,10 @@ function debugAutoConnectBuildings() {
 
 function resetDebugDefaults() {
 ROAD_COSTS.road_1lane=10; ROAD_COSTS.road_2lane=25; ROAD_COSTS.road_multi=50;
-ROAD_COSTS.road_highway=100; ROAD_COSTS.road_bridge=75; ROAD_COSTS.road_tunnel=120;
+ROAD_COSTS.road_highway=15; ROAD_COSTS.road_flyover=75; ROAD_COSTS.road_tunnel=120;
 UPKEEP_COST[1]=2; UPKEEP_COST[2]=5; UPKEEP_COST[3]=10;
+DAY_SHIFT_START=9.0; DAY_SHIFT_END=17.0; NIGHT_SHIFT_START=22.0; NIGHT_SHIFT_END=6.0;
+if (typeof computeDepartureTicks === 'function') computeDepartureTicks();
 toggleDebugMenu(); toggleDebugMenu(); // refresh values
 showNotification('Debug: prices reset to defaults');
 }
@@ -6350,13 +7468,14 @@ document.getElementById('tutorialModal').style.display = 'none';
 document.getElementById('overlay').style.display = 'none';
 const kb = document.getElementById('keybindsCard');
 if (kb) kb.classList.remove('visible');
+_boardSelectA = null;
 if (G) setSpeed(speedBeforeSettings || 1);
 }
 
 // ===== TUTORIAL SYSTEM =====
 const TUTORIAL_PAGES = [
 {icon:'🏛️',title:'Welcome, Commissioner',body:`Welcome to <b>Tiny Town Traffic</b> — you are the newly appointed Transport Commissioner of Millhaven.\n\nYour job: build roads, connect homes to workplaces, and keep traffic flowing.\n\nThree game modes:\n• <b>Normal</b> — balanced economy, go bankrupt and it's game over\n• <b>Endless</b> — relaxed, no game-over condition\n• <b>Creative</b> — unlimited money, build freely`,hint:'The previous Commissioner vanished under unclear circumstances. Nobody talks about it.'},
-{icon:'🛣️',title:'Building Roads',body:`Click a road type in the side panel (or use a hotkey), then click tiles on the map to place them.\n\n<b>Road Types:</b>\n• <kbd>R</kbd> One-Way Lane — $10, capacity 2\n• <kbd>T</kbd> Two-Lane Road — $25, capacity 4\n• <kbd>Y</kbd> Multi-Lane — $50, capacity 8\n• <kbd>H</kbd> Highway — $100, capacity 12\n• <kbd>B</kbd> Bridge — $75, spans water\n• <kbd>U</kbd> Tunnel — $120, goes through mountains\n• <kbd>V</kbd> Elevated Highway — $150, builds over existing roads\n\nPress <kbd>L</kbd> to toggle <b>Straight Line</b> mode for quick road drawing.`,hint:'The roads didn\'t bring people to Millhaven. Something else did.'},
+{icon:'🛣️',title:'Building Roads',body:`Click a road type in the side panel (or use a hotkey), then click tiles on the map to place them.\n\n<b>Road Types:</b>\n• <kbd>R</kbd> Dirt Road — $10, capacity 2\n• <kbd>T</kbd> Two-Lane Road — $25, capacity 4\n• <kbd>V</kbd> One-Way Road — $30, forced direction with adjustable speed limit\n• <kbd>Y</kbd> Multi-Lane — $50, capacity 8\n• <kbd>H</kbd> Highway — $100, capacity 12\n• <kbd>B</kbd> Flyover — $75, elevated overpass\n• <kbd>U</kbd> Tunnel — $120, goes through mountains\n\nPress <kbd>L</kbd> to toggle <b>Straight Line</b> mode for quick road drawing.`,hint:'The roads didn\'t bring people to Millhaven. Something else did.'},
 {icon:'💰',title:'Paid Roads & Tolls',body:`Paid roads generate toll revenue but come with a risk.\n\n• <kbd>4</kbd> Paid 2-Lane — $40\n• <kbd>5</kbd> Paid Multi — $70\n• <kbd>6</kbd> Paid Highway — $140\n\n<b>Warning:</b> If paid roads exceed <b>20%</b> of your total network, workers may go on <b>strike</b> — refusing to commute until you reduce tolls.\n\nWatch the <b>Toll %</b> indicator in the HUD.`,hint:'Certain old families have lived here since before the roads were built. They never seem to age.'},
 {icon:'🏗️',title:'Buildings & Infrastructure',body:`<b>Buildings:</b>\n• <kbd>K</kbd> Parking Lot ($60) — reduces congestion near busy areas\n• <kbd>M</kbd> Maintenance Depot ($200) — repairs nearby roads automatically\n\nHouses, offices, restaurants, and schools spawn <b>automatically</b> as you build roads near open land.\n\nLook for disconnect indicators in the HUD — <b>🏚️</b> means houses can't reach any workplace. Click the indicator to cycle through them.`,hint:'Rosa Caruso stopped by the commissioner\'s office. She left her card and says she\'d love to discuss development plans.'},
 {icon:'🔧',title:'Tools & Road Upkeep',body:`<b>Tools:</b>\n• <kbd>X</kbd> Demolish — remove roads/buildings (click & drag for area)\n• <kbd>I</kbd> Inspect — click a road or building to see details\n• <kbd>F</kbd> Traffic Control — place signals at intersections\n\n<b>Road Upkeep</b> affects road durability:\n• <kbd>7</kbd> Low — $2/road/week, more breakdowns\n• <kbd>8</kbd> Medium — $5/road/week, balanced\n• <kbd>9</kbd> High — $10/road/week, fewest breakdowns\n\nBroken roads block traffic until repaired by a maintenance depot.`,hint:'Some roads, when demolished, reveal ghost asphalt underneath — from a network that predates the town.'},
@@ -6438,7 +7557,7 @@ showArtifactPopup(artifact.title, artifact.text);
 const count = G.artifactsFound.length;
 if (count === 5) addToJournal('history', 'You are beginning to see the patterns beneath this town.', ['entity']);
 if (count === 10) addToJournal('history', 'The artifacts paint a picture of something ancient beneath the roads.', ['entity']);
-if (count === 15) addToJournal('history', 'Commissioner Voss saw what you are seeing. He lasted 11 years. How long will you?', ['voss','entity']);
+if (count === 15) addToJournal('history', 'Commissioner Voss saw what you are seeing. He lasted 11 years. Some say he\'s still out there — in the deepest tunnels, mapping what he found. Tunnel deep enough and you might find him.', ['voss','entity']);
 if (count === 20) addToJournal('history', 'The network is patient. It has been doing this for a very long time.', ['entity']);
 return true;
 }
@@ -6470,22 +7589,9 @@ G.loreCollections[col].push({ text, day: G.day, category });
 }
 }
 
-function openLoreJournal() {
-if (!G) return;
-// Sync geography from terrainNames
-if (G.terrainNames && G.terrainNames.length > 0) {
-G.terrainNames.forEach(tn => {
-const desc = tn.name ? `${tn.name} (${tn.type || 'landmark'})` : `${tn.type || 'landmark'}`;
-addToJournal('geography', desc);
-});
-}
-// Generate founding history if empty
-if (G.loreJournal.history.length === 0) {
-addToJournal('history', 'You have been appointed Transport Commissioner. The previous commissioner disappeared under unclear circumstances. Nobody talks about it.');
-if (G.day > 7) addToJournal('history', `By week ${Math.floor(G.day/7)}, the town had ${G.buildings.length} buildings and ${G.roads.size} roads.`);
-}
-const modal = document.getElementById('loreJournal');
-// Collection metadata (display names, icons, descriptions)
+let journalCurrentTab = 'journal';
+let _boardSelectA = null; // first selected evidence card index for connection drawing
+
 const COLLECTION_META = {
 caruso:     { icon:'🍽️', label:'The Caruso Family',        desc:'La Dolce Via. Four generations. A long history of quiet influence.' },
 bellini:    { icon:'🎣', label:'The Bellini Murder',        desc:'Marco Bellini. A permit denied. A weighted coat at the bottom of a lake.' },
@@ -6498,65 +7604,49 @@ anand:      { icon:'🌶️', label:'Spice Meridian & Priya Anand',desc:'She was
 founding:   { icon:'📐', label:'The Founding of Millhaven',  desc:'Elias Holt. 1923. He described the valley as eager to be connected.' },
 millhaven:  { icon:'🏘️', label:'Millhaven Mysteries',        desc:'Loose threads. Things that don\'t quite fit. The town has a long memory.' },
 };
-const categories = [
-{ key: 'legends', label: 'Legends & Lore', icon: '📜' },
-{ key: 'discoveries', label: 'Artifacts & Discoveries', icon: '💎' },
-{ key: 'geography', label: 'Geography', icon: '🗺️' },
-{ key: 'history', label: 'History & Events', icon: '📖' }
-];
+
+function escapeForAttr(text) {
+return text.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function openLoreJournal(tab) {
+if (!G) return;
+if (tab) journalCurrentTab = tab;
+// Sync geography from terrainNames
+if (G.terrainNames && G.terrainNames.length > 0) {
+G.terrainNames.forEach(tn => {
+const desc = tn.name ? `${tn.name} (${tn.type || 'landmark'})` : `${tn.type || 'landmark'}`;
+addToJournal('geography', desc);
+});
+}
+// Generate founding history if empty
+if (G.loreJournal.history.length === 0) {
+addToJournal('history', 'You have been appointed Transport Commissioner. The previous commissioner disappeared under unclear circumstances. Nobody talks about it.');
+if (G.day > 7) addToJournal('history', `By week ${Math.floor(G.day/7)}, the town had ${G.buildings.length} buildings and ${G.roads.size} roads.`);
+}
+// Ensure mysteryBoard exists (backward compat)
+if (!G.mysteryBoard) G.mysteryBoard = { pinnedEntries:[], connections:[], solvedDeductions:[], failedAttempts:{}, revealedCollections:{}, unlockedBonusLore:[] };
+const modal = document.getElementById('loreJournal');
 let html = '<h2>Lore Journal</h2>';
-// --- Lore Collections section ---
-const colKeys = Object.keys(G.loreCollections || {}).filter(k => G.loreCollections[k].length > 0);
-html += `<div class="journal-category"><h3>🔖 Lore Collections<span class="count">(${colKeys.length} active)</span></h3>`;
-if (colKeys.length === 0) {
-html += '<div class="empty-category">Discover artifacts and events to unlock collections...</div>';
-} else {
-for (const colKey of colKeys) {
-const meta = COLLECTION_META[colKey] || { icon:'📎', label: colKey, desc:'' };
-const entries = G.loreCollections[colKey];
-const newCount = entries.filter(e => {
-const journalEntry = (G.loreJournal[e.category] || []).find(j => j.text === e.text);
-return journalEntry && journalEntry.isNew;
-}).length;
-html += `<div style="margin-bottom:10px;border:1px solid rgba(212,165,116,0.2);border-radius:8px;padding:8px 10px;background:rgba(232,213,183,0.04);">`;
-html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;cursor:pointer;" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='none'?'block':'none'">`;
-html += `<span style="color:#d4a574;font-size:13px;font-weight:600;">${meta.icon} ${meta.label}</span>`;
-html += `<span style="color:#a89070;font-size:11px;">${entries.length} entries${newCount > 0 ? ` <span style="color:#6abf69">+${newCount} new</span>` : ''} ▾</span>`;
-html += `</div>`;
-html += `<div style="font-size:11px;color:#706050;font-style:italic;margin-bottom:6px;">${meta.desc}</div>`;
-html += `<div style="display:none;">`;
-for (const e of entries) {
-html += `<div class="journal-entry" style="margin-bottom:3px;"><span class="entry-day">Day ${e.day}</span>${e.text}</div>`;
-}
-html += `</div></div>`;
-}
-}
+// Tab bar
+html += '<div class="journal-tabs">';
+html += `<div class="journal-tab ${journalCurrentTab==='journal'?'active':''}" onclick="openLoreJournal('journal')">📖 Journal</div>`;
+html += `<div class="journal-tab ${journalCurrentTab==='collections'?'active':''}" onclick="openLoreJournal('collections')">🔖 Collections</div>`;
+html += `<div class="journal-tab ${journalCurrentTab==='mystery'?'active':''}" onclick="openLoreJournal('mystery')">🔍 Mystery Board</div>`;
 html += '</div>';
-// --- Standard journal categories ---
-for (const cat of categories) {
-const entries = G.loreJournal[cat.key] || [];
-html += `<div class="journal-category"><h3>${cat.icon} ${cat.label}<span class="count">(${entries.length})</span></h3>`;
-if (entries.length === 0) {
-html += '<div class="empty-category">No entries yet...</div>';
-} else {
-for (const e of entries) {
-const cls = e.isNew ? 'journal-entry new-entry' : 'journal-entry';
-const colBadges = (e.collections || []).map(c => {
-const m = COLLECTION_META[c];
-return m ? `<span style="display:inline-block;background:rgba(212,165,116,0.15);border:1px solid rgba(212,165,116,0.3);border-radius:10px;padding:0 6px;font-size:10px;color:#a89070;margin-left:4px;">${m.icon} ${m.label}</span>` : '';
-}).join('');
-html += `<div class="${cls}"><span class="entry-day">Day ${e.day}</span>${e.text}${colBadges}</div>`;
-}
-}
-html += '</div>';
-}
+if (journalCurrentTab === 'journal') html += renderJournalTab();
+else if (journalCurrentTab === 'collections') html += renderCollectionsTab();
+else html += renderMysteryBoardTab();
 html += '<button class="menu-btn" onclick="closeLoreJournal()" style="padding:8px 20px;font-size:13px;margin-top:10px;width:100%;">Close</button>';
 modal.innerHTML = html;
 modal.style.display = 'block';
 document.getElementById('overlay').style.display = 'block';
-// Mark all as read
-for (const cat of categories) {
-(G.loreJournal[cat.key] || []).forEach(e => e.isNew = false);
+// Mark all as read when viewing journal tab
+if (journalCurrentTab === 'journal') {
+const categories = ['legends','discoveries','geography','history'];
+for (const key of categories) {
+(G.loreJournal[key] || []).forEach(e => e.isNew = false);
+}
 }
 if (G && G.speed !== 0) {
 speedBeforeSettings = G.speed;
@@ -6564,9 +7654,324 @@ setSpeed(0);
 }
 }
 
+function renderJournalTab() {
+const categories = [
+{ key: 'legends', label: 'Legends & Lore', icon: '📜' },
+{ key: 'discoveries', label: 'Artifacts & Discoveries', icon: '💎' },
+{ key: 'geography', label: 'Geography', icon: '🗺️' },
+{ key: 'history', label: 'History & Events', icon: '📖' }
+];
+const mb = G.mysteryBoard;
+let html = '';
+for (const cat of categories) {
+const entries = G.loreJournal[cat.key] || [];
+html += `<div class="journal-category"><h3>${cat.icon} ${cat.label}<span class="count">(${entries.length})</span></h3>`;
+if (entries.length === 0) {
+html += '<div class="empty-category">No entries yet...</div>';
+} else {
+for (let ei = 0; ei < entries.length; ei++) {
+const e = entries[ei];
+const cls = e.isNew ? 'journal-entry new-entry' : 'journal-entry';
+// Collection badges: hidden unless revealed
+const colBadges = (e.collections || []).map(c => {
+const m = COLLECTION_META[c];
+if (!m) return '';
+const revealed = mb.revealedCollections[e.text] && mb.revealedCollections[e.text].includes(c);
+if (revealed) {
+return `<span class="collection-revealed">${m.icon} ${m.label}</span>`;
+} else {
+return `<span class="collection-hidden">🔒 ???</span>`;
+}
+}).join('');
+// Pin button — use category key + index to avoid quote-escaping issues in onclick
+const isPinned = mb.pinnedEntries.some(p => p.text === e.text);
+const pinCls = isPinned ? 'pin-btn pinned' : 'pin-btn';
+const pinBtn = `<span class="${pinCls}" onclick="event.stopPropagation();togglePinEntryByIndex('${cat.key}',${ei})" title="${isPinned?'Unpin from Mystery Board':'Pin to Mystery Board'}">📌</span>`;
+html += `<div class="${cls}"><span class="entry-day">Day ${e.day}</span>${e.text}${colBadges}${pinBtn}</div>`;
+}
+}
+html += '</div>';
+}
+return html;
+}
+
+function renderCollectionsTab() {
+const mb = G.mysteryBoard;
+const colKeys = Object.keys(COLLECTION_META);
+let html = '';
+for (const colKey of colKeys) {
+const meta = COLLECTION_META[colKey];
+const entries = G.loreCollections[colKey] || [];
+// Count how many entries have this collection revealed
+const revealedCount = entries.filter(e => mb.revealedCollections[e.text] && mb.revealedCollections[e.text].includes(colKey)).length;
+const totalCount = entries.length;
+html += `<div style="margin-bottom:10px;border:1px solid rgba(212,165,116,0.2);border-radius:8px;padding:8px 10px;background:rgba(232,213,183,0.04);">`;
+html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;cursor:pointer;" onclick="this.parentElement.querySelector('.coll-entries').style.display=this.parentElement.querySelector('.coll-entries').style.display==='none'?'block':'none'">`;
+html += `<span style="color:#d4a574;font-size:13px;font-weight:600;">${meta.icon} ${meta.label}</span>`;
+html += `<span style="color:#a89070;font-size:11px;">${revealedCount}/${totalCount} revealed ▾</span>`;
+html += `</div>`;
+html += `<div style="font-size:11px;color:#706050;font-style:italic;margin-bottom:6px;">${meta.desc}</div>`;
+// Progress bar
+if (totalCount > 0) {
+const pct = Math.round((revealedCount / totalCount) * 100);
+html += `<div style="background:rgba(232,213,183,0.1);border-radius:4px;height:6px;margin-bottom:6px;overflow:hidden;">`;
+html += `<div style="background:linear-gradient(90deg,#4e8c50,#6abf69);height:100%;width:${pct}%;border-radius:4px;transition:width 0.3s;"></div>`;
+html += `</div>`;
+}
+html += `<div class="coll-entries" style="display:none;">`;
+if (totalCount === 0) {
+html += '<div class="empty-category">No entries discovered yet...</div>';
+} else {
+for (const e of entries) {
+const isRevealed = mb.revealedCollections[e.text] && mb.revealedCollections[e.text].includes(colKey);
+if (isRevealed) {
+html += `<div class="journal-entry" style="margin-bottom:3px;"><span class="entry-day">Day ${e.day}</span>${e.text}</div>`;
+} else {
+html += `<div class="journal-entry" style="margin-bottom:3px;color:#504840;"><span class="entry-day">Day ${e.day}</span>🔒 <em>Solve a mystery to reveal this entry...</em></div>`;
+}
+}
+}
+html += `</div></div>`;
+}
+return html;
+}
+
+function renderMysteryBoardTab() {
+const mb = G.mysteryBoard;
+let html = '';
+// --- Pinned Evidence ---
+html += `<div class="journal-category"><h3>📌 Pinned Evidence<span class="count">(${mb.pinnedEntries.length})</span></h3>`;
+if (mb.pinnedEntries.length === 0) {
+html += '<div class="empty-category">Pin entries from the Journal tab to investigate them here...</div>';
+} else {
+html += '<div style="font-size:10px;color:#706050;margin-bottom:6px;">Click one card, then another to draw a connection.</div>';
+for (let i = 0; i < mb.pinnedEntries.length; i++) {
+const p = mb.pinnedEntries[i];
+const isSelected = _boardSelectA === i;
+const selCls = isSelected ? 'evidence-card selected' : 'evidence-card';
+const truncText = p.text.length > 100 ? p.text.substring(0,100) + '...' : p.text;
+html += `<div class="${selCls}" onclick="selectEvidence(${i})">`;
+html += `<span class="unpin-btn" onclick="event.stopPropagation();unpinEntry(${i})">✕</span>`;
+html += `<span style="color:#a89070;font-size:9px;">${p.category.toUpperCase()} — Day ${p.day}</span><br>${truncText}`;
+html += `</div>`;
+}
+}
+html += '</div>';
+// --- Connections ---
+html += `<div class="journal-category"><h3>🔗 Connections<span class="count">(${mb.connections.length})</span></h3>`;
+if (mb.connections.length === 0) {
+html += '<div class="empty-category">No connections yet. Select two pinned cards to link them.</div>';
+} else {
+for (let i = 0; i < mb.connections.length; i++) {
+const c = mb.connections[i];
+const tA = c.entryA.length > 40 ? c.entryA.substring(0,40)+'...' : c.entryA;
+const tB = c.entryB.length > 40 ? c.entryB.substring(0,40)+'...' : c.entryB;
+html += `<div class="connection-item">`;
+html += `<span>"${tA}" ↔ "${tB}"</span>`;
+html += `<span class="disconnect-btn" onclick="removeConnection(${i})">✕ disconnect</span>`;
+html += `</div>`;
+}
+}
+html += '</div>';
+// --- Deduction Challenges ---
+const available = getAvailableDeductions();
+html += `<div class="journal-category"><h3>🧩 Deduction Challenges<span class="count">(${available.length} available)</span></h3>`;
+if (available.length === 0 && mb.solvedDeductions.length === 0) {
+html += '<div class="empty-category">Pin and connect the right evidence to unlock deduction challenges...</div>';
+} else if (available.length === 0) {
+html += '<div class="empty-category">No new challenges available. Keep discovering artifacts!</div>';
+}
+for (const ded of available) {
+const fails = mb.failedAttempts[ded.id] || 0;
+const stars = '★'.repeat(ded.difficulty) + '☆'.repeat(3 - ded.difficulty);
+html += `<div class="deduction-card">`;
+html += `<h4>🧩 Case: ${ded.id.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())}</h4>`;
+html += `<div class="difficulty">${stars} Difficulty</div>`;
+html += `<p>${ded.question}</p>`;
+for (let ci = 0; ci < ded.choices.length; ci++) {
+html += `<button class="deduction-choice" onclick="attemptDeduction('${escapeForAttr(ded.id)}',${ci})">${ded.choices[ci]}</button>`;
+}
+if (fails >= 2) {
+html += `<div class="hint-text">💡 Hint: ${ded.hint}</div>`;
+}
+if (fails > 0 && fails < 2) {
+html += `<div style="font-size:10px;color:#e07070;margin-top:4px;">${fails} failed attempt${fails>1?'s':''}. Hint available after 2.</div>`;
+}
+html += `</div>`;
+}
+html += '</div>';
+// --- Solved Cases ---
+if (mb.solvedDeductions.length > 0) {
+html += `<div class="journal-category"><h3>✅ Solved Cases<span class="count">(${mb.solvedDeductions.length})</span></h3>`;
+for (const solvedId of mb.solvedDeductions) {
+const ded = MYSTERY_DEDUCTIONS.find(d => d.id === solvedId);
+if (!ded) continue;
+html += `<div class="deduction-solved">`;
+html += `<h4>✅ ${ded.id.replace(/_/g,' ').replace(/\b\w/g,l=>l.toUpperCase())}</h4>`;
+html += `<p>${ded.bonusLore}</p>`;
+const revColls = (ded.revealsCollections || []).map(c => {
+const m = COLLECTION_META[c];
+return m ? `<span class="collection-revealed">${m.icon} ${m.label}</span>` : '';
+}).join(' ');
+if (revColls) html += `<div style="margin-top:4px;">Revealed: ${revColls}</div>`;
+html += `</div>`;
+}
+html += '</div>';
+}
+return html;
+}
+
+function togglePinEntryByIndex(category, entryIndex) {
+if (!G || !G.mysteryBoard) return;
+const entries = G.loreJournal[category] || [];
+if (entryIndex < 0 || entryIndex >= entries.length) return;
+togglePinEntry(category, entries[entryIndex].text);
+}
+
+function togglePinEntry(category, text) {
+if (!G || !G.mysteryBoard) return;
+const mb = G.mysteryBoard;
+const idx = mb.pinnedEntries.findIndex(p => p.text === text);
+if (idx >= 0) {
+// Unpin: remove entry and clean up connections
+unpinEntry(idx);
+} else {
+// Pin: find the entry in the journal
+const entry = (G.loreJournal[category] || []).find(e => e.text === text);
+if (entry) {
+mb.pinnedEntries.push({ text: entry.text, category, day: entry.day, pinnedAt: Date.now() });
+}
+}
+openLoreJournal();
+}
+
+function unpinEntry(index) {
+if (!G || !G.mysteryBoard) return;
+const mb = G.mysteryBoard;
+const removed = mb.pinnedEntries[index];
+if (!removed) return;
+mb.pinnedEntries.splice(index, 1);
+// Remove connections involving this entry
+mb.connections = mb.connections.filter(c => c.entryA !== removed.text && c.entryB !== removed.text);
+_boardSelectA = null;
+openLoreJournal();
+}
+
+function selectEvidence(index) {
+if (!G || !G.mysteryBoard) return;
+const mb = G.mysteryBoard;
+if (_boardSelectA === null) {
+_boardSelectA = index;
+} else if (_boardSelectA === index) {
+_boardSelectA = null;
+} else {
+// Create connection between A and index
+const entryA = mb.pinnedEntries[_boardSelectA];
+const entryB = mb.pinnedEntries[index];
+if (entryA && entryB) {
+// Check for duplicate connection
+const exists = mb.connections.some(c =>
+(c.entryA === entryA.text && c.entryB === entryB.text) ||
+(c.entryA === entryB.text && c.entryB === entryA.text)
+);
+if (!exists) {
+mb.connections.push({ entryA: entryA.text, entryB: entryB.text, createdAt: Date.now() });
+}
+}
+_boardSelectA = null;
+}
+openLoreJournal();
+}
+
+function removeConnection(index) {
+if (!G || !G.mysteryBoard) return;
+G.mysteryBoard.connections.splice(index, 1);
+openLoreJournal();
+}
+
+function getAvailableDeductions() {
+if (!G || !G.mysteryBoard) return [];
+const mb = G.mysteryBoard;
+const pinnedTexts = mb.pinnedEntries.map(p => p.text);
+// Build a flat list of all artifacts for ID lookup
+const allArtifacts = [...ARTIFACT_POOL.ground, ...ARTIFACT_POOL.mountain, ...ARTIFACT_POOL.lake];
+return MYSTERY_DEDUCTIONS.filter(ded => {
+if (mb.solvedDeductions.includes(ded.id)) return false;
+// Check all required artifacts are pinned (by matching artifact text via ID)
+const requiredTexts = ded.requiredPins.map(id => {
+const art = allArtifacts.find(a => a.id === id);
+return art ? art.text : null;
+}).filter(Boolean);
+if (requiredTexts.length !== ded.requiredPins.length) return false;
+// All must be pinned
+if (!requiredTexts.every(t => pinnedTexts.includes(t))) return false;
+// All must be connected to each other
+for (let i = 0; i < requiredTexts.length; i++) {
+for (let j = i + 1; j < requiredTexts.length; j++) {
+const connected = mb.connections.some(c =>
+(c.entryA === requiredTexts[i] && c.entryB === requiredTexts[j]) ||
+(c.entryA === requiredTexts[j] && c.entryB === requiredTexts[i])
+);
+if (!connected) return false;
+}
+}
+return true;
+});
+}
+
+function attemptDeduction(dedId, choiceIndex) {
+if (!G || !G.mysteryBoard) return;
+const mb = G.mysteryBoard;
+const ded = MYSTERY_DEDUCTIONS.find(d => d.id === dedId);
+if (!ded || mb.solvedDeductions.includes(dedId)) return;
+if (choiceIndex === ded.correctIndex) {
+// Correct!
+mb.solvedDeductions.push(dedId);
+// Reveal collections for entries that have the revealed collections
+const allArtifacts = [...ARTIFACT_POOL.ground, ...ARTIFACT_POOL.mountain, ...ARTIFACT_POOL.lake];
+const requiredTexts = ded.requiredPins.map(id => {
+const art = allArtifacts.find(a => a.id === id);
+return art ? art.text : null;
+}).filter(Boolean);
+// Reveal collection memberships for all entries that belong to the revealed collections
+for (const colKey of ded.revealsCollections) {
+const colEntries = G.loreCollections[colKey] || [];
+for (const ce of colEntries) {
+if (!mb.revealedCollections[ce.text]) mb.revealedCollections[ce.text] = [];
+if (!mb.revealedCollections[ce.text].includes(colKey)) {
+mb.revealedCollections[ce.text].push(colKey);
+}
+}
+}
+// Add bonus lore
+if (ded.bonusLore && !mb.unlockedBonusLore.includes(ded.bonusLore)) {
+mb.unlockedBonusLore.push(ded.bonusLore);
+addToJournal(ded.bonusCategory || 'discoveries', ded.bonusLore, ded.bonusCollections || []);
+// Auto-reveal the bonus lore entry's collections
+if (ded.bonusCollections) {
+for (const bc of ded.bonusCollections) {
+if (!mb.revealedCollections[ded.bonusLore]) mb.revealedCollections[ded.bonusLore] = [];
+if (!mb.revealedCollections[ded.bonusLore].includes(bc)) {
+mb.revealedCollections[ded.bonusLore].push(bc);
+}
+}
+}
+}
+showNotification('Case solved! Collection memberships revealed. Check the Collections tab.');
+saveGame();
+} else {
+// Wrong answer
+if (!mb.failedAttempts[dedId]) mb.failedAttempts[dedId] = 0;
+mb.failedAttempts[dedId]++;
+showNotification('That doesn\'t fit the evidence. Try again.');
+}
+openLoreJournal();
+}
+
 function closeLoreJournal() {
 document.getElementById('loreJournal').style.display = 'none';
 document.getElementById('overlay').style.display = 'none';
+_boardSelectA = null;
 if (G) setSpeed(speedBeforeSettings || 1);
 }
 
@@ -6595,10 +8000,14 @@ function gameLoop(timestamp) {
 const dt = Math.min((timestamp - lastTime) / 16.67, 3); // cap at 3x speed
 lastTime = timestamp;
 if (G) {
+try {
 updateKeyboardCamera();
 simulate(dt);
 render();
 if (Date.now() % 500 < 20) updateHUD();
+} catch(e) {
+console.error('Game loop error:', e);
+}
 }
 requestAnimationFrame(gameLoop);
 }
