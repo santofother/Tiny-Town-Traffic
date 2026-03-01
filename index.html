@@ -116,6 +116,20 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 .tut-nav button:hover{transform:scale(1.05);box-shadow:0 2px 10px rgba(78,140,80,0.3);}
 .tut-nav button:disabled{opacity:0.3;cursor:default;transform:none;box-shadow:none;}
 .tut-nav span{color:#a89070;font-size:12px;}
+#tutorialPopup{position:fixed;top:10px;right:250px;transform:none;z-index:200;background:rgba(26,26,46,0.95);border-radius:12px;padding:16px 20px;color:#e8d5b7;border:1px solid rgba(78,140,80,0.5);width:320px;box-shadow:0 4px 20px rgba(0,0,0,0.4);pointer-events:auto;}
+.tut-pop-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.tut-pop-step{font-size:11px;color:#8a7a60;font-weight:600;}
+.tut-pop-skip{background:none;border:1px solid rgba(232,213,183,0.2);color:#a89070;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;transition:all 0.2s;}
+.tut-pop-skip:hover{color:#e8d5b7;border-color:rgba(232,213,183,0.4);}
+.tut-pop-title{font-size:16px;font-weight:700;color:#d4a574;margin-bottom:6px;}
+.tut-pop-text{font-size:13px;color:#c4b49a;line-height:1.5;margin-bottom:10px;}
+.tut-pop-footer{display:flex;justify-content:space-between;align-items:center;}
+.tut-pop-hint{font-size:11px;color:#6a7a5a;font-style:italic;flex:1;}
+.tut-pop-next{background:linear-gradient(135deg,#4a6741,#3d5a35);color:#e8d5b7;border:none;padding:6px 16px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:600;transition:all 0.2s;}
+.tut-pop-next:hover{transform:scale(1.05);box-shadow:0 2px 10px rgba(78,140,80,0.3);}
+.tut-pop-next.waiting{background:rgba(232,213,183,0.1);color:#6a7a5a;cursor:default;transform:none;box-shadow:none;}
+.tool-btn.tut-highlight{animation:tutPulse 1.2s ease-in-out infinite;border-color:rgba(78,140,80,0.8)!important;box-shadow:0 0 12px rgba(78,140,80,0.4)!important;}
+@keyframes tutPulse{0%,100%{box-shadow:0 0 6px rgba(78,140,80,0.3);}50%{box-shadow:0 0 16px rgba(78,140,80,0.6);}}
 .kb-hint{display:inline-block;background:rgba(232,213,183,0.15);border:1px solid rgba(232,213,183,0.25);border-radius:3px;padding:0 4px;font-family:monospace;font-size:10px;color:#a89070;margin-left:4px;line-height:1.6;vertical-align:middle;}
 .tool-btn .btn-right{display:flex;align-items:center;gap:4px;}
 #keybindsCard{display:none;margin-top:12px;max-height:50vh;overflow-y:auto;scrollbar-width:thin;}
@@ -180,7 +194,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <button class="menu-btn btn-creative" onclick="startGame('creative')"><span class="btn-icon">🎨</span> Creative Mode</button>
 <button class="menu-btn secondary" onclick="loadGame()"><span class="btn-icon">💾</span> Continue</button>
 <button class="menu-btn secondary" onclick="showSettings()"><span class="btn-icon">⚙️</span> Settings</button>
-<button class="menu-btn secondary" onclick="showTutorial()"><span class="btn-icon">📖</span> How to Play</button>
+<button class="menu-btn secondary" onclick="startTutorial()"><span class="btn-icon">🎓</span> Tutorial</button>
 <p style="color:#6a7a8a;margin-top:30px;font-size:11px;position:relative;z-index:2;">A cozy traffic sim — Santo's project</p>
 <div id="loreTicker"><div id="loreTickerInner"></div></div>
 </div>
@@ -262,6 +276,18 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div id="artifactPopup"><h3 id="artifactPopupTitle"></h3><p id="artifactPopupText"></p><button class="dismiss-btn" onclick="closeArtifactPopup()">Dismiss</button></div>
 <div id="weekSummary"></div>
 <div id="loreJournal"></div>
+<div id="tutorialPopup" style="display:none;">
+<div class="tut-pop-header">
+<span class="tut-pop-step" id="tutPopStep">Step 1/8</span>
+<button class="tut-pop-skip" onclick="skipTutorial()">End Tutorial</button>
+</div>
+<div class="tut-pop-title" id="tutPopTitle">Welcome!</div>
+<div class="tut-pop-text" id="tutPopText">Tutorial text here</div>
+<div class="tut-pop-footer">
+<span class="tut-pop-hint" id="tutPopHint"></span>
+<button class="tut-pop-next" id="tutPopNext" onclick="advanceTutorialStep()">Next →</button>
+</div>
+</div>
 <div id="overlay" onclick="closeModals()"></div>
 <div id="tutorialModal">
 <h2>How to Play</h2>
@@ -425,6 +451,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <script src="simulate.js"></script>
 <script src="render.js"></script>
 <script src="ui.js"></script>
+<script src="tutorial.js"></script>
 <script>
 // ===== MAIN MENU INIT =====
 (function initMainMenu() {
@@ -849,7 +876,8 @@ vossActiveBonus: null, // {id, name, desc, icon, expiresDay} or null
 vossIncomeBoost: 1, // multiplier for weekly income
 vossTunnelDiscount: 1, // multiplier for tunnel costs (0.5 = half price)
 vossSpeedBoost: 1, // multiplier for road speeds
-vossMiningBoost: 1 // multiplier for mountain treasure/artifact chances
+vossMiningBoost: 1, // multiplier for mountain treasure/artifact chances
+tutorial: null // {step:0, cameraStartX, cameraStartY, speedChanged, inspectedBuilding, roadsPlaced}
 };
 }
 
@@ -1487,7 +1515,7 @@ G.camera.y += dy;
 
 // ===== SAVE/LOAD =====
 function saveGame() {
-if (!G) return;
+if (!G || G.tutorial) return;
 const save = {
 mode: G.mode, money: G.money, day: G.day, dayTick: G.dayTick,
 score: G.score, weeklyRevenue: G.weeklyRevenue, upkeepTier: G.upkeepTier,
@@ -1738,6 +1766,7 @@ G.camera.y = (rx + ry) * TILE * SIN_A;
 }
 
 function returnToMenu() {
+if (G && G.tutorial) endTutorial();
 if (G) saveGame();
 G = null;
 document.getElementById('mainMenu').style.display = 'flex';
@@ -1746,6 +1775,7 @@ document.getElementById('sidePanel').style.display = 'none';
 document.getElementById('gameOver').style.display = 'none';
 document.getElementById('weekSummary').style.display = 'none';
 document.getElementById('infoPanel').style.display = 'none';
+document.getElementById('tutorialPopup').style.display = 'none';
 MC.style.display = 'none';
 closeModals();
 }
@@ -2115,6 +2145,7 @@ try {
 updateKeyboardCamera();
 simulate(dt);
 render();
+if (G.tutorial) checkTutorialProgress();
 if (Date.now() % 500 < 20) updateHUD();
 } catch(e) {
 console.error('Game loop error:', e);

@@ -828,6 +828,8 @@ ctx.stroke();
 ctx.globalAlpha = 1;
 }
 }
+// Tutorial highlights
+if (G.tutorial) drawTutorialHighlights();
 // Minimap
 renderMinimap();
 }

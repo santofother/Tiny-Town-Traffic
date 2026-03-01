@@ -262,7 +262,7 @@ panel.style.display = 'block';
 function showInspectInfo(x, y) {
 const panel = document.getElementById('infoPanel');
 const content = document.getElementById('infoContent');
-G.highlightBuildings = [];
+if (!G.tutorial) G.highlightBuildings = [];
 G.highlightColor = '#44ff44';
 G.commuteZoneCenter = null;
 
@@ -311,6 +311,7 @@ const ctrlOnTile = G.intersections.get(`${x},${y}`);
 if (!roadOnTile && !ctrlOnTile) {
 const building = G.buildings.find(b => Math.abs(b.x - x) <= 1 && Math.abs(b.y - y) <= 1);
 if (building) {
+if (G.tutorial) G.tutorial.inspectedBuilding = true;
 let html = `<h3>${building.name}</h3><p>Type: ${building.type}${building.cuisine ? ' ('+building.cuisine+')' : ''}${building.schoolType ? ' ('+building.schoolType+')' : ''}</p>`;
 const linkedBuildingIds = [];
 if (building.type === 'house') {
@@ -888,13 +889,24 @@ return html;
 function renderCollectionsTab() {
 const mb = G.mysteryBoard;
 const colKeys = Object.keys(COLLECTION_META);
+// Compute the true total size of each collection from the full artifact/deduction pools
+const collectionPoolSize = {};
+for (const key of colKeys) collectionPoolSize[key] = 0;
+const allArtifacts = [...(ARTIFACT_POOL.ground || []), ...(ARTIFACT_POOL.mountain || []), ...(ARTIFACT_POOL.lake || [])];
+for (const art of allArtifacts) {
+if (art.collections) art.collections.forEach(c => { if (collectionPoolSize[c] !== undefined) collectionPoolSize[c]++; });
+}
+for (const ded of MYSTERY_DEDUCTIONS) {
+if (ded.revealsCollections) ded.revealsCollections.forEach(c => { if (collectionPoolSize[c] !== undefined) collectionPoolSize[c]++; });
+if (ded.bonusCollections) ded.bonusCollections.forEach(c => { if (collectionPoolSize[c] !== undefined) collectionPoolSize[c]++; });
+}
 let html = '';
 for (const colKey of colKeys) {
 const meta = COLLECTION_META[colKey];
 const entries = G.loreCollections[colKey] || [];
-// Count how many entries have this collection revealed
+// Only count entries whose collection membership has been revealed to the player
 const revealedCount = entries.filter(e => mb.revealedCollections[e.text] && mb.revealedCollections[e.text].includes(colKey)).length;
-const totalCount = entries.length;
+const totalCount = collectionPoolSize[colKey] || 0;
 html += `<div style="margin-bottom:10px;border:1px solid rgba(212,165,116,0.2);border-radius:8px;padding:8px 10px;background:rgba(232,213,183,0.04);">`;
 html += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;cursor:pointer;" onclick="this.parentElement.querySelector('.coll-entries').style.display=this.parentElement.querySelector('.coll-entries').style.display==='none'?'block':'none'">`;
 html += `<span style="color:#d4a574;font-size:13px;font-weight:600;">${meta.icon} ${meta.label}</span>`;
@@ -909,7 +921,7 @@ html += `<div style="background:linear-gradient(90deg,#4e8c50,#6abf69);height:10
 html += `</div>`;
 }
 html += `<div class="coll-entries" style="display:none;">`;
-if (totalCount === 0) {
+if (entries.length === 0) {
 html += '<div class="empty-category">No entries discovered yet...</div>';
 } else {
 for (const e of entries) {
@@ -1010,3 +1022,4 @@ html += '</div>';
 }
 return html;
 }
+
