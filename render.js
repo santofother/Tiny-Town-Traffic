@@ -651,6 +651,41 @@ const tipAngle = angle + Math.PI/3;
 ctx.lineTo(ax + Math.cos(tipAngle) * 2.5*zoom, ay + Math.sin(tipAngle) * 2.5*zoom);
 ctx.stroke();
 }
+} else if (ctrl.type === 'multi_intersection') {
+// Wide signal gantry spanning full tile width
+const gantryY = sp.y - 22*zoom;
+// Horizontal bar
+ctx.fillStyle = `rgba(70,70,70,${amb})`;
+ctx.fillRect(sp.x - 14*zoom, gantryY - 1.5*zoom, 28*zoom, 3*zoom);
+// Support posts
+ctx.fillRect(sp.x - 14*zoom - 1*zoom, gantryY, 2*zoom, 22*zoom);
+ctx.fillRect(sp.x + 14*zoom - 1*zoom, gantryY, 2*zoom, 22*zoom);
+const nsGreen = ctrl.greenAxis === 'NS';
+const phase = ctrl.phase || 'green';
+const nsState = nsGreen ? phase : 'red';
+const ewState = !nsGreen ? phase : 'red';
+// Left signal head (N/S)
+const lhx = sp.x - 8*zoom;
+const lr = 2.2*zoom;
+ctx.fillStyle = `rgba(40,40,40,${amb})`;
+ctx.fillRect(lhx - 3.5*zoom, gantryY - 12*zoom, 7*zoom, 16*zoom);
+ctx.fillStyle = nsState === 'red' ? `rgba(255,50,50,${amb})` : `rgba(80,40,40,${amb*0.4})`;
+ctx.beginPath(); ctx.arc(lhx, gantryY - 9*zoom, lr, 0, Math.PI*2); ctx.fill();
+ctx.fillStyle = nsState === 'yellow' ? `rgba(255,220,50,${amb})` : `rgba(80,70,30,${amb*0.4})`;
+ctx.beginPath(); ctx.arc(lhx, gantryY - 4*zoom, lr, 0, Math.PI*2); ctx.fill();
+ctx.fillStyle = nsState === 'green' ? `rgba(50,255,50,${amb})` : `rgba(40,80,40,${amb*0.4})`;
+ctx.beginPath(); ctx.arc(lhx, gantryY + 1*zoom, lr, 0, Math.PI*2); ctx.fill();
+// Right signal head (E/W)
+const rhx = sp.x + 8*zoom;
+ctx.fillStyle = `rgba(40,40,40,${amb})`;
+ctx.fillRect(rhx - 3.5*zoom, gantryY - 12*zoom, 7*zoom, 16*zoom);
+ctx.fillStyle = ewState === 'red' ? `rgba(255,50,50,${amb})` : `rgba(80,40,40,${amb*0.4})`;
+ctx.beginPath(); ctx.arc(rhx, gantryY - 9*zoom, lr, 0, Math.PI*2); ctx.fill();
+ctx.fillStyle = ewState === 'yellow' ? `rgba(255,220,50,${amb})` : `rgba(80,70,30,${amb*0.4})`;
+ctx.beginPath(); ctx.arc(rhx, gantryY - 4*zoom, lr, 0, Math.PI*2); ctx.fill();
+ctx.fillStyle = ewState === 'green' ? `rgba(50,255,50,${amb})` : `rgba(40,80,40,${amb*0.4})`;
+ctx.beginPath(); ctx.arc(rhx, gantryY + 1*zoom, lr, 0, Math.PI*2); ctx.fill();
+
 } else if (ctrl.type === 'stop') {
 // Per-direction stop signs at road edges
 const stopDirs = ctrl.stopDirs || {N:true,S:true,E:true,W:true};
@@ -1180,6 +1215,30 @@ ctx.lineTo(cBottom.x, cBottom.y + roadH);
 ctx.lineTo(cRight.x, cRight.y + roadH);
 ctx.closePath();
 ctx.fill();
+}
+
+// Box junction yellow diagonal hatching
+if (road.boxJunction) {
+ctx.save();
+ctx.strokeStyle = 'rgba(255,210,0,0.35)';
+ctx.lineWidth = Math.max(1, zoom * 0.8);
+// Draw 5 diagonal lines across the isometric diamond
+for (let li = 0; li < 5; li++) {
+const t = (li + 1) / 6; // evenly spaced 1/6..5/6
+// Interpolate along two opposite edges and connect
+const ax = cTop.x + (cLeft.x - cTop.x) * t;
+const ay = cTop.y + (cLeft.y - cTop.y) * t;
+const bx = cRight.x + (cBottom.x - cRight.x) * t;
+const by = cRight.y + (cBottom.y - cRight.y) * t;
+ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke();
+// Cross-diagonal
+const cx2 = cTop.x + (cRight.x - cTop.x) * t;
+const cy2 = cTop.y + (cRight.y - cTop.y) * t;
+const dx2 = cLeft.x + (cBottom.x - cLeft.x) * t;
+const dy2 = cLeft.y + (cBottom.y - cLeft.y) * t;
+ctx.beginPath(); ctx.moveTo(cx2, cy2); ctx.lineTo(dx2, dy2); ctx.stroke();
+}
+ctx.restore();
 }
 
 // Edge midpoints (needed for arrows/indicators even outside lane markings)

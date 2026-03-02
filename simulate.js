@@ -3,6 +3,15 @@
 // day/week cycles, revenue calculation, breakdowns, and loan management.
 // Modifies global game state (G) extensively. Depends on: world.js, ui.js, lore.js
 
+function getCongestionPenalty(x, y) {
+if (!G.tileVehicleCount) return 1.0;
+const count = G.tileVehicleCount.get(`${x},${y}`) || 0;
+const capacity = 4; // approximate tile capacity
+if (count >= capacity) return 3.0;
+if (count >= capacity * 0.5) return 1.5;
+return 1.0;
+}
+
 function findPath(startX, startY, endX, endY) {
 const cacheKey = `${startX},${startY}-${endX},${endY}-${G.lastRoadChangeId}`;
 if (G.pathCache.has(cacheKey)) return G.pathCache.get(cacheKey);
@@ -66,7 +75,7 @@ if (curRoad && curRoad.oneWayDir && (curRoad.oneWayDir.dx * dx + curRoad.oneWayD
 } else {
 const nk = `${nx},${ny},${curLevel}`;
 if (!closed.has(nk)) {
-const moveCost = 1 / (ROAD_SPEED[nRoad.type] || 1);
+const moveCost = (1 / (ROAD_SPEED[nRoad.type] || 1)) * getCongestionPenalty(nx, ny);
 const tentG = (gScore.get(currentKey) || 0) + moveCost;
 if (tentG < (gScore.get(nk) || Infinity)) {
 cameFrom.set(nk, currentKey);
@@ -88,7 +97,7 @@ const canEnter = !nRoadOther.oneWayDir || (nRoadOther.oneWayDir.dx * dx + nRoadO
 if (canEnter) {
 const nk = `${nx},${ny},${otherLevel}`;
 if (!closed.has(nk)) {
-const moveCost = 1 / (ROAD_SPEED[nRoadOther.type] || 1) + 0.5; // small penalty for level change
+const moveCost = (1 / (ROAD_SPEED[nRoadOther.type] || 1)) * getCongestionPenalty(nx, ny) + 0.5; // small penalty for level change
 const tentG = (gScore.get(currentKey) || 0) + moveCost;
 if (tentG < (gScore.get(nk) || Infinity)) {
 cameFrom.set(nk, currentKey);
@@ -112,7 +121,7 @@ const canLeave = !curRoad2 || !curRoad2.oneWayDir || (curRoad2.oneWayDir.dx * dx
 if (canLeave) {
 const nk = `${nx},${ny},${curLevel}`;
 if (!closed.has(nk)) {
-const moveCost = 1 / (ROAD_SPEED[flyRoad.type] || 1);
+const moveCost = (1 / (ROAD_SPEED[flyRoad.type] || 1)) * getCongestionPenalty(nx, ny);
 const tentG = (gScore.get(currentKey) || 0) + moveCost;
 if (tentG < (gScore.get(nk) || Infinity)) {
 cameFrom.set(nk, currentKey);
@@ -151,6 +160,9 @@ return null;
 }
 
 function spawnVehicleFrom(family, memberIdx, fromX, fromY, destX, destY, purpose) {
+const roadCount = G.roads.size + G.elevatedRoads.size;
+const vehicleCap = Math.max(30, Math.min(200, roadCount * 3));
+if (G.vehicles.length >= vehicleCap) return null;
 const member = family.members[memberIdx];
 if (!findNearestRoad(fromX, fromY, 2, {excludeHighways: true, levelFilter: 0})) {
 if (purpose === 'commute' || purpose === 'return') G.failedCommutes++;
@@ -195,6 +207,9 @@ return v;
 }
 
 function spawnVehicle(family, memberIdx, destX, destY, purpose) {
+const roadCount = G.roads.size + G.elevatedRoads.size;
+const vehicleCap = Math.max(30, Math.min(200, roadCount * 3));
+if (G.vehicles.length >= vehicleCap) return null;
 const member = family.members[memberIdx];
 const hx = family.houseTile.x, hy = family.houseTile.y;
 // House must have a directly adjacent ground-level non-highway road (driveway connection)
@@ -253,11 +268,19 @@ G.pathCache.clear();
 }
 }
 // Build per-tile vehicle count map for capacity enforcement
-const tileVehicleCount = new Map();
+G.tileVehicleCount = new Map();
+const tileVehicleCount = G.tileVehicleCount;
 for (const v of G.vehicles) {
 if (!v.active || v.crashed) continue;
 const tk = `${Math.floor(v.x)},${Math.floor(v.y)}`;
 tileVehicleCount.set(tk, (tileVehicleCount.get(tk) || 0) + 1);
+}
+// Clear path cache periodically to account for congestion changes
+if (!G._lastPathClearTick) G._lastPathClearTick = 0;
+G._lastPathClearTick++;
+if (G._lastPathClearTick >= 120) {
+G.pathCache.clear();
+G._lastPathClearTick = 0;
 }
 for (let i = G.vehicles.length - 1; i >= 0; i--) {
 const v = G.vehicles[i];
@@ -357,15 +380,18 @@ G.crashes.push({x: cx, y: cy, timer: repairTime, vehicles: [v.color, ov.color]})
 break;
 }
 }
-// Push apart to prevent visual phasing
+// Push apart to prevent visual phasing (stronger for stuck vehicles)
 if (oDist < 0.4 && oDist > 0.01) {
-const pushStr = (0.4 - oDist) * 0.3;
+const stuckMult = (v.stuckCount || 0) >= 1 ? 0.6 : 0.3;
+const pushStr = (0.4 - oDist) * stuckMult;
 const nx = odx / oDist, ny = ody / oDist;
 v.x -= nx * pushStr;
 v.y -= ny * pushStr;
 }
-// Allow creep at very low speed instead of full stop to prevent permanent gridlock
-trafficSlowdown = Math.min(trafficSlowdown, 0.03);
+// Graduated creep: faster creep when stuck longer to escape jams
+const sc = v.stuckCount || 0;
+const creepSpeed = sc >= 2 ? 0.10 : sc >= 1 ? 0.06 : 0.03;
+trafficSlowdown = Math.min(trafficSlowdown, creepSpeed);
 v.braking = true;
 } else if (oDist < 1.2) {
 // Close — hard brake but allow creep
@@ -433,12 +459,12 @@ v.laneChangeTimer = 30;
 // Stuck detection — reroute if vehicle hasn't moved significantly
 if (!v.stuckCheck) { v.stuckCheck = {x: v.x, y: v.y, tick: 0}; }
 v.stuckCheck.tick += dt;
-if (v.stuckCheck.tick > 90) { // check every ~90 ticks (~1.5s)
+if (v.stuckCheck.tick > 45) { // check every ~45 ticks (~0.75s)
 const movedDist = Math.sqrt((v.x - v.stuckCheck.x) ** 2 + (v.y - v.stuckCheck.y) ** 2);
 if (movedDist < 0.3) {
 // Vehicle is stuck — try to reroute
 v.stuckCount = (v.stuckCount || 0) + 1;
-if (v.stuckCount >= 2) {
+if (v.stuckCount >= 1) {
 // Reroute: find a new path from current position to destination
 const destNode = v.path[v.path.length - 1];
 if (destNode) {
@@ -454,7 +480,7 @@ v.pathIdx = 0;
 v.lastStopKey = null;
 v.intersectionCleared = false;
 v.stuckCount = 0;
-} else if (v.stuckCount >= 5) {
+} else if (v.stuckCount >= 3) {
 // Truly stuck with no alternate route — despawn
 v.active = false;
 }
@@ -574,7 +600,7 @@ v.braking = true;
 }
 }
 }
-} else if (intersection.type === 'light') {
+} else if (intersection.type === 'light' || intersection.type === 'multi_intersection') {
 const vAngle = v.angle || 0;
 const absA = Math.abs(vAngle);
 const movingNS = absA > Math.PI/4 && absA < 3*Math.PI/4;
@@ -653,6 +679,17 @@ if (count >= cap) {
 trafficSlowdown *= 0.3; // at capacity: severe congestion
 } else if (count >= cap * 0.75) {
 trafficSlowdown *= 0.7; // approaching capacity
+}
+}
+// Box junction merging friction — slow down within 1.5 tiles even on green
+if (road && road.boxJunction) {
+trafficSlowdown *= 0.4;
+} else {
+const vx = Math.floor(v.x), vy = Math.floor(v.y);
+for (const [bdx, bdy] of [[0,-1],[0,1],[-1,0],[1,0]]) {
+const bk = `${vx+bdx},${vy+bdy}`;
+const br = G.roads.get(bk);
+if (br && br.boxJunction) { trafficSlowdown *= 0.4; break; }
 }
 }
 const moveSpeed = v.speed * roadSpeed * trafficSlowdown * dt;
@@ -812,10 +849,11 @@ const occKey = `${Math.floor(occ.x)},${Math.floor(occ.y)}`;
 if (occKey !== key) ctrl.occupiedBy = null;
 }
 }
-if (ctrl.type === 'light') {
+if (ctrl.type === 'light' || ctrl.type === 'multi_intersection') {
 ctrl.timer += tickDelta;
 if (!ctrl.phase) ctrl.phase = 'green';
-if (ctrl.phase === 'green' && ctrl.timer > 150) {
+const greenLen = ctrl.phaseLength || 150;
+if (ctrl.phase === 'green' && ctrl.timer > greenLen) {
 ctrl.phase = 'yellow';
 ctrl.timer = 0;
 } else if (ctrl.phase === 'yellow' && ctrl.timer > 30) {
@@ -1345,7 +1383,7 @@ const onTimeCount = G.families.reduce((total, f) => {
 const workers = f.members.filter(m => m.role === 'adult' && m.workplaceId === office.id && !m.onStrike);
 return total + workers.filter(m => m.arrivedOnTime).length;
 }, 0);
-let rev = employees * 120;
+let rev = employees * 150;
 if (onTimeCount === employees && employees > 0) {
 rev *= 1.5; // 50% bonus for perfect on-time
 } else {
@@ -1369,7 +1407,7 @@ const onTimeCount = G.families.reduce((total, f) => {
 const workers = f.members.filter(m => m.role === 'adult' && m.workplaceId === r.id && !m.onStrike);
 return total + workers.filter(m => m.arrivedOnTime).length;
 }, 0);
-let staffBonus = employees * 75;
+let staffBonus = employees * 100;
 if (onTimeCount === employees && employees > 0) {
 staffBonus *= 1.5; // 50% bonus for all on-time
 } else {
@@ -1390,13 +1428,22 @@ const maintCost = G.maintenanceBuildings.length * 30;
 // Family population tax: $8 per connected family
 const isVossExcluded = (f) => { const h = G.buildings.find(b => b.id === f.houseId); return h && h.vossHouse && !G.vossReturned; };
 const connectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && !isVossExcluded(f) && hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
-const familyTax = connectedFamilies * 8;
+const familyTax = connectedFamilies * 12;
 // Unconnected house penalty: $20 per disconnected family (emergency services, complaints)
 const disconnectedFamilies = G.families.filter(f => f.members.length > 0 && f.houseTile && !isVossExcluded(f) && !hasNearbyRoad(f.houseTile.x, f.houseTile.y)).length;
-const disconnectPenalty = disconnectedFamilies * 20;
+const disconnectPenalty = disconnectedFamilies <= 3
+? disconnectedFamilies * 20
+: 3 * 20 + (disconnectedFamilies - 3) * 30;
 // Remove abandoned families
 G.families = G.families.filter(f => f.members.length > 0);
 let totalIncome = taxOffice + taxRestaurant + G.weekTollRoad + G.weekParking + familyTax;
+// Traffic efficiency multiplier: bad traffic reduces ALL income
+const wcsEff = G.weeklyCommuteStats;
+const wcsEffTotal = wcsEff.officeTotal + wcsEff.restaurantTotal + wcsEff.schoolTotal;
+const wcsEffLate = wcsEff.officeLate + wcsEff.restaurantLate + wcsEff.schoolLate;
+const onTimePct = wcsEffTotal > 0 ? (wcsEffTotal - wcsEffLate) / wcsEffTotal : 1;
+const trafficEfficiency = 0.3 + 0.7 * onTimePct;
+totalIncome = Math.floor(totalIncome * trafficEfficiency);
 // Apply Voss income boost if active
 if (G.vossIncomeBoost && G.vossIncomeBoost > 1) {
 totalIncome = Math.floor(totalIncome * G.vossIncomeBoost);
@@ -1420,7 +1467,7 @@ G.money -= loanPayments;
 G.totalDebt = G.loans.reduce((s, l) => s + l.remaining, 0);
 if (loanPayments > 0 && G.loans.length === 0) showNotification('🎉 All loans fully repaid!');
 // Show weekly summary
-showWeeklySummary(taxOffice, taxRestaurant, G.weekTollRoad, G.weekParking, upkeepCost, maintCost, strikersCount, totalWorkers, tollPct, disconnectedFamilies, disconnectPenalty, familyTax, loanPayments);
+showWeeklySummary(taxOffice, taxRestaurant, G.weekTollRoad, G.weekParking, upkeepCost, maintCost, strikersCount, totalWorkers, tollPct, disconnectedFamilies, disconnectPenalty, familyTax, loanPayments, trafficEfficiency, onTimePct);
 G.weeklyRevenue = totalIncome - totalCost - loanPayments;
 G.weekTaxOffice = 0;
 G.weekTaxRestaurant = 0;
@@ -1434,25 +1481,18 @@ G.weeklyCommuteStats = { officeTotal:0, officeLate:0, restaurantTotal:0, restaur
 const maxRadius = Math.floor(Math.min(MAP_W, MAP_H) / 2) - 2;
 G.playableRadius = Math.min(maxRadius, G.playableRadius + 5);
 showNotification(`🗺 Town expanded! Buildable area grew.`);
-// Spawn new buildings within playable area (increased growth)
+// Spawn new buildings scaled to town size and connectivity
 const cx = G.playableCenter.x, cy = G.playableCenter.y, pr = G.playableRadius - 3;
-// Houses: 8-15 per week
-for (let i = 0; i < 8; i++) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.8) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.7) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.7) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.6) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.5) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.4) placeRandomBuilding('house', cx, cy, pr);
-if (Math.random() < 0.3) placeRandomBuilding('house', cx, cy, pr);
-// Offices: 2-4 per week
-for (let i = 0; i < 2; i++) placeRandomBuilding('office', cx, cy, pr);
-if (Math.random() < 0.6) placeRandomBuilding('office', cx, cy, pr);
-if (Math.random() < 0.4) placeRandomBuilding('office', cx, cy, pr);
-// Restaurants: 1-3 per week
-placeRandomBuilding('restaurant', cx, cy, pr);
-if (Math.random() < 0.6) placeRandomBuilding('restaurant', cx, cy, pr);
-if (Math.random() < 0.3) placeRandomBuilding('restaurant', cx, cy, pr);
+const totalFamilies = G.families.filter(f => f.members.length > 0).length;
+const connFam = connectedFamilies;
+const connRatio = totalFamilies > 0 ? connFam / totalFamilies : 0;
+const spawnMult = connRatio > 0.7 ? 1.0 : connRatio > 0.4 ? 0.5 : 0.25;
+const houseCount = Math.max(2, Math.min(15, Math.floor((3 + Math.floor(connFam / 5)) * spawnMult)));
+const officeCount = Math.max(1, Math.min(4, Math.floor((1 + Math.floor(connFam / 10)) * spawnMult)));
+const restCount = Math.max(1, Math.min(3, Math.floor((1 + Math.floor(connFam / 15)) * spawnMult)));
+for (let i = 0; i < houseCount; i++) placeRandomBuilding('house', cx, cy, pr);
+for (let i = 0; i < officeCount; i++) placeRandomBuilding('office', cx, cy, pr);
+for (let i = 0; i < restCount; i++) placeRandomBuilding('restaurant', cx, cy, pr);
 // Banks: rare spawn, max 2
 const bankCount = G.buildings.filter(b => b.type === 'bank').length;
 if (bankCount < 2 && Math.random() < 0.05) placeRandomBuilding('bank', cx, cy, pr);

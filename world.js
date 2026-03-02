@@ -936,20 +936,37 @@ let roadCount = 0;
 let stopDirs = {N:false,S:false,E:false,W:false};
 let hasSmaller = false;
 let hasMulti = false;
+// For multi×multi detection: track multi-lane neighbors by axis
+// Determine this tile's group identity (parent key)
+let multiNS = false, multiEW = false;
+const tileGroup = tileRoad.parentRoad || tk; // parent key, or self if we ARE the parent
 for (let di = 0; di < dirs.length; di++) {
 const [dx, dy] = dirs[di];
 const nk = `${tile.x+dx},${tile.y+dy}`;
 const neighbor = G.roads.get(nk);
-if (!neighbor || neighbor.multiLaneGroup) continue;
-roadCount++;
-const neighborIsMulti = neighbor.type && neighbor.type.includes('multi');
-if (neighborIsMulti) {
+if (!neighbor) continue;
+const neighborIsMulti = neighbor.multiLaneGroup || (neighbor.type && neighbor.type.includes('multi'));
+// Check if neighbor is a sibling (same wide-road group)
+const neighborGroup = neighbor.parentRoad || nk;
+const isSibling = (neighborGroup === tileGroup) || (nk === tileGroup) || (neighborGroup === tk);
+if (neighborIsMulti && !isSibling) {
+// Multi-lane neighbor from a DIFFERENT road group — real crossing
 hasMulti = true;
-} else {
+if (di < 2) multiNS = true; // N or S
+else multiEW = true; // W or E
+}
+if (neighbor.multiLaneGroup) continue; // skip siblings for roadCount
+roadCount++;
+if (!neighborIsMulti) {
 hasSmaller = true;
 }
 }
-if (roadCount >= 3 || (isMultiLane && hasSmaller && roadCount >= 1)) {
+// Multi×multi intersection: multi-lane neighbors on BOTH axes
+if (isMultiLane && multiNS && multiEW) {
+tileRoad.boxJunction = true;
+G.intersections.set(tk, {type: 'multi_intersection', phase: 'green', greenAxis: 'NS', timer: 0, phaseLength: 200});
+} else if (roadCount >= 3 || (isMultiLane && hasSmaller && roadCount >= 1)) {
+tileRoad.boxJunction = false;
 if (isMultiLane) {
 // Multi-lane tile: only stop directions where smaller roads connect
 for (let di = 0; di < dirs.length; di++) {
@@ -971,6 +988,10 @@ if (!G.intersections.has(tk)) {
 G.intersections.set(tk, {type: 'stop', stopDirs: {N:true,S:true,E:true,W:true}, greenAxis: 'NS', timer: 0});
 }
 }
+} else {
+// No intersection conditions met — clean up stale data
+tileRoad.boxJunction = false;
+G.intersections.delete(tk);
 }
 }
 }

@@ -825,7 +825,7 @@ let G = null; // game state object
 function newGameState(mode) {
 return {
 mode: mode, // 'normal','endless','creative'
-money: mode === 'creative' ? 999999999 : 5000,
+money: mode === 'creative' ? 999999999 : 10000,
 day: 1,
 dayTick: 0, // 0-3600 ticks per day (60fps * 60s)
 speed: 1,
@@ -855,7 +855,7 @@ families: [],
 parkingLots: [],
 camera: {x: MAP_W*TILE/2, y: MAP_H*TILE/2, zoom: 1, rotation: 0, targetRotation: 0},
 selectedTool: null,
-straightMode: false,
+straightMode: true,
 straightStart: null,
 dragStart: null,
 roadsDuringPause: new Set(),

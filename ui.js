@@ -3,7 +3,7 @@
 // notifications, settings, tutorial pages, lore journal/mystery board, search, and tool selection.
 // Reads from and occasionally modifies global game state (G). Depends on: world.js, simulate.js, lore.js
 
-function showWeeklySummary(taxO, taxR, toll, park, upkeep, maint, strikers, totalWorkers, tollPct, disconnected, disconnectPenalty, famTax, loanPay) {
+function showWeeklySummary(taxO, taxR, toll, park, upkeep, maint, strikers, totalWorkers, tollPct, disconnected, disconnectPenalty, famTax, loanPay, trafficEfficiency, onTimePct) {
 const el = document.getElementById('weekSummary');
 const strikeHtml = strikers > 0 ? `
 <div class="line"><span>⚠ Workers on Strike</span><span class="neg">${strikers}/${totalWorkers} (${Math.round(tollPct*100)}% toll roads)</span></div>` : '';
@@ -15,6 +15,10 @@ const wcs = G.weeklyCommuteStats;
 const wcsTotal = wcs.officeTotal + wcs.restaurantTotal + wcs.schoolTotal;
 const wcsLate = wcs.officeLate + wcs.restaurantLate + wcs.schoolLate;
 const wcsOnTime = wcsTotal - wcsLate;
+const effPct = trafficEfficiency !== undefined ? Math.round(trafficEfficiency * 100) : 100;
+const onTimePctDisplay = onTimePct !== undefined ? Math.round(onTimePct * 100) : 100;
+const effHtml = wcsTotal > 0 ? `
+<div class="line"><span>🚦 Traffic Efficiency</span><span class="${effPct < 80 ? 'neg' : 'pos'}">${onTimePctDisplay}% on-time (${effPct}% income)</span></div>` : '';
 const commuteHtml = wcsTotal > 0 ? `
 <div class="line"><span>📊 Commute Performance</span><span class="${wcsLate > 0 ? 'neg' : 'pos'}">${wcsOnTime}/${wcsTotal} on-time (${wcsLate} late)</span></div>
 <div class="line" style="font-size:11px;color:#a89070;"><span>&nbsp;&nbsp;Office ${wcs.officeTotal-wcs.officeLate}/${wcs.officeTotal} · Restaurant ${wcs.restaurantTotal-wcs.restaurantLate}/${wcs.restaurantTotal} · School ${wcs.schoolTotal-wcs.schoolLate}/${wcs.schoolTotal}</span><span></span></div>` : '';
@@ -27,7 +31,7 @@ el.innerHTML = `
 <div class="line"><span>Toll Revenue</span><span class="pos">+$${toll}</span></div>
 <div class="line"><span>Parking Revenue</span><span class="pos">+$${park}</span></div>
 <div class="line"><span>Road Upkeep</span><span class="neg">-$${upkeep}</span></div>
-<div class="line"><span>Maintenance</span><span class="neg">-$${maint}</span></div>${loanHtml}${disconnectHtml}${strikeHtml}${commuteHtml}
+<div class="line"><span>Maintenance</span><span class="neg">-$${maint}</span></div>${loanHtml}${disconnectHtml}${strikeHtml}${commuteHtml}${effHtml}
 <hr style="border-color:rgba(232,213,183,0.2);margin:8px 0;">
 <div class="line"><span><strong>Net</strong></span><span class="${net>=0?'pos':'neg'}"><strong>${net>=0?'+':''}$${net}</strong></span></div>
 ${tollPct > 0.2 ? `<p style="color:#ff8844;font-size:11px;margin-top:6px;">⚠ Toll road threshold exceeded (${Math.round(tollPct*100)}% > 20%). Reduce paid roads to end strikes!</p>` : ''}
