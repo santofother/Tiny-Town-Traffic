@@ -59,10 +59,10 @@ const nRoad = getRoadAtLevel(nx, ny, curLevel);
 if (nRoad && !(nRoad.breakdown && nRoad.blocking)) {
 // One-way enforcement: check if traveling FROM current TO neighbor is allowed
 const curRoad = getRoadAtLevel(current.x, current.y, curLevel);
-if (curRoad && curRoad.oneWayDir && (curRoad.oneWayDir.dx !== dx || curRoad.oneWayDir.dy !== dy)) {
-// Can't leave this tile in the wrong direction — skip
-} else if (nRoad.oneWayDir && (nRoad.oneWayDir.dx !== dx || nRoad.oneWayDir.dy !== dy)) {
-// Can't enter that tile going the wrong way — skip
+if (curRoad && curRoad.oneWayDir && (curRoad.oneWayDir.dx * dx + curRoad.oneWayDir.dy * dy < 0)) {
+// Can't leave this tile against the flow — skip
+} else if (nRoad.oneWayDir && (nRoad.oneWayDir.dx * dx + nRoad.oneWayDir.dy * dy < 0)) {
+// Can't enter that tile against the flow — skip
 } else {
 const nk = `${nx},${ny},${curLevel}`;
 if (!closed.has(nk)) {
@@ -84,7 +84,7 @@ const otherLevel = curLevel === 0 ? 1 : 0;
 const nRoadOther = getRoadAtLevel(nx, ny, otherLevel);
 if (nRoadOther && !(nRoadOther.breakdown && nRoadOther.blocking)) {
 // One-way check: respect target tile's oneWayDir for level transitions too
-const canEnter = !nRoadOther.oneWayDir || (nRoadOther.oneWayDir.dx === dx && nRoadOther.oneWayDir.dy === dy);
+const canEnter = !nRoadOther.oneWayDir || (nRoadOther.oneWayDir.dx * dx + nRoadOther.oneWayDir.dy * dy >= 0);
 if (canEnter) {
 const nk = `${nx},${ny},${otherLevel}`;
 if (!closed.has(nk)) {
@@ -108,7 +108,7 @@ const flyRoad = getRoadAtLevel(nx, ny, 1);
 if (flyRoad && !(flyRoad.breakdown && flyRoad.blocking)) {
 // One-way check on current tile leaving direction
 const curRoad2 = getRoadAtLevel(current.x, current.y, curLevel);
-const canLeave = !curRoad2 || !curRoad2.oneWayDir || (curRoad2.oneWayDir.dx === dx && curRoad2.oneWayDir.dy === dy);
+const canLeave = !curRoad2 || !curRoad2.oneWayDir || (curRoad2.oneWayDir.dx * dx + curRoad2.oneWayDir.dy * dy >= 0);
 if (canLeave) {
 const nk = `${nx},${ny},${curLevel}`;
 if (!closed.has(nk)) {

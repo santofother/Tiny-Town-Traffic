@@ -71,25 +71,25 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 #sidePanel::-webkit-scrollbar{width:4px;}
 #sidePanel::-webkit-scrollbar-thumb{background:rgba(232,213,183,0.3);border-radius:2px;}
 .panel-section{background:rgba(26,26,46,0.88);border-radius:10px;padding:10px;color:#e8d5b7;backdrop-filter:blur(6px);border:1px solid rgba(232,213,183,0.15);}
-#lateReportPanel{position:fixed;top:10px;right:220px;width:400px;max-height:calc(100vh - 20px);overflow-y:auto;z-index:150;background:rgba(26,26,46,0.95);border:1px solid rgba(232,213,183,0.2);border-radius:12px;padding:16px;color:#e8d5b7;font-size:13px;scrollbar-width:thin;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
-#lateReportPanel h2{color:#d4a574;font-size:16px;margin:0 0 10px 0;}
+#lateReportPanel{position:fixed;top:10px;right:210px;width:320px;max-height:calc(100vh - 20px);overflow-y:auto;z-index:150;background:rgba(26,26,46,0.95);border:1px solid rgba(232,213,183,0.2);border-radius:12px;padding:14px;color:#e8d5b7;font-size:11px;scrollbar-width:thin;box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+#lateReportPanel h2{color:#d4a574;font-size:14px;margin:0 0 8px 0;}
 .lr-tabs{display:flex;gap:6px;margin-bottom:8px;}
-.lr-tab{background:rgba(232,213,183,0.1);border:1px solid rgba(232,213,183,0.2);color:#a89070;padding:5px 12px;border-radius:6px;cursor:pointer;font-size:12px;transition:all 0.2s;}
+.lr-tab{background:rgba(232,213,183,0.1);border:1px solid rgba(232,213,183,0.2);color:#a89070;padding:4px 10px;border-radius:6px;cursor:pointer;font-size:11px;transition:all 0.2s;}
 .lr-tab.active{background:rgba(232,213,183,0.25);color:#e8d5b7;border-color:rgba(232,213,183,0.4);}
 .lr-tab:hover{background:rgba(232,213,183,0.18);}
 .lr-toggle{display:flex;gap:6px;margin-bottom:10px;}
-.lr-toggle-btn{background:rgba(232,213,183,0.08);border:1px solid rgba(232,213,183,0.15);color:#8a7a60;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:11px;transition:all 0.2s;}
+.lr-toggle-btn{background:rgba(232,213,183,0.08);border:1px solid rgba(232,213,183,0.15);color:#8a7a60;padding:3px 8px;border-radius:4px;cursor:pointer;font-size:10px;transition:all 0.2s;}
 .lr-toggle-btn.active{background:rgba(212,165,116,0.2);color:#d4a574;border-color:rgba(212,165,116,0.4);}
 .lr-section{margin-bottom:6px;border:1px solid rgba(232,213,183,0.1);border-radius:8px;overflow:hidden;}
 .lr-section-hdr{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;cursor:pointer;background:rgba(232,213,183,0.05);transition:background 0.15s;}
 .lr-section-hdr:hover{background:rgba(232,213,183,0.1);}
-.lr-section-hdr .lr-name{font-weight:600;font-size:12px;flex:1;}
-.lr-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:11px;font-weight:700;color:#1a1a2e;}
+.lr-section-hdr .lr-name{font-weight:600;font-size:11px;flex:1;}
+.lr-badge{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:700;color:#1a1a2e;}
 .lr-badge-yellow{background:#f0c040;}
 .lr-badge-orange{background:#e08030;}
 .lr-badge-red{background:#cf6679;}
 .lr-rows{padding:4px 10px 6px 10px;}
-.lr-row{display:flex;align-items:center;gap:6px;padding:3px 0;font-size:12px;color:#c4b49a;cursor:pointer;transition:color 0.15s;}
+.lr-row{display:flex;align-items:center;gap:5px;padding:2px 0;font-size:11px;color:#c4b49a;cursor:pointer;transition:color 0.15s;}
 .lr-row:hover{color:#e8d5b7;}
 .lr-row .lr-arrow{color:#6a7a5a;}
 .lr-close{position:absolute;top:12px;right:14px;background:none;border:1px solid rgba(232,213,183,0.2);color:#a89070;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:12px;transition:all 0.2s;}
@@ -245,7 +245,6 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <div id="disconnectIndicator" style="display:none;cursor:pointer;" title="Click to find disconnected houses" onclick="cycleDisconnectedHouse()"><span class="label">🏚️</span><br><span class="value" id="disconnectCount">0</span></div>
 <div id="disconnectOfficeIndicator" style="display:none;cursor:pointer;" title="Click to find disconnected offices" onclick="cycleDisconnectedBuilding('office')"><span class="label">🏢</span><br><span class="value" id="disconnectOfficeCount">0</span></div>
 <div id="disconnectRestIndicator" style="display:none;cursor:pointer;" title="Click to find disconnected restaurants" onclick="cycleDisconnectedBuilding('restaurant')"><span class="label">🍽️</span><br><span class="value" id="disconnectRestCount">0</span></div>
-<div id="commuteStatsDiv" style="display:none;" title="Today's commute stats"><span class="label">📊 Arrivals</span><br><span class="value" id="commuteStatsVal">0</span></div>
 <div>
 <button class="speed-btn" id="pauseBtn" onclick="setSpeed(0)">⏸</button>
 <button class="speed-btn active" id="playBtn" onclick="setSpeed(1)">▶</button>
@@ -254,7 +253,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 </div>
 <button class="speed-btn" onclick="showSettings()" title="Settings">⚙</button>
 <button class="speed-btn" onclick="openLoreJournal()" title="Lore Journal">📜</button>
-<button class="speed-btn" id="lateReportBtn" onclick="showLateReport()" title="Late Report" style="display:none;">⏰</button>
+<button class="speed-btn" id="lateReportBtn" onclick="showLateReport()" title="Late Report [Z]">⏰ <span style="font-size:9px;opacity:0.6;">[Z]</span></button>
 <div style="position:relative;">
 <input id="searchBar" type="text" placeholder="🔍 Search..." oninput="updateSearchSuggestions()" onkeydown="handleSearchKey(event)" onfocus="updateSearchSuggestions()" onblur="setTimeout(()=>hideSearch(),200)" style="background:rgba(232,213,183,0.12);border:1px solid rgba(232,213,183,0.25);color:#e8d5b7;padding:4px 8px;border-radius:5px;font-size:12px;width:150px;outline:none;">
 <div id="searchDropdown" style="display:none;position:absolute;top:100%;left:0;width:220px;max-height:250px;overflow-y:auto;background:rgba(26,26,46,0.97);border:1px solid rgba(232,213,183,0.25);border-radius:8px;margin-top:4px;z-index:500;scrollbar-width:thin;"></div>
@@ -296,7 +295,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 <button class="tool-btn" onclick="selectTool('inspect')" data-tool="inspect">🔍 Inspect<span class="kb-hint">I</span></button>
 </div>
 <button class="tool-btn" onclick="selectTool('traffic')" data-tool="traffic">🚦 Traffic Ctrl<span class="kb-hint">F</span></button>
-<button class="tool-btn" onclick="toggleStraight()" id="straightBtn">📏 <span id="straightLabel">Straight Line: OFF</span><span class="kb-hint">L</span></button>
+<button class="tool-btn" onclick="toggleStraight()" id="straightBtn">📏 <span id="straightLabel">Straight Line: ON</span><span class="kb-hint">L</span></button>
 </div>
 <div class="panel-section">
 <h3>Road Upkeep</h3>
@@ -391,6 +390,7 @@ body{overflow:hidden;background:#1a1a2e;font-family:'Segoe UI',Tahoma,sans-serif
 </div>
 <div class="kb-section"><h4>Panels</h4>
 <div class="kb-row"><span class="kb-key">N</span><span class="kb-action">Lore Journal</span></div>
+<div class="kb-row"><span class="kb-key">Z</span><span class="kb-action">Late Report</span></div>
 <div class="kb-row"><span class="kb-key">G</span><span class="kb-action">Settings</span></div>
 <div class="kb-row"><span class="kb-key">?</span><span class="kb-action">Show Keybinds</span></div>
 </div>
@@ -915,6 +915,8 @@ vossSpeedBoost: 1, // multiplier for road speeds
 vossMiningBoost: 1, // multiplier for mountain treasure/artifact chances
 tutorial: null, // {step:0, cameraStartX, cameraStartY, speedChanged, inspectedBuilding, roadsPlaced}
 tutorialArtifactsGiven: false,
+_tutorialSearched: false,
+_tutorialLateOpened: false,
 lateReportDay: { byHouse: [], byBusiness: [] },
 lateReportWeek: { byHouse: [], byBusiness: [] }
 };
@@ -1508,6 +1510,7 @@ else if (e.key === '7') setUpkeep(1);
 else if (e.key === '8') setUpkeep(2);
 else if (e.key === '9') setUpkeep(3);
 else if (k === 'n') openLoreJournal();
+else if (k === 'z') showLateReport();
 else if (k === 'g') showSettings();
 else if (k === 'c') returnToCenter();
 else if (e.key === '?') { showSettings(); setTimeout(()=>{ const kb=document.getElementById('keybindsCard'); if(kb) kb.classList.add('visible'); },50); }
@@ -1805,6 +1808,7 @@ items[i].style.background = i === searchHighlight ? 'rgba(232,213,183,0.15)' : '
 function selectSearchResult(idx) {
 const r = searchResults[idx];
 if (!r || !G) return;
+if (G.tutorial) G._tutorialSearched = true;
 // Pan camera to target
 const iso = toISO(r.targetX, r.targetY);
 G.camera.x = iso.sx;

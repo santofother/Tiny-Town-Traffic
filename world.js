@@ -1015,9 +1015,9 @@ const sameDay = r.placedDay === G.day;
 const recentlyPlaced = sameDay && (G.dayTick - (r.placedTick || 0)) < 1800; // half a day (~30s real time at 1x)
 if (G.roadsDuringPause.has(tk) || sameDay) {
 // Full refund within the same day, 80% if placed today but more than half-day ago
-totalRefund += recentlyPlaced || G.roadsDuringPause.has(tk) ? cost : Math.floor(cost * 0.8);
+totalRefund += road.type === 'road_tunnel' ? 0 : (recentlyPlaced || G.roadsDuringPause.has(tk) ? cost : Math.floor(cost * 0.8));
 } else {
-totalRefund += Math.floor(cost * 0.2);
+totalRefund += road.type === 'road_tunnel' ? 0 : Math.floor(cost * 0.2);
 }
 // Delete from whichever map it's in
 if (G.elevatedRoads.has(tk)) {

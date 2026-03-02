@@ -94,19 +94,6 @@ dcRestValEl.style.color = dcRests.length > 2 ? '#ff4444' : '#ffaa44';
 } else {
 dcRestEl.style.display = 'none';
 }
-// Commute stats indicator
-const cs = G.commuteStats;
-const csTotal = cs.officeTotal + cs.restaurantTotal + cs.schoolTotal;
-const csLate = cs.officeLate + cs.restaurantLate + cs.schoolLate;
-const csDiv = document.getElementById('commuteStatsDiv');
-if (csTotal > 0) {
-csDiv.style.display = '';
-const csOnTime = csTotal - csLate;
-document.getElementById('commuteStatsVal').textContent = `${csOnTime}/${csTotal}`;
-csDiv.title = `Today's commute stats\nOffice: ${cs.officeTotal - cs.officeLate}/${cs.officeTotal} on-time\nRestaurant: ${cs.restaurantTotal - cs.restaurantLate}/${cs.restaurantTotal}\nSchool: ${cs.schoolTotal - cs.schoolLate}/${cs.schoolTotal}`;
-} else {
-csDiv.style.display = 'none';
-}
 // Debt indicator
 const debtEl = document.getElementById('debtIndicator');
 const debtValEl = document.getElementById('debtAmount');
@@ -316,7 +303,8 @@ if (!roadOnTile && !ctrlOnTile) {
 const building = G.buildings.find(b => Math.abs(b.x - x) <= 1 && Math.abs(b.y - y) <= 1);
 if (building) {
 if (G.tutorial) G.tutorial.inspectedBuilding = true;
-let html = `<h3>${building.name}</h3><p>Type: ${building.type}${building.cuisine ? ' ('+building.cuisine+')' : ''}${building.schoolType ? ' ('+building.schoolType+')' : ''}</p>`;
+const displayName = (building.vossHouse && ((G.artifactsFound||[]).filter(a=>a.startsWith('voss_')).length < 1)) ? 'Vacant House' : building.name;
+let html = `<h3>${displayName}</h3><p>Type: ${building.type}${building.cuisine ? ' ('+building.cuisine+')' : ''}${building.schoolType ? ' ('+building.schoolType+')' : ''}</p>`;
 const linkedBuildingIds = [];
 if (building.type === 'house') {
 const connected = hasNearbyRoad(building.x, building.y);
@@ -329,15 +317,24 @@ if (vossArtifacts >= 4) {
 html += `<p style="color:#998877;font-style:italic;">Status: <strong>Retained</strong>. Daily commute data shows one trip: to the eastern mountain and back. Every day. Same route. Into the tunnels.</p>`;
 html += `<p style="color:#776655;font-style:italic;font-size:10px;">Raymond. Retired. Enjoys long walks. Says this is the only place he's ever felt truly at home. Doesn't remember much before arriving here. Doesn't mind.</p>`;
 html += `<p style="color:#556677;font-style:italic;font-size:10px;">A neighbor reports: "He comes home smelling like stone dust. His hands are warm, even in winter. If you tunnel deep enough, you might run into him."</p>`;
-} else {
+} else if (vossArtifacts >= 1) {
 html += `<p style="color:#998877;font-style:italic;">Status: Vacant. Previous occupant: Commissioner Raymond Voss. Relocated 18 months ago.</p>`;
+} else {
+html += `<p style="color:#998877;font-style:italic;">Status: Vacant. The previous occupant left some time ago. No forwarding address on file.</p>`;
 }
 }
 const families = G.families.filter(f => f.houseId === building.id);
 if (families.length === 0) html += `<p style="color:#888;">No families assigned yet.</p>`;
 families.forEach(fam => {
+// Hide Voss family details until player has found voss artifacts
+const isVossFamily = building.vossHouse && fam.lastName === 'Voss';
+const vossProgress = isVossFamily ? (G.artifactsFound||[]).filter(a=>a.startsWith('voss_')).length : 0;
+if (isVossFamily && vossProgress < 1) {
+// Don't reveal the family name or lore note before any discoveries
+} else {
 html += `<p style="margin-top:8px;color:#d4a574;"><strong>The ${fam.lastName} Family</strong></p>`;
-if (fam.loreNote) html += `<p style="color:#998877;font-style:italic;font-size:11px;">${fam.loreNote}</p>`;
+if (fam.loreNote && !(isVossFamily && vossProgress < 4)) html += `<p style="color:#998877;font-style:italic;font-size:11px;">${fam.loreNote}</p>`;
+}
 fam.members.forEach(m => {
 if (m.role === 'adult') {
 const wp = G.buildings.find(b => b.id === m.workplaceId);
@@ -1075,6 +1072,10 @@ G.lateReportDay = snapshot;
 if (G.day % 7 === 1) {
 G.lateReportWeek = { byHouse: [], byBusiness: [] };
 }
+// Accumulate daily data into weekly report
+if (!G.lateReportWeek) G.lateReportWeek = { byHouse: [], byBusiness: [] };
+mergeSnapshot(G.lateReportWeek.byHouse, snapshot.byHouse, 'houseId', 'houseName');
+mergeSnapshot(G.lateReportWeek.byBusiness, snapshot.byBusiness, 'bizId', 'bizName');
 } else {
 // Accumulate into week: merge workers into existing entries
 const week = G.lateReportWeek;
@@ -1086,10 +1087,6 @@ sortByTotal(week.byBusiness);
 sortWorkers(week.byHouse);
 sortWorkers(week.byBusiness);
 }
-// Show/hide HUD button
-const btn = document.getElementById('lateReportBtn');
-const hasData = G.lateReportDay.byHouse.length > 0 || G.lateReportDay.byBusiness.length > 0;
-if (btn) btn.style.display = hasData ? '' : 'none';
 }
 
 function mergeSnapshot(target, source, idKey, nameKey) {
@@ -1120,6 +1117,7 @@ G.camera.y = iso.sy;
 
 function showLateReport() {
 if (!G) return;
+if (G.tutorial) G._tutorialLateOpened = true;
 const panel = document.getElementById('lateReportPanel');
 if (panel.style.display === 'block') { panel.style.display = 'none'; return; }
 renderLateReport();
@@ -1180,6 +1178,26 @@ html += `<span style="color:#6a7a5a;font-size:10px;margin-left:6px;">${expanded 
 html += '</div>';
 if (expanded) {
 html += '<div class="lr-rows">';
+if (lateReportPeriod === 'week') {
+// Aggregate workers by name for weekly view, show avg (total/7)
+const agg = {};
+for (const w of section.workers) {
+const key = w.name + '|' + (lateReportTab === 'house' ? w.destId : w.homeId);
+if (!agg[key]) agg[key] = { name: w.name, dest: lateReportTab === 'house' ? w.destName : w.homeName, destId: lateReportTab === 'house' ? w.destId : w.homeId, total: 0 };
+agg[key].total += w.minutesLate;
+}
+const aggList = Object.values(agg).sort((a, b) => b.total - a.total);
+for (const w of aggList) {
+const avg = (w.total / 7).toFixed(1);
+const wBadge = getBadgeClass(w.total);
+html += `<div class="lr-row" onclick="jumpToBuilding(${w.destId})">`;
+html += `<span>${w.name}</span>`;
+html += `<span class="lr-arrow">→</span>`;
+html += `<span>${w.dest}</span>`;
+html += `<span style="margin-left:auto;" class="${wBadge}">${w.total}m (${avg}m/day)</span>`;
+html += '</div>';
+}
+} else {
 for (const w of section.workers) {
 const wBadge = getBadgeClass(w.minutesLate);
 const dest = lateReportTab === 'house' ? w.destName : w.homeName;
@@ -1190,6 +1208,7 @@ html += `<span class="lr-arrow">→</span>`;
 html += `<span>${dest}</span>`;
 html += `<span style="margin-left:auto;" class="${wBadge}">${w.minutesLate}m</span>`;
 html += '</div>';
+}
 }
 html += '</div>';
 }

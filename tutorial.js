@@ -81,6 +81,42 @@ highlightTool: 'road_2lane',
 highlightBuildings: null
 },
 {
+id: 'build_highway',
+title: '🛣️ Build a Highway',
+text: 'Highways are the fastest roads in the game — they carry the most traffic and let vehicles travel at top speed.<br><br>Select the <b>Highway</b> tool (press <b>H</b>, costs $100) and place at least one segment. Use highways as main arteries between distant parts of your town.',
+hint: 'Place a Highway segment',
+check: 'tutorial_highway',
+highlightTool: 'road_highway',
+highlightBuildings: null
+},
+{
+id: 'build_maintenance',
+title: '🔧 Maintenance Depot',
+text: 'Roads break down over time! A <b>Maintenance Depot</b> automatically dispatches repair vehicles to fix nearby broken roads.<br><br>Press <b>M</b> to select the Maintenance Depot tool ($200) and place one near your road network.',
+hint: 'Place a Maintenance Depot',
+check: 'tutorial_maintenance',
+highlightTool: 'maintenance',
+highlightBuildings: null
+},
+{
+id: 'use_search',
+title: '🔍 Search Bar',
+text: 'The <b>Search Bar</b> in the HUD lets you find any road, building, or family by name.<br><br>Click the search box at the top of the screen and type a name — then select a result to jump the camera straight to it.',
+hint: 'Search for something',
+check: 'tutorial_search',
+highlightTool: null,
+highlightBuildings: null
+},
+{
+id: 'open_late_report',
+title: '⏰ Late Report',
+text: 'The <b>Late Report</b> (press <b>Z</b> or click ⏰ in the HUD) shows which workers arrived late, grouped by house or business.<br><br>Press <b>Z</b> or click the ⏰ button to open the Late Report and see how your road network is performing.',
+hint: 'Open the Late Report',
+check: 'tutorial_late_report',
+highlightTool: null,
+highlightBuildings: null
+},
+{
 id: 'artifact_road',
 title: '🗺️ Artifacts & Clues',
 text: 'Artifacts can be found by placing roads, clicking terrain with Inspect, or exploring near buildings.<br><br>Place <b>any road tile</b> to uncover the first clue.',
@@ -285,6 +321,24 @@ case 'twolane_placed': {
 let has2lane = false;
 G.roads.forEach(r => { if (r.type === 'road_2lane') has2lane = true; });
 satisfied = has2lane;
+break;
+}
+case 'tutorial_highway': {
+let hasHighway = false;
+G.roads.forEach(r => { if (r.type === 'road_highway' || r.type === 'paid_highway') hasHighway = true; });
+satisfied = hasHighway;
+break;
+}
+case 'tutorial_maintenance': {
+satisfied = G.buildings.some(b => b.type === 'maintenance');
+break;
+}
+case 'tutorial_search': {
+satisfied = !!G._tutorialSearched;
+break;
+}
+case 'tutorial_late_report': {
+satisfied = !!G._tutorialLateOpened;
 break;
 }
 case 'tutorial_artifact_1': {
