@@ -99,6 +99,15 @@ highlightTool: 'maintenance',
 highlightBuildings: null
 },
 {
+id: 'traffic_control',
+title: '🚦 Traffic Controls',
+text: 'As your town grows, intersections get busy! Use <b>Traffic Controls</b> to manage flow.<br><br>Press <b>F</b> to select the Traffic Control tool, then click on an <b>intersection</b> (where 3+ roads meet). You can place:<br>• <b>🛑 Stop Signs</b> — free, slows traffic<br>• <b>🚦 Traffic Lights</b> — $50, manages flow automatically<br>• <b>🔄 Roundabouts</b> — $80, keeps traffic moving smoothly<br><br><b>Tip:</b> After placing a stop sign, click the intersection again to toggle which directions have stops (N/S/E/W). A 2-way stop lets main roads flow freely while side streets yield!<br><br>Try placing any traffic control at an intersection!',
+hint: 'Place a traffic control at an intersection',
+check: 'tutorial_traffic_control',
+highlightTool: 'traffic',
+highlightBuildings: null
+},
+{
 id: 'use_search',
 title: '🔍 Search Bar',
 text: 'The <b>Search Bar</b> in the HUD lets you find any road, building, or family by name.<br><br>Click the search box at the top of the screen and type a name — then select a result to jump the camera straight to it.',
@@ -326,11 +335,16 @@ break;
 case 'tutorial_highway': {
 let hasHighway = false;
 G.roads.forEach(r => { if (r.type === 'road_highway' || r.type === 'paid_highway') hasHighway = true; });
+G.elevatedRoads.forEach(r => { if (r.type === 'road_highway' || r.type === 'paid_highway') hasHighway = true; });
 satisfied = hasHighway;
 break;
 }
 case 'tutorial_maintenance': {
-satisfied = G.buildings.some(b => b.type === 'maintenance');
+satisfied = G.maintenanceBuildings && G.maintenanceBuildings.length > 0;
+break;
+}
+case 'tutorial_traffic_control': {
+satisfied = !!G._tutorialTrafficControlUsed;
 break;
 }
 case 'tutorial_search': {

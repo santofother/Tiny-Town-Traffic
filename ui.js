@@ -649,6 +649,7 @@ G.intersections.delete(key);
 showNotification('Traffic control removed');
 } else {
 G.intersections.set(key, {type, stopDirs: {N:true,S:true,E:true,W:true}, greenAxis: 'NS', timer: 0});
+G._tutorialTrafficControlUsed = true;
 const labels = {stop: '🛑 Stop sign placed', light: '🚦 Traffic light installed', roundabout: '🔄 Roundabout built'};
 showNotification(labels[type] || 'Traffic control updated');
 }
