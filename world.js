@@ -520,13 +520,8 @@ if (x < 0 || x >= MAP_W || y < 0 || y >= MAP_H) return false;
 // Check playable area
 const pdx = x - G.playableCenter.x, pdy = y - G.playableCenter.y;
 if (Math.sqrt(pdx*pdx + pdy*pdy) > G.playableRadius + 1) return false;
-// Block road placement on building tiles (highways/flyovers also blocked adjacent to buildings)
-const isHighwayType = type.includes('highway');
-if (G.buildings.some(b => {
-if (b.x === x && b.y === y) return true;
-if (isHighwayType && Math.abs(b.x - x) <= 1 && Math.abs(b.y - y) <= 1) return true;
-return false;
-})) return false;
+// Block road placement on building tiles
+if (G.buildings.some(b => b.x === x && b.y === y)) return false;
 // Block road placement on parking lot tiles
 if (G.parkingLots.some(p => p.x === x && p.y === y)) return false;
 const key = `${x},${y}`;
@@ -570,7 +565,7 @@ if (terrain === 2) return 'road_tunnel'; // mountain -> tunnel
 return type;
 }
 
-function placeRoad(type, x, y, freePlacement) {
+function placeRoad(type, x, y, freePlacement, skipIntersectionUpdate) {
 const key = `${x},${y}`;
 if (type === 'road_tunnel' || type === 'road_flyover' || type === 'road_highway' || type === 'paid_highway') {
 if (G.elevatedRoads.has(key)) return false;
@@ -769,8 +764,8 @@ G.roads.set(key, road);
 G.lastRoadChangeId++;
 G.pathCache.clear();
 if (G.speed === 0) G.roadsDuringPause.add(key);
-// Check if creates intersection
-updateIntersections(x, y);
+// Check if creates intersection (skip for wide roads — called after setup in placeWideRoad)
+if (!skipIntersectionUpdate) updateIntersections(x, y);
 // Update parking lot connections (new road may be adjacent to existing parking lots)
 updateAllParkingConnections();
 // Warn about paid road threshold
@@ -826,7 +821,7 @@ const ny = direction === 'h' ? y + off : y;
 if (canPlaceRoad(type, nx, ny)) {
 // For highways: only the center tile (offset=0) pays, flanking tiles are free
 const isFlanking = (type.includes('highway')) && off !== 0;
-if (placeRoad(type, nx, ny, isFlanking)) {
+if (placeRoad(type, nx, ny, isFlanking, true)) {
 const nk = `${nx},${ny}`;
 childKeys.push(nk);
 // Mark child tiles with parent reference
@@ -861,6 +856,11 @@ if (!parentRoad.oneWayDir) {
 parentRoad.oneWayDir = {dx: flowDir.dx, dy: flowDir.dy};
 }
 }
+}
+// Now that all multilane properties are set, update intersections for all placed tiles
+for (const ck of childKeys) {
+const [cx, cy] = ck.split(',').map(Number);
+updateIntersections(cx, cy);
 }
 }
 
@@ -935,11 +935,13 @@ const isMultiLane = tileRoad.multiLaneGroup || (tileRoad.type && tileRoad.type.i
 let roadCount = 0;
 let stopDirs = {N:false,S:false,E:false,W:false};
 let hasSmaller = false;
+let hasSmallerPerpendicular = false; // smaller road crossing perpendicular to multilane flow
 let hasMulti = false;
 // For multi×multi detection: track multi-lane neighbors by axis
 // Determine this tile's group identity (parent key)
 let multiNS = false, multiEW = false;
 const tileGroup = tileRoad.parentRoad || tk; // parent key, or self if we ARE the parent
+const tileFlowDir = tileRoad.oneWayDir; // flow direction for perpendicular check
 for (let di = 0; di < dirs.length; di++) {
 const [dx, dy] = dirs[di];
 const nk = `${tile.x+dx},${tile.y+dy}`;
@@ -959,13 +961,23 @@ if (neighbor.multiLaneGroup) continue; // skip siblings for roadCount
 roadCount++;
 if (!neighborIsMulti) {
 hasSmaller = true;
+// Check if this smaller road is perpendicular to multilane flow (real intersection)
+// vs parallel (just an end connection — no stop sign needed)
+if (tileFlowDir) {
+const dot = Math.abs(tileFlowDir.dx * dx + tileFlowDir.dy * dy);
+if (dot === 0) {
+hasSmallerPerpendicular = true; // perpendicular = real crossing
+}
+} else {
+hasSmallerPerpendicular = true; // no flow info, assume intersection
+}
 }
 }
 // Multi×multi intersection: multi-lane neighbors on BOTH axes
 if (isMultiLane && multiNS && multiEW) {
 tileRoad.boxJunction = true;
 G.intersections.set(tk, {type: 'multi_intersection', phase: 'green', greenAxis: 'NS', timer: 0, phaseLength: 200});
-} else if (roadCount >= 3 || (isMultiLane && hasSmaller && roadCount >= 1)) {
+} else if (roadCount >= 3 || (isMultiLane && hasSmallerPerpendicular && roadCount >= 1)) {
 tileRoad.boxJunction = false;
 if (isMultiLane) {
 // Multi-lane tile: only stop directions where smaller roads connect

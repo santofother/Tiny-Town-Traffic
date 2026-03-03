@@ -1675,6 +1675,11 @@ delete ctrl.stops;
 }
 });
 buildingIdCounter = Math.max(...G.buildings.map(b => b.id), 0);
+// Recalculate all intersections to fix stale data from older saves
+for (const [key] of G.roads) {
+const [rx, ry] = key.split(',').map(Number);
+updateIntersections(rx, ry);
+}
 // Refresh parking lot road connections after load
 updateAllParkingConnections();
 document.getElementById('mainMenu').style.display = 'none';

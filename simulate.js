@@ -12,8 +12,9 @@ if (count >= capacity * 0.5) return 1.5;
 return 1.0;
 }
 
-function findPath(startX, startY, endX, endY) {
-const cacheKey = `${startX},${startY}-${endX},${endY}-${G.lastRoadChangeId}`;
+function findPath(startX, startY, endX, endY, opts) {
+const allowUturn = opts && opts.allowUturn;
+const cacheKey = `${startX},${startY}-${endX},${endY}-${G.lastRoadChangeId}${allowUturn ? '-uturn' : ''}`;
 if (G.pathCache.has(cacheKey)) return G.pathCache.get(cacheKey);
 // Find nearest ground-level non-highway road to start and end
 const startRoad = findNearestRoad(startX, startY, 2, {excludeHighways: true, levelFilter: 0});
@@ -68,8 +69,9 @@ const nRoad = getRoadAtLevel(nx, ny, curLevel);
 if (nRoad && !(nRoad.breakdown && nRoad.blocking)) {
 // One-way enforcement: check if traveling FROM current TO neighbor is allowed
 const curRoad = getRoadAtLevel(current.x, current.y, curLevel);
-if (curRoad && curRoad.oneWayDir && (curRoad.oneWayDir.dx * dx + curRoad.oneWayDir.dy * dy < 0)) {
-// Can't leave this tile against the flow — skip
+const isStartTile = allowUturn && currentKey === startKey;
+if (curRoad && curRoad.oneWayDir && (curRoad.oneWayDir.dx * dx + curRoad.oneWayDir.dy * dy < 0) && !isStartTile) {
+// Can't leave this tile against the flow — skip (unless U-turning from start)
 } else if (nRoad.oneWayDir && (nRoad.oneWayDir.dx * dx + nRoad.oneWayDir.dy * dy < 0)) {
 // Can't enter that tile against the flow — skip
 } else {
@@ -472,7 +474,12 @@ const curRoadX = Math.floor(v.x), curRoadY = Math.floor(v.y);
 // Temporarily increase lastRoadChangeId to bypass path cache
 const savedId = G.lastRoadChangeId;
 G.lastRoadChangeId++;
-const newPath = findPath(curRoadX, curRoadY, destNode.x, destNode.y);
+// First try normal reroute, then try with U-turn allowed
+let newPath = findPath(curRoadX, curRoadY, destNode.x, destNode.y);
+if (!newPath && v.stuckCount >= 2) {
+// Allow U-turn: let vehicle reverse out of one-way dead-end
+newPath = findPath(curRoadX, curRoadY, destNode.x, destNode.y, {allowUturn: true});
+}
 G.lastRoadChangeId = savedId;
 if (newPath && newPath.length > 1) {
 v.path = newPath;
