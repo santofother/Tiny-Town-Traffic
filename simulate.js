@@ -191,7 +191,7 @@ destX, destY,
 purpose,
 path: path,
 pathIdx: 0,
-speed: 0.05,
+speed: 0.065,
 color: CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)],
 angle: 0,
 braking: false,
@@ -242,7 +242,7 @@ destX, destY,
 purpose,
 path: path,
 pathIdx: 0,
-speed: 0.05,
+speed: 0.065,
 color: CAR_COLORS[Math.floor(Math.random() * CAR_COLORS.length)],
 angle: 0,
 braking: false,
@@ -327,7 +327,7 @@ const vCos = Math.cos(v.angle || 0), vSin = Math.sin(v.angle || 0);
 const lanesPerDir = road ? (ROAD_LANES_PER_DIR[road.type] || 1) : 1;
 const isMultiLane = lanesPerDir >= 2;
 // Lane change cooldown
-if (v.laneChangeTimer > 0) v.laneChangeTimer -= dt;
+if (v.laneChangeTimer > 0) v.laneChangeTimer -= dt * G.speed;
 // Overtaking detection
 let blockedInLane = false;
 let blockedSpeed = Infinity;
@@ -699,7 +699,7 @@ const br = G.roads.get(bk);
 if (br && br.boxJunction) { trafficSlowdown *= 0.4; break; }
 }
 }
-const moveSpeed = v.speed * roadSpeed * trafficSlowdown * dt;
+const moveSpeed = v.speed * roadSpeed * trafficSlowdown * dt * G.speed;
 if (dist < moveSpeed) {
 v.x = target.x;
 v.y = target.y;
@@ -756,7 +756,7 @@ v.y += my;
 
 function onVehicleArrived(v) {
 v.arrived = true;
-const travelTime = (G.dayTick - v.departTick) / 60; // in game minutes
+const travelTime = (G.dayTick - v.departTick) * (18 * 60 / 3600); // in game minutes (ticks → minutes)
 // Trucks/deliveries just disappear on arrival
 if (v.isTruck || v.purpose === 'delivery' || v.purpose === 'night_delivery') return;
 const family = v.familyId >= 0 ? G.families[v.familyId] : null;
@@ -937,6 +937,42 @@ G.lastSave = Date.now();
 }
 }
 
+function gaussianRandom() {
+// Box-Muller transform: returns standard normal (mean 0, std 1)
+let u, v, s;
+do { u = Math.random() * 2 - 1; v = Math.random() * 2 - 1; s = u * u + v * v; } while (s >= 1 || s === 0);
+return u * Math.sqrt(-2 * Math.log(s) / s);
+}
+
+function estimateTravelMinutes(fromX, fromY, destX, destY) {
+// Estimate travel time in game-minutes using actual A* path and road speeds
+const path = findPath(fromX, fromY, destX, destY);
+if (!path || path.length < 2) {
+// Fallback: use Euclidean distance with pessimistic 2-lane speed
+const dx = destX - fromX, dy = destY - fromY;
+const dist = Math.sqrt(dx * dx + dy * dy) * 1.5; // approximate Manhattan factor
+const tilesPerGameMin = 0.065 * 0.6 * (3600 / (18 * 60)); // base speed * 2-lane * ticks-to-minutes
+return dist / tilesPerGameMin;
+}
+// Walk the path, summing time per segment based on road type
+let totalMinutes = 0;
+const ticksPerGameMin = 3600 / (18 * 60); // ~3.33 ticks per game-minute
+for (let i = 0; i < path.length - 1; i++) {
+const seg = path[i];
+const next = path[i + 1];
+const sdx = next.x - seg.x, sdy = next.y - seg.y;
+const segDist = Math.sqrt(sdx * sdx + sdy * sdy);
+const roadKey = `${Math.floor(seg.x)},${Math.floor(seg.y)}`;
+const road = G.roads.get(roadKey) || G.elevatedRoads.get(roadKey);
+const roadSpd = road ? (ROAD_SPEED[road.type] || 1) : 0.5;
+// tiles/tick = v.speed * roadSpeed (at G.speed=1, dt cancels with tick rate)
+const tilesPerTick = 0.065 * roadSpd;
+const ticks = segDist / tilesPerTick;
+totalMinutes += ticks / ticksPerGameMin;
+}
+return totalMinutes;
+}
+
 function computeDepartureTicks() {
 if (!G || !G.families) return;
 G.families.forEach(family => {
@@ -946,17 +982,19 @@ if (m.role !== 'adult' || !m.workplaceId) continue;
 m.spawnedToday = false;
 const workplace = G.buildings.find(b => b.id === m.workplaceId);
 if (!workplace) { m.targetDepartTick = null; continue; }
-const dx = workplace.x - family.houseTile.x;
-const dy = workplace.y - family.houseTile.y;
-const dist = Math.sqrt(dx * dx + dy * dy);
-const zone = getCommuteZone(dist);
 const shiftStart = m.nightShift ? NIGHT_SHIFT_START : DAY_SHIFT_START;
+// Estimate actual travel time from A* path and road infrastructure
+const travelMinutes = estimateTravelMinutes(family.houseTile.x, family.houseTile.y, workplace.x, workplace.y);
 const personalAdjust = (m.punctuality || 0) * 60; // -60 to +60 minutes
 // Parent modifier: primary adult with school children leaves 20 min earlier
 const children = family.members.filter(c => c.role === 'child' && c.schoolId);
 const parentExtra = (i === 0 && children.length > 0) ? 20 : 0;
-const totalLead = zone.leadMinutes + parentExtra - personalAdjust;
-let departHour = shiftStart - totalLead / 60;
+// Lead = estimated travel + buffer + parent extra - personal adjustment
+const bufferMinutes = 20; // buffer for traffic, congestion, and pathing variability
+const totalLead = travelMinutes + bufferMinutes + parentExtra - personalAdjust;
+// Gaussian jitter: depart ~15 min early on average, ±8 min std dev (stagger departures)
+const jitterMinutes = 15 + gaussianRandom() * 8;
+let departHour = shiftStart - (totalLead + jitterMinutes) / 60;
 // Clamp departure to reasonable range (don't depart before 5 AM or negative ticks)
 if (!m.nightShift) departHour = Math.max(5, departHour);
 else departHour = Math.max(18, departHour);

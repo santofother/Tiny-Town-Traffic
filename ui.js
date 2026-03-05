@@ -1059,10 +1059,10 @@ if (!bizMap[workplace.id]) bizMap[workplace.id] = { bizId: workplace.id, bizName
 bizMap[workplace.id].workers.push({ name: m.name, homeName: house.name, homeId: house.id, minutesLate: m.minutesLate });
 }
 }
-// Sort sections by total lateness descending
+// Sort sections by average lateness descending
 const sortByTotal = arr => arr.sort((a, b) => {
-const ta = a.workers.reduce((s, w) => s + w.minutesLate, 0);
-const tb = b.workers.reduce((s, w) => s + w.minutesLate, 0);
+const ta = a.workers.reduce((s, w) => s + w.minutesLate, 0) / (a.workers.length || 1);
+const tb = b.workers.reduce((s, w) => s + w.minutesLate, 0) / (b.workers.length || 1);
 return tb - ta;
 });
 // Sort workers within each section worst first
@@ -1173,12 +1173,13 @@ html += '<div style="color:#6a7a5a;font-style:italic;padding:12px 0;">No late wo
 for (const section of list) {
 const sid = section[idKey];
 const total = section.workers.reduce((s, w) => s + w.minutesLate, 0);
+const avg = Math.round(total / (section.workers.length || 1));
 const expanded = !!lateReportExpanded[sid];
-const badge = getBadgeClass(total);
+const badge = getBadgeClass(avg);
 html += '<div class="lr-section">';
 html += `<div class="lr-section-hdr" onclick="toggleLateSection(${sid})">`;
 html += `<span class="lr-name" onclick="event.stopPropagation();jumpToBuilding(${sid})">${section[nameKey]}</span>`;
-html += `<span class="${badge}">${total}m late</span>`;
+html += `<span class="${badge}">avg ${avg}m late (${section.workers.length})</span>`;
 html += `<span style="color:#6a7a5a;font-size:10px;margin-left:6px;">${expanded ? '▾' : '▸'}</span>`;
 html += '</div>';
 if (expanded) {
@@ -1188,18 +1189,19 @@ if (lateReportPeriod === 'week') {
 const agg = {};
 for (const w of section.workers) {
 const key = w.name + '|' + (lateReportTab === 'house' ? w.destId : w.homeId);
-if (!agg[key]) agg[key] = { name: w.name, dest: lateReportTab === 'house' ? w.destName : w.homeName, destId: lateReportTab === 'house' ? w.destId : w.homeId, total: 0 };
+if (!agg[key]) agg[key] = { name: w.name, dest: lateReportTab === 'house' ? w.destName : w.homeName, destId: lateReportTab === 'house' ? w.destId : w.homeId, total: 0, count: 0 };
 agg[key].total += w.minutesLate;
+agg[key].count++;
 }
-const aggList = Object.values(agg).sort((a, b) => b.total - a.total);
+const aggList = Object.values(agg).sort((a, b) => (b.total / b.count) - (a.total / a.count));
 for (const w of aggList) {
-const avg = (w.total / 7).toFixed(1);
-const wBadge = getBadgeClass(w.total);
+const avg = Math.round(w.total / w.count);
+const wBadge = getBadgeClass(avg);
 html += `<div class="lr-row" onclick="jumpToBuilding(${w.destId})">`;
 html += `<span>${w.name}</span>`;
 html += `<span class="lr-arrow">→</span>`;
 html += `<span>${w.dest}</span>`;
-html += `<span style="margin-left:auto;" class="${wBadge}">${w.total}m (${avg}m/day)</span>`;
+html += `<span style="margin-left:auto;" class="${wBadge}">avg ${avg}m/day (${w.count}d)</span>`;
 html += '</div>';
 }
 } else {
